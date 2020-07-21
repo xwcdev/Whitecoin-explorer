@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="wrap" :class="{mobile: isMobile}">
     <div class="head-part">
       <div class="info-wrap">
         <div class="info clear">
@@ -178,7 +178,7 @@
       </div>
     </div>
     <footer>
-      <div>Copyright @2018-2019 Whitecoin | All rights reserved</div>
+      <div>Copyright @2018-2019 <a href="http://explorer.whitecoin.info/xwc">xwc</a> Whitecoin | All rights reserved</div>
     </footer>
   </div>
 </template>
@@ -191,6 +191,7 @@ import typeObj from "../utils/type";
 var echarts = require("echarts");
 export default {
   name: "home",
+  inject: ['isMobile'],
   data() {
     return {
       blockInfo: {

@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="wrap" :class="{mobile: isMobile}">
     <div class="background"></div>
     <div class="top-line"></div>
     <main>
@@ -247,6 +247,7 @@
 
   export default {
     mixins: [mixin],
+    inject: ["isMobile"],
     name: "v-address",
     data() {
       return {
