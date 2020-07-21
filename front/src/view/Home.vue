@@ -178,7 +178,7 @@
       </div>
     </div>
     <footer>
-      <div>Copyright @2018-2019 <a href="http://explorer.whitecoin.info/xwc">xwc</a> Whitecoin | All rights reserved</div>
+      <div>Copyright @2018-2019<a href="http://explorer.whitecoin.info/xwc">xwc</a>Whitecoin | All rights reserved</div>
     </footer>
   </div>
 </template>
