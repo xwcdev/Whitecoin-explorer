@@ -201,6 +201,7 @@ public class TransactionServiceImpl implements TransactionService {
                 } else {
                     data.add(json);
                 }
+                transOpTypeRes.setFail(trans.getFail());
 
             }
             transOpTypeRes.setOperationData(data);

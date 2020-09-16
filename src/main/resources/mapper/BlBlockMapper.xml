@@ -99,6 +99,13 @@
       #{trxCount,jdbcType=INTEGER}, #{amount,jdbcType=BIGINT}, #{fee,jdbcType=DECIMAL}, 
       #{reward,jdbcType=DECIMAL}, #{merkleRoot,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}
       )
+    ON DUPLICATE KEY UPDATE created_time =
+    <if test="createdTime != null" >
+      #{createdTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createdTime == null" >
+      now()
+    </if>
   </insert>
    <insert id="insertBatch" parameterType="java.util.List">
      insert into bl_block (block_id, block_num, block_size, 
@@ -115,6 +122,13 @@
       #{item.reward,jdbcType=DECIMAL}, #{item.merkleRoot,jdbcType=VARCHAR}, #{item.createdTime,jdbcType=TIMESTAMP}
       )
     </foreach>
+     ON DUPLICATE KEY UPDATE created_time =
+     <if test="createdTime != null" >
+       #{createdTime,jdbcType=TIMESTAMP}
+     </if>
+     <if test="createdTime == null" >
+       now()
+     </if>
   </insert>
   <insert id="insertSelective" parameterType="com.browser.dao.entity.BlBlock" >
     insert into bl_block
@@ -212,6 +226,14 @@
         #{createdTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
+
+    ON DUPLICATE KEY UPDATE created_time =
+    <if test="createdTime != null" >
+      #{createdTime,jdbcType=TIMESTAMP}
+    </if>
+    <if test="createdTime == null" >
+      now()
+    </if>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.browser.dao.entity.BlBlock" >
     update bl_block

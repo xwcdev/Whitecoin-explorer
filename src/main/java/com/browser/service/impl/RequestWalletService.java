@@ -1,10 +1,14 @@
 package com.browser.service.impl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.*;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.browser.tools.Constant;
+import com.browser.wallet.beans.ContractTxReceipt;
+import com.browser.wallet.beans.SimpleContractInfo;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +26,8 @@ public class RequestWalletService {
 
     @Value("${wallet.url}")
     private String walletUrl;
+    @Value("${wallet.caller}")
+    private String walletRpcCaller;
 
 
 
@@ -313,23 +319,92 @@ public class RequestWalletService {
      * @return
      */
     public String getlockedBalance(String accountName,String lockedAddress) {
+        return invokeContractOffline(accountName, lockedAddress, "getUsers", "1000,0");
+    }
+
+    public String invokeContractOffline(String accountName, String contractAddress, String apiName, String apiArg) {
         List<Object> params = new ArrayList<Object>();
         params.add(accountName);
-        params.add(lockedAddress);
-        params.add("getUsers");
-        params.add("1000,0");
+        params.add(contractAddress);
+        params.add(apiName);
+        params.add(apiArg);
         return send(RpcLink.INVOKE_CONTRACT_OFFLINE, params);
     }
+
     /**
-     *  查锁所有citizen
+     * 获取合约交易的receipt
+     * @param txid
+     * @return
+     */
+    public List<ContractTxReceipt> getContractTxReceipt(String txid) {
+        String res = send(RpcLink.GET_CONTRACT_RECEIPT, Collections.singletonList(txid));
+        JSONArray array = JSON.parseArray(res);
+        List<ContractTxReceipt> result = new ArrayList<>();
+        for(int i = 0;i<array.size();i++) {
+            result.add(JSON.toJavaObject(array.getJSONObject(i), ContractTxReceipt.class));
+        }
+        return result;
+    }
+
+    public SimpleContractInfo getSimpleContractInfo(String contractId) {
+        String res = send(RpcLink.GET_SIMPLE_CONTRACT_INFO, Collections.singletonList(contractId));
+        return JSON.toJavaObject(JSON.parseObject(res), SimpleContractInfo.class);
+    }
+
+    public int getTokenPrecisionDecimals(String accountName, String contractId) {
+        String res = invokeContractOffline(accountName, contractId, "precision", "");
+        try {
+            if(res.length()>2 && res.startsWith("\"") && res.endsWith("\"")) {
+                res = res.substring(1, res.length()-1);
+            }
+            BigInteger precision = new BigInteger(res);
+            if(precision.compareTo(BigInteger.ZERO)<0) {
+                throw new WalletException("invalid precision " + res + " of token contract " + contractId);
+            }
+            return precision.toString().length()-1;
+        } catch (Exception e) {
+            throw new WalletException(e.getMessage());
+        }
+    }
+
+    public BigInteger getTokenTotalSupply(String accountName, String contractId) {
+        String res = invokeContractOffline(accountName, contractId, "totalSupply", "");
+        try {
+            if(res.length()>2 && res.startsWith("\"") && res.endsWith("\"")) {
+                res = res.substring(1, res.length()-1);
+            }
+            BigInteger totalSupply = new BigInteger(res);
+            if(totalSupply.compareTo(BigInteger.ZERO)<0) {
+                throw new WalletException("invalid totalSupply " + res + " of token contract " + contractId);
+            }
+            return totalSupply;
+        } catch (Exception e) {
+            throw new WalletException(e.getMessage());
+        }
+    }
+
+    public String getTokenSymbol(String accountName, String contractId) {
+        String res = invokeContractOffline(accountName, contractId, "tokenSymbol", "");
+        try {
+            if(res.length()>2 && res.startsWith("\"") && res.endsWith("\"")) {
+                res = res.substring(1, res.length()-1);
+            }
+            return res;
+        } catch (Exception e) {
+            throw new WalletException(e.getMessage());
+        }
+    }
+
+    /**
+     *  查锁所有miner
      * @param
      * @return
      */
-    public JSONArray getAllCitizen(Long citizens) {
+    public JSONArray getAllMiners(Long miners) {
         List<Object> params = new ArrayList<Object>();
         params.add("");
-        params.add(citizens);
-        String result = send(RpcLink.LIST_CITIZENS, params);
+        params.add(miners);
+        String result = send(RpcLink.LIST_MINERS, params);
         JSONArray jsonArray =new JSONArray();
         if(result!=null){
             jsonArray = JSONObject.parseArray(result);

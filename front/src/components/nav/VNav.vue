@@ -23,6 +23,9 @@
         <router-link to="/richlist">
           <li :class="{'choice':getChoiceIndex === 4}" @click="navChange(4)">{{$t('nav.richlist')}}</li>
         </router-link>
+        <router-link to="/tokens">
+          <li :class="{'choice':getChoiceIndex === 5}" @click="navChange(5)">{{$t('nav.tokens')}}</li>
+        </router-link>
         <el-select
           v-model="selectedLang"
           placeholder="Select Language"

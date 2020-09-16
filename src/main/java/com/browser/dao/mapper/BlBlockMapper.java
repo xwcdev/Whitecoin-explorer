@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.browser.dao.entity.BlBlock;
+import org.apache.ibatis.annotations.Param;
 
 public interface BlBlockMapper {
     int deleteByPrimaryKey(String blockId);

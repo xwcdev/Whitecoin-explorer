@@ -1,6 +1,8 @@
 package com.browser.controller;
 
-import com.browser.dao.entity.TransOpTypeRes;
+import com.browser.dao.entity.*;
+import com.browser.service.*;
+import com.browser.wallet.beans.TxReceiptContractBalanceChange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +13,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.browser.dao.entity.BlTransaction;
-import com.browser.dao.entity.ResultMsg;
 import com.browser.protocol.EUDataGridResult;
-import com.browser.service.TransactionService;
 import com.browser.tools.controller.BaseController;
+
+import java.util.List;
 
 @Controller
 public class TransactionController extends BaseController {
 
 	@Autowired
 	private TransactionService transactionService;
+	@Autowired
+	private TokenTransactionService tokenTransactionService;
+	@Autowired
+	private TxContractBalanceChangeService txContractBalanceChangeService;
+	@Autowired
+	private TxEventsService txEventsService;
+	@Autowired
+	private TokenService tokenService;
 	
 	private static Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
@@ -31,6 +40,42 @@ public class TransactionController extends BaseController {
 		ResultMsg resultMsg = new ResultMsg();
 		try {
 			EUDataGridResult data = transactionService.getTransactionList(transaction);
+			resultMsg.setRetCode(ResultMsg.HTTP_OK);
+			resultMsg.setData(data);
+		} catch (Exception e) {
+			logger.error("系统错误", e);
+			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+			resultMsg.setRetMsg(e.getMessage());
+		}
+		return resultMsg;
+	}
+
+	/**
+	 * 返回合约代币列表
+	 */
+	@ResponseBody
+	@RequestMapping(value = "listTokens", method = RequestMethod.POST)
+	public ResultMsg listTokens(@RequestBody BlToken token) {
+		ResultMsg resultMsg = new ResultMsg();
+		try {
+			EUDataGridResult data = tokenService.getActiveTokenList(token);
+			resultMsg.setRetCode(ResultMsg.HTTP_OK);
+			resultMsg.setData(data);
+		} catch (Exception e) {
+			logger.error("系统错误", e);
+			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+			resultMsg.setRetMsg(e.getMessage());
+		}
+		return resultMsg;
+	}
+
+	// 根据条件返回token转账流水
+	@ResponseBody
+	@RequestMapping(value = "getTokenTransactionList", method = RequestMethod.POST)
+	public ResultMsg getTokenTransactionList(@RequestBody BlTokenTransaction transaction) {
+		ResultMsg resultMsg = new ResultMsg();
+		try {
+			EUDataGridResult data = tokenTransactionService.getTokenTransactionList(transaction);
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
@@ -52,6 +97,16 @@ public class TransactionController extends BaseController {
 		}
 		try {
 			TransOpTypeRes data = transactionService.getOperationDetail(transaction);
+			if(data != null) {
+				// 查询events, contractBalanceChanges
+				List<BlTxEvents> txEvents = txEventsService.selectAllByTrxId(transaction.getTrxId());
+				data.setEvents(txEvents);
+				List<BlTxContractBalanceChange> txContractBalanceChanges = txContractBalanceChangeService.selectAllByTrxId(transaction.getTrxId());
+				data.setTxContractBalanceChanges(txContractBalanceChanges);
+				// 找到这笔交易对应的token流水
+				List<BlTokenTransaction> tokenTransactions = tokenTransactionService.selectAllByTrxId(transaction.getTrxId());
+				data.setTokenTransactions(tokenTransactions);
+			}
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
@@ -82,5 +137,27 @@ public class TransactionController extends BaseController {
 		}
 		return resultMsg;
 	}
-	
+
+	@ResponseBody
+	@RequestMapping(value = "queryTokenTrxByAddr", method = { RequestMethod.POST })
+	public ResultMsg queryTokenTrxByAddr(@RequestBody BlTokenTransaction transaction) {
+		ResultMsg resultMsg = new ResultMsg();
+		if(null==transaction.getAddress()) {
+			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
+			resultMsg.setRetMsg("参数不能为空");
+			return resultMsg;
+		}
+		try {
+			EUDataGridResult data = tokenTransactionService.selectListByUserAddress(transaction);
+			resultMsg.setRetCode(ResultMsg.HTTP_OK);
+			resultMsg.setData(data);
+		} catch (Exception e) {
+			logger.error("系统错误", e);
+			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+			resultMsg.setRetMsg(e.getMessage());
+		}
+		return resultMsg;
+	}
+
+
 }

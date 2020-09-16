@@ -57,6 +57,16 @@ public class BlockServiceImpl implements BlockService {
 		// 分页处理
 		PageHelper.startPage(blBlock.getPage(), blBlock.getRows());
 		List<BlBlock> list = blBlockMapper.getBlockInfoList(blBlock);
+		Integer limit = blBlock.getRows();
+		if(limit == null || limit<=0) {
+			limit = 10;
+		}
+		Integer offset = 0;
+		if(blBlock.getPage()!=null && blBlock.getPage()>0) {
+			offset = (blBlock.getPage()-1) * limit;
+		}
+		// TODO: 根据最新区块高度，offset, limit，推算出查询的block_num范围
+//		List<BlBlock> list = blBlockMapper.getBlockInfoListByLimit(limit, offset);
 		if (list != null && list.size() > 0) {
 			for (BlBlock block : list) {
 				if (null!=block.getReward()) {

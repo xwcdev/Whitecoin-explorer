@@ -16,6 +16,55 @@
 .right {
   float: right;
 }
+
+.tokenTransfers {
+  header {
+    color: white;;
+    height: 40px;
+    background: #132241;
+    line-height: 40px;
+    padding-left: 15px;
+    font-weight: 500;
+  }
+  .con {
+    ul {
+      li {
+        padding: 15px;
+        font-size: 14px;
+        border-bottom: 1px solid #fcfcfc;
+        &:last-of-type {
+          border-bottom: none;
+        }
+        span {
+          display: inline-block;
+          text-align: center;
+        }
+        .border {
+          box-sizing: border-box;
+          width: 846px;
+          min-height: 25px;
+          display: inline-block;
+          text-align: left;
+          padding: 5px;
+          .el-textarea__inner {
+            border: 1px solid #e5e5e5;
+          }
+        }
+        .name {
+          width: 250px;
+          text-align: left;
+          .el-icon-back {
+            transform: rotate(180deg);
+          }
+        }
+        .top {
+          vertical-align: top;
+        }
+      }
+    }
+  }
+}
+
 .operation-details {
   header {
     color: white;;

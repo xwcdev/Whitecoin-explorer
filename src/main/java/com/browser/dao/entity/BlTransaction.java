@@ -1,7 +1,10 @@
 package com.browser.dao.entity;
 
+import com.browser.wallet.beans.ContractTxReceipt;
+
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 public class BlTransaction {
@@ -61,6 +64,11 @@ public class BlTransaction {
     private Integer extension1;
     
     private String memo;
+
+    private Boolean fail = false; // 是否失败交易
+
+    // 这个不直接存入数据库，取数据后的暂存值
+    private ContractTxReceipt receipt;
     
     //状态
     private Integer status;
@@ -428,5 +436,21 @@ public class BlTransaction {
 	public void setParentOpType(Integer parentOpType) {
 		this.parentOpType = parentOpType;
 	}
-	
+
+	public ContractTxReceipt getReceipt() {
+		return receipt;
+	}
+
+	public void setReceipt(ContractTxReceipt receipt) {
+		this.receipt = receipt;
+	}
+
+	public Boolean getFail() {
+		return fail;
+	}
+
+	public void setFail(Boolean fail) {
+		this.fail = fail;
+	}
+
 }

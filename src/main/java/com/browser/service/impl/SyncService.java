@@ -1,28 +1,34 @@
 package com.browser.service.impl;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
-import com.browser.config.CitizenWeightsInit;
+import com.alibaba.fastjson.JSON;
+import com.browser.config.MinerWeightsInit;
+import com.browser.dao.entity.*;
+import com.browser.dao.mapper.*;
+import com.browser.service.*;
 import com.browser.task.plugins.UpdateBalanceSyncPlugin;
+import com.browser.wallet.ContractUtils;
+import com.browser.wallet.OperationUtils;
+import com.browser.wallet.PrecisionUtils;
+import com.browser.wallet.beans.ContractTxReceipt;
+import com.browser.wallet.beans.SimpleContractInfo;
+import com.browser.wallet.beans.TxReceiptContractBalanceChange;
+import com.browser.wallet.beans.TxReceiptEvent;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.browser.config.RealData;
-import com.browser.dao.entity.BlBlock;
-import com.browser.dao.entity.BlContractBalance;
-import com.browser.dao.entity.BlContractInfo;
-import com.browser.dao.entity.BlTransaction;
-import com.browser.dao.mapper.BlBlockMapper;
-import com.browser.dao.mapper.BlContractInfoMapper;
-import com.browser.dao.mapper.BlTransactionMapper;
-import com.browser.service.BlockService;
-import com.browser.service.TransactionService;
 import com.browser.tools.Constant;
 import com.browser.tools.common.DateUtil;
 import com.browser.tools.common.StringUtil;
@@ -55,15 +61,26 @@ public class SyncService {
 
     @Autowired
     private BlContractInfoMapper blContractInfoMapper;
+    @Autowired
+    private TxEventsService txEventsService;
+    @Autowired
+    private TxContractBalanceChangeService txContractBalanceChangeService;
+    @Autowired
+    private BlTokenMapper blTokenMapper;
+    @Autowired
+    private TokenTransactionService tokenTransactionService;
 
     @Autowired
     private RedisService redisService;
 
     @Autowired
-    private CitizenWeightsInit citizenWeightsInit;
+    private MinerWeightsInit minerWeightsInit;
 
     @Autowired
     private UpdateBalanceSyncPlugin updateBalanceSyncPlugin;
+
+    @Value("${wallet.caller}")
+    private String walletRpcCaller;
 
     // @Autowired
     // private BlContractBalanceMapper blContractBalanceMapper;
@@ -87,7 +104,17 @@ public class SyncService {
 //        typeSet.add(Constant.NAME_TRANSFER_OPERATION);
     }
 
+    private ConcurrentHashMap<String, BlToken> activeTokens = null; // contractAddress => token
+
     public void blockSync(Long blockNum) {
+
+        if(activeTokens == null) {
+            List<BlToken> tokens = blTokenMapper.selectAllActive();
+            activeTokens = new ConcurrentHashMap<>();
+            for(BlToken token : tokens) {
+                activeTokens.put(token.getContractAddress(), token);
+            }
+        }
 
         // 获取队列数据，请求
         BlBlock bc =new BlBlock();
@@ -182,15 +209,175 @@ public class SyncService {
                                 }
 
                                 // 合约交易处理
-                                if (Constant.CONTRACT_REGISTER_OPERATION == opType
-                                        || Constant.CONTRACT_UPGRADE_OPERATION == opType
-                                        || Constant.CONTRACT_INVOKE_OPERATION == opType
-                                        || Constant.CONTRACT_TRANSFER_OPERATION == opType) {
+                                if (OperationUtils.isContractOp(opType)) {
                                     BlTransaction trx = contractTransaction(json, txId, opType);
                                     trx.setBlockId(bc.getBlockId());
                                     trx.setBlockNum(bc.getBlockNum());
                                     trx.setTrxTime(bc.getBlockTime());
                                     transactionList.add(trx);
+
+                                    ContractTxReceipt txReceipt = trx.getReceipt();
+                                    if(txReceipt != null) {
+                                        if(txReceipt.getExec_succeed()!=null && txReceipt.getExec_succeed()) {
+                                            // 合约执行成功
+                                            trx.setFail(false);
+                                            // 添加合约events和balance changes到数据库
+                                            List<TxReceiptEvent> txReceiptEvents = txReceipt.getEvents();
+                                            if(txReceiptEvents!=null) {
+                                                for (int k=0;k<txReceiptEvents.size();k++) {
+                                                    TxReceiptEvent receiptEvent = txReceiptEvents.get(k);
+                                                    if(txEventsService.selectByTrxIdAndEventSeq(txId, k) !=null) {
+                                                        continue;
+                                                    }
+                                                    BlTxEvents blTxEvents = new BlTxEvents();
+                                                    blTxEvents.setTrxId(txId);
+                                                    blTxEvents.setEventSeq(k);
+                                                    blTxEvents.setBlockNum(blockNum);
+                                                    blTxEvents.setCallerAddr(receiptEvent.getCaller_addr());
+                                                    blTxEvents.setContractAddress(receiptEvent.getContract_address());
+                                                    blTxEvents.setEventName(receiptEvent.getEvent_name());
+                                                    blTxEvents.setEventArg(receiptEvent.getEvent_arg());
+                                                    blTxEvents.setOpNum(receiptEvent.getOp_num());
+                                                    txEventsService.insert(blTxEvents);
+                                                }
+                                            }
+                                            List<TxReceiptContractBalanceChange> contract_withdraw =
+                                                    TxReceiptContractBalanceChange.fromTxReceiptChangeJson(txReceipt.getContract_withdraw());
+                                            List<TxReceiptContractBalanceChange> contract_balances =
+                                                    TxReceiptContractBalanceChange.fromTxReceiptChangeJson(txReceipt.getContract_balances());
+                                            List<TxReceiptContractBalanceChange> deposit_to_address =
+                                                    TxReceiptContractBalanceChange.fromTxReceiptChangeJson(txReceipt.getDeposit_to_address());
+                                            List<TxReceiptContractBalanceChange> deposit_contract =
+                                                    TxReceiptContractBalanceChange.fromTxReceiptChangeJson(txReceipt.getDeposit_contract());
+                                            Map<String, List<TxReceiptContractBalanceChange>> allNativeChangesInReceipt = new HashMap<>();
+                                            allNativeChangesInReceipt.put("contract_withdraw", contract_withdraw);
+                                            allNativeChangesInReceipt.put("contract_balances", contract_balances);
+                                            allNativeChangesInReceipt.put("deposit_to_address", deposit_to_address);
+                                            allNativeChangesInReceipt.put("deposit_contract", deposit_contract);
+                                            for(String changeType : allNativeChangesInReceipt.keySet()) {
+                                                List<TxReceiptContractBalanceChange> changes = allNativeChangesInReceipt.get(changeType);
+                                                if(changes == null) {
+                                                    continue;
+                                                }
+                                                for(int k=0;k<changes.size();k++) {
+                                                    TxReceiptContractBalanceChange changeItem = changes.get(k);
+                                                    if(txContractBalanceChangeService.selectByTrxIdAndChangeTypeAndChangeSeq(txId, changeType, k) != null) {
+                                                        continue;
+                                                    }
+                                                    BlTxContractBalanceChange blTxContractBalanceChange = new BlTxContractBalanceChange();
+                                                    blTxContractBalanceChange.setChangeSeq(k);
+                                                    blTxContractBalanceChange.setChangeType(changeType);
+                                                    blTxContractBalanceChange.setTrxId(txId);
+                                                    blTxContractBalanceChange.setAddress(changeItem.getAddress());
+                                                    blTxContractBalanceChange.setAmount(changeItem.getAmount());
+                                                    blTxContractBalanceChange.setAssetId(changeItem.getAssetId());
+                                                    blTxContractBalanceChange.setBlockNum(blockNum);
+                                                    txContractBalanceChangeService.insert(blTxContractBalanceChange);
+                                                }
+                                            }
+
+
+                                            // 发现token合约的Transfer事件，增加流水到token_transaction(新type)
+                                            if(txReceiptEvents!=null) {
+                                                for (int k = 0; k < txReceiptEvents.size(); k++) {
+                                                    TxReceiptEvent receiptEvent = txReceiptEvents.get(k);
+                                                    if (activeTokens == null) {
+                                                        continue;
+                                                    }
+                                                    String contractId = trx.getContractId();
+                                                    if(receiptEvent.getEvent_name().equals("Transfer")
+                                                            && blTokenMapper.selectByContractAddress(contractId) == null) {
+                                                        // 如果发现非现有token合约的Transfer事件，则可能是新token合约
+                                                        SimpleContractInfo contractInfo = requestWalletService.getSimpleContractInfo(contractId);
+                                                        if(contractInfo == null) {
+                                                            logger.error("can't find contract {}", contractId);
+                                                            continue;
+                                                        }
+                                                        // 即使没初始化好的token合约也立刻添加，另外加上定时任务更新
+                                                        Integer precision = null;
+                                                        BigDecimal totalSupply = null;
+                                                        String tokenSymbol = null;
+                                                        try {
+                                                            precision = requestWalletService.getTokenPrecisionDecimals(walletRpcCaller, contractId);
+                                                            BigInteger totalSupplyFull = requestWalletService.getTokenTotalSupply(walletRpcCaller, contractId);
+                                                            totalSupply = new BigDecimal(totalSupplyFull).setScale(precision, RoundingMode.FLOOR)
+                                                                    .divide(PrecisionUtils.decimalsToPrecision(precision), RoundingMode.FLOOR);
+                                                        } catch (Exception e) {}
+                                                        try {
+                                                            tokenSymbol = requestWalletService.getTokenSymbol(walletRpcCaller, contractId);
+                                                        } catch (Exception e) {}
+                                                        BlToken newToken = new BlToken();
+                                                        newToken.setContractAddress(contractInfo.getId());
+                                                        newToken.setCreateTrxId(contractInfo.getRegistered_trx());
+                                                        newToken.setCreatorAddress(contractInfo.getOwner_address());
+                                                        newToken.setPrecision(precision);
+                                                        newToken.setTokenSupply(totalSupply);
+                                                        newToken.setTokenSymbol(tokenSymbol);
+                                                        blTokenMapper.insert(newToken);
+                                                        // 如果newToken初始化成功，则加入activeTokens
+                                                        if(newToken.getTokenSymbol()!=null && newToken.getTokenSupply()!=null && newToken.getPrecision()!=null) {
+                                                            activeTokens.put(newToken.getContractAddress(), newToken);
+                                                        }
+                                                    }
+
+                                                    BlToken token = activeTokens.get(receiptEvent.getContract_address());
+                                                    if (token == null) {
+                                                        continue;
+                                                    }
+                                                    if (tokenTransactionService.selectByTrxIdAndEventSeq(txId, k) != null) {
+                                                        continue;
+                                                    }
+                                                    if (!"Transfer".equals(receiptEvent.getEvent_name())) {
+                                                        continue;
+                                                    }
+                                                    // token Transfer事件
+                                                    try {
+                                                        JSONObject transferArg = JSON.parseObject(receiptEvent.getEvent_arg());
+                                                        String transferFrom = transferArg.getString("from");
+                                                        String transferTo = transferArg.getString("to");
+                                                        String transferMemo = transferArg.getString("memo");
+                                                        String transferAmountStr = transferArg.getString("amount");
+                                                        if (transferFrom != null && transferFrom.isEmpty()) {
+                                                            transferFrom = null;
+                                                        }
+                                                        if (transferTo != null && transferTo.isEmpty()) {
+                                                            transferTo = null;
+                                                        }
+                                                        if (transferMemo == null) {
+                                                            transferMemo = "";
+                                                        }
+                                                        if (transferAmountStr == null) {
+                                                            continue;
+                                                        }
+                                                        long transferAmount = Long.parseLong(transferAmountStr);
+                                                        if (transferAmount < 0) {
+                                                            continue;
+                                                        }
+                                                        BlTokenTransaction blTokenTransaction = new BlTokenTransaction();
+                                                        blTokenTransaction.setTrxId(txId);
+                                                        blTokenTransaction.setEventSeq(k);
+                                                        blTokenTransaction.setAmount(transferAmount);
+                                                        blTokenTransaction.setFee(trx.getFee() != null ? trx.getFee().longValue() : 0L);
+                                                        blTokenTransaction.setBlockId(trx.getBlockId());
+                                                        blTokenTransaction.setBlockNum(blockNum.intValue());
+                                                        blTokenTransaction.setContractId(token.getContractAddress());
+                                                        blTokenTransaction.setSymbol(token.getTokenSymbol());
+                                                        blTokenTransaction.setTrxTime(trx.getTrxTime());
+                                                        blTokenTransaction.setFromAccount(transferFrom);
+                                                        blTokenTransaction.setToAccount(transferTo);
+                                                        blTokenTransaction.setMemo(transferMemo);
+                                                        tokenTransactionService.insert(blTokenTransaction);
+                                                    } catch (Exception e) {
+                                                        logger.error("parse transfer log of txid {} error", txId, e);
+                                                    }
+                                                }
+                                            }
+                                            // TODO: 发现swap合约的相关事件，增加流水到swap_transaction(新type)
+                                        } else {
+                                            // 合约执行失败，标记交易状态
+                                            trx.setFail(true);
+                                        }
+                                    }
                                 }
 
                                 // 账户改名交易处理
@@ -350,6 +537,14 @@ public class SyncService {
             }
 
         }
+        // get contract receipt
+        List<ContractTxReceipt> txReceipts = requestWalletService.getContractTxReceipt(trxId);
+        if(txReceipts!=null && !txReceipts.isEmpty()) {
+            // 目前只处理交易的第一个receipt。正常构造的合约交易只有一个op
+            ContractTxReceipt txReceipt = txReceipts.get(0);
+            contractTrx.setReceipt(txReceipt);
+        }
+
         return contractTrx;
     }
 
@@ -560,8 +755,8 @@ public class SyncService {
                 blTransaction.setToAccount(jsonObject.getString("addr"));
                 blTransaction.setExtension(jsonObject.getString("name"));
 
-                //更新内存中citizen权重
-                updateCitizenWeight(jsonObject.getString("addr"));
+                //更新内存中miner权重
+                updateMinerWeight(jsonObject.getString("addr"));
             }
 
             blTransaction.setAssetId(json.getString("lock_asset_id"));
@@ -579,8 +774,8 @@ public class SyncService {
                 blTransaction.setFromAccount(jsonObject.getString("addr"));
                 blTransaction.setExtension(jsonObject.getString("name"));
 
-                //更新内存中citizen权重
-                updateCitizenWeight(jsonObject.getString("addr"));
+                //更新内存中miner权重
+                updateMinerWeight(jsonObject.getString("addr"));
             }
 
             blTransaction.setToAccount(json.getString("foreclose_addr"));
@@ -647,18 +842,18 @@ public class SyncService {
         return str;
     }
 
-    private void updateCitizenWeight(String adddress){
+    private void updateMinerWeight(String adddress){
         String accountName = redisService.getAccountName(adddress);
         if(accountName==null){
             return;
         }
-        String citizenInfo = requestWalletService.getMiner(accountName);
-        if(StringUtils.isEmpty(citizenInfo)){
+        String minerInfo = requestWalletService.getMiner(accountName);
+        if(StringUtils.isEmpty(minerInfo)){
            return;
         }
-        JSONObject citizenObject =JSONObject.parseObject(citizenInfo);
-        Map<String,BigDecimal> weightMap = citizenWeightsInit.getWeightMap();
-        weightMap.put(adddress,citizenObject.getBigDecimal("pledge_weight"));
+        JSONObject minerObject =JSONObject.parseObject(minerInfo);
+        Map<String,BigDecimal> weightMap = minerWeightsInit.getWeightMap();
+        weightMap.put(adddress,minerObject.getBigDecimal("pledge_weight"));
     }
 
     private JSONObject getMinerAddr(String minerId) {
