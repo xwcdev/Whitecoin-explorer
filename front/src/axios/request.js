@@ -10,7 +10,7 @@ if(process.env.NODE_ENV==='development') {
 } else {
   //真实环境
   // axios.defaults.baseURL = 'http://explorer.whitecoin.cash/whitecoin-browser';
-  axios.defaults.baseURL = 'http://127.0.0.1:9007';
+  axios.defaults.baseURL = 'http://explorer.whitecoin.info:5000';
 }
 
 // http request 请求拦截器，有token值则配置上token值
