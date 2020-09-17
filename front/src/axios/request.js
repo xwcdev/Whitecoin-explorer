@@ -5,12 +5,12 @@ const store = window.sessionStorage;
 if(process.env.NODE_ENV==='development') {
   //开发环境
   // axios.defaults.baseURL = 'http://192.168.1.196:9007';
-  axios.defaults.baseURL = 'http://192.168.1.121:9007/'; //'http://explorer.hx.cash/hx-browser';
-  axios.defaults.baseURL = 'http://localhost:9007/'; // TODO
+  axios.defaults.baseURL = 'http://192.168.1.121:9007/api'; //'http://explorer.hx.cash/hx-browser';
+  axios.defaults.baseURL = 'http://localhost:9007/api'; // TODO
 } else {
   //真实环境
   // axios.defaults.baseURL = 'http://explorer.whitecoin.cash/whitecoin-browser';
-  axios.defaults.baseURL = 'http://explorer.whitecoin.info:5000';
+  axios.defaults.baseURL = 'http://explorer.whitecoin.info:5000/api';
 }
 
 // http request 请求拦截器，有token值则配置上token值
