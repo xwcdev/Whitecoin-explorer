@@ -51,6 +51,12 @@
           <token-transfer-detail :detail="tokenTransfer"></token-transfer-detail>
           </div>
         </div>
+        <div class="contractBalanceChangeDetails"
+          v-if="detailsData && detailsData.txContractBalanceChanges && detailsData.txContractBalanceChanges.length>0">
+          <div v-for="(detail, idx) in detailsData.txContractBalanceChanges" :key="idx" class="token-transfer-detail">
+            <contract-balance-change-detail :detail="detail"></contract-balance-change-detail>
+          </div>
+        </div>
         <!-- Operation Details -->
         <div class="details">
           <h3>{{$t('transferDetails.details.title')}}</h3>
@@ -101,6 +107,7 @@ import OperationOther from "../components/operationDetails/other/operationOther"
 import PayBack from "../components/operationDetails/wage/PayBack";
 import Acceptance from "../components/operationDetails/acceptance/Acceptance";
 import TokenTransferDetail from '../components/token/TokenTransferDetail';
+import ContractBalanceChangeDetail from '../components/contractBalanceChange/ContractBalanceChangeDetail';
 import typeObj from "../utils/type";
 
 export default {
@@ -116,6 +123,7 @@ export default {
     ContractRegister,
     ContractInvoke,
     TokenTransferDetail,
+    ContractBalanceChangeDetail,
     Tips
   },
   name: "transfer-details",

@@ -66,3 +66,42 @@ CREATE TABLE `bl_token_transaction` (
   KEY `token_tx_idx_contract_id` (`contract_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='token转账流水';
 
+CREATE TABLE `bl_swap_contract` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `contract_address` VARCHAR(100) NOT NULL COMMENT 'swap合约地址',
+  `token1` VARCHAR(100) NOT NULL COMMENT 'swap token1代币的代币符号或者合约地址',
+  `token2` VARCHAR(100) NOT NULL COMMENT 'swap token2代币的代币符号或者合约地址',
+  `verified` INT(1) NOT NULL COMMENT '是否被认证过',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `contract_address_UNIQUE` (`contract_address` ASC))
+COMMENT = 'swap合约';
+
+CREATE TABLE `bl_swap_transaction` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `trx_id` varchar(100) NOT NULL,
+  `block_id` varchar(100) NOT NULL,
+  `block_num` int(11) NOT NULL,
+  `caller_address` varchar(100) NOT NULL COMMENT '合约调用人',
+  `op_num` int(11) NOT NULL COMMENT 'operation在tx中的索引',
+  `event_name` varchar(100) NOT NULL COMMENT 'event名称',
+  `event_seq` int(11) NOT NULL COMMENT 'event在operation中的序号',
+  `event_arg` text NOT NULL DEFAULT '' COMMENT 'event参数',
+  `contract_address` varchar(100) NOT NULL COMMENT 'event所属合约地址',
+  `trx_time` datetime NOT NULL,
+  `change` decimal(36,18) DEFAULT NULL COMMENT '事件中单个资产金额变化的变化数量',
+  `reason` varchar(255) DEFAULT NULL COMMENT '事件中的原因',
+  `symbol` varchar(100) DEFAULT NULL COMMENT '事件涉及的单个资产符号或者合约地址',
+  `change_address` varchar(100) DEFAULT NULL COMMENT '事件中涉及变化的单个地址',
+  `liquidity_token1_change_amount` decimal(36,18) DEFAULT NULL COMMENT '流动性变化事件中的token1的数量变化',
+  `liquidity_token2_change_amount` decimal(36,18) DEFAULT NULL COMMENT '流动性变化事件中的token2的数量变化',
+  `exchange_fee` decimal(36,18) DEFAULT NULL COMMENT '兑换的手续费',
+  `buy_asset` varchar(100) DEFAULT NULL COMMENT '购买的资产符号或者合约地址',
+  `sell_asset` varchar(100) DEFAULT NULL COMMENT '卖出的资产符号或者合约地址',
+  `buy_amount` decimal(36,18) DEFAULT NULL COMMENT '购买的数量',
+  `sell_amount` decimal(36,18) DEFAULT NULL COMMENT '卖出的数量',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `swap_tx_unique_txid_op_num_event_seq` (`trx_id`,`op_num`,`event_seq`),
+  KEY `swap_tx_index_contract_address` (`contract_address`,`event_name`),
+  KEY `swap_tx_index_caller_address` (`caller_address`),
+  KEY `swap_tx_index_event_name` (`event_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='swap交易流水';

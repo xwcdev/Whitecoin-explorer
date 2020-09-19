@@ -295,7 +295,9 @@ public class TransactionServiceImpl implements TransactionService {
     private void handleDiffOpTypeData(BlTransaction trx) {
         if (Constant.PARENT_CONTRACT == trx.getParentOpType()) {
             BlContractInfo contractInfo = blContractInfoMapper.selectByPrimaryKey(trx.getContractId());
-            trx.setAuthorAddr(contractInfo.getOwnerAddress());
+            if(contractInfo != null) {
+                trx.setAuthorAddr(contractInfo.getOwnerAddress());
+            }
         }
         if (Constant.GURANTEE_CREATE_OPERATION == trx.getOpType()) {
             JSONObject json = JSONObject.parseObject(trx.getExtension());

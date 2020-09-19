@@ -75,6 +75,12 @@ const en = {
       title: 'Token Transfers',
       transfer: 'Transfer',
     },
+    contractBalanceChangeDetail: {
+      title: 'Contract Balance Changes',
+      contract_withdraw: 'Withdraw from contract',
+      deposit_contract: 'Deposit to contract',
+      deposit_to_address: 'Address Received from contract',
+    },
     details: {
       title: 'Details',
       transfer: 'Transfer',

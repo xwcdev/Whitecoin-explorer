@@ -2,6 +2,8 @@ package com.browser.controller;
 
 import com.browser.dao.entity.*;
 import com.browser.service.*;
+import com.browser.tools.Constant;
+import com.browser.wallet.PrecisionUtils;
 import com.browser.wallet.beans.TxReceiptContractBalanceChange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +18,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.browser.protocol.EUDataGridResult;
 import com.browser.tools.controller.BaseController;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class TransactionController extends BaseController {
@@ -31,6 +36,8 @@ public class TransactionController extends BaseController {
 	private TxEventsService txEventsService;
 	@Autowired
 	private TokenService tokenService;
+	@Autowired
+	private AssetService assetService;
 	
 	private static Logger logger = LoggerFactory.getLogger(TransactionController.class);
 
@@ -102,6 +109,28 @@ public class TransactionController extends BaseController {
 				List<BlTxEvents> txEvents = txEventsService.selectAllByTrxId(transaction.getTrxId());
 				data.setEvents(txEvents);
 				List<BlTxContractBalanceChange> txContractBalanceChanges = txContractBalanceChangeService.selectAllByTrxId(transaction.getTrxId());
+				txContractBalanceChanges = txContractBalanceChanges.stream().filter(
+						x->!"contract_balances".equals(x.getChangeType())
+				).collect(Collectors.toList()); // 排除contract_balances的changeType
+				for(BlTxContractBalanceChange change : txContractBalanceChanges) {
+					BlAsset changeAsset = assetService.selectByAssetId(change.getAssetId());
+					if(changeAsset == null) {
+						if(Constant.MAIN_ASSET_ID.equals(change.getAssetId())) {
+							changeAsset = new BlAsset();
+							changeAsset.setAssetId(Constant.MAIN_ASSET_ID);
+							changeAsset.setSymbol(Constant.SYMBOL);
+							changeAsset.setPrecision(Constant.PRECISION);
+						} else {
+							continue;
+						}
+					}
+					change.setAssetSymbol(changeAsset.getSymbol());
+					if(change.getAmount()!=null) {
+						int assetDecimals = changeAsset.getPrecision().toString().length()-1;
+						change.setAmountStr(new BigDecimal(change.getAmount()).setScale(assetDecimals, RoundingMode.FLOOR)
+								.divide(PrecisionUtils.decimalsToPrecision(assetDecimals), RoundingMode.FLOOR).toString());
+					}
+				}
 				data.setTxContractBalanceChanges(txContractBalanceChanges);
 				// 找到这笔交易对应的token流水
 				List<BlTokenTransaction> tokenTransactions = tokenTransactionService.selectAllByTrxId(transaction.getTrxId());
