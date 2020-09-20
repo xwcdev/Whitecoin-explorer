@@ -1,13 +1,11 @@
 package com.browser.controller;
 
+import com.browser.task.SyncTaskSingle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.browser.dao.entity.BlBlock;
 import com.browser.dao.entity.BlTransaction;
@@ -27,6 +25,21 @@ public class BlockController extends BaseController {
 	private TransactionService transactionService;
 	
 	private static Logger logger = LoggerFactory.getLogger(BlockController.class);
+
+	/**
+	 * 单独从某个高度开始重扫一段区块（并不会彻底从这里重扫，只是重扫这段区块一次（重扫的区块数量不确定）
+	 * @param blockNum
+	 * @return
+	 */
+	@ResponseBody
+	@GetMapping("/set_scan_from_block/{blockNum}")
+	public String setScanFromBlock(@PathVariable("blockNum") Long blockNum) {
+		if(blockNum == null || blockNum <= 0) {
+			return "error blockNum " + blockNum;
+		}
+		SyncTaskSingle.tmpScanFromBlockNum.set(blockNum);
+		return "ok";
+	}
 
 	@ResponseBody
 	@RequestMapping(value = "queryBlockList", method = { RequestMethod.POST })

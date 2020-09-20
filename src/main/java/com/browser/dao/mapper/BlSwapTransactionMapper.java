@@ -9,4 +9,6 @@ public interface BlSwapTransactionMapper {
         BlSwapTransaction selectByPrimaryKey(@Param("id") Long id);
         List<BlSwapTransaction> selectAllByCond(BlSwapTransaction cond);
         int insert(BlSwapTransaction record);
+
+        List<BlSwapTransaction> selectListByUserAddress(BlSwapTransaction cond);
 }

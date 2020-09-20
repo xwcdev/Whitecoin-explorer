@@ -8,4 +8,5 @@ import java.util.List;
 public interface TokenService {
     List<BlToken> selectAllNotActive();
     EUDataGridResult getActiveTokenList(BlToken token);
+    BlToken selectByContractAddress(String contractAddress);
 }

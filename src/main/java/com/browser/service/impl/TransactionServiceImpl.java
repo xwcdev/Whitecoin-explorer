@@ -174,8 +174,8 @@ public class TransactionServiceImpl implements TransactionService {
                 transOpTypeRes.setTxHash(trans.getTrxId());
                 transOpTypeRes.setTxType(trans.getOpType());
                 transOpTypeRes.setTxStatus(Constant.TRX_STATUS);
-                if (Constant.TRX_TYPE_WITHDRAW_REQ == transaction.getOpType()
-                        || Constant.GURANTEE_CREATE_OPERATION == transaction.getOpType()) {
+                if (Constant.TRX_TYPE_WITHDRAW_REQ == trans.getOpType()
+                        || Constant.GURANTEE_CREATE_OPERATION == trans.getOpType()) {
                     transOpTypeRes.setTxStatus(trans.getExtension1());
                 }
                 transOpTypeRes.setTimeStamp(trans.getTrxTime());
@@ -191,7 +191,7 @@ public class TransactionServiceImpl implements TransactionService {
                     }
                 }
 
-                JSONObject result = transTypeResolveService.transTypeResolve(transaction.getOpType(), json, trans);
+                JSONObject result = transTypeResolveService.transTypeResolve(trans.getOpType(), json, trans);
                 if (result != null) {
                     if (Constant.TRX_TYPE_WITHDRAW_REQ == trans.getOpType()) {
                         JSONObject withdrawResult = handleWithdrawData(trans);

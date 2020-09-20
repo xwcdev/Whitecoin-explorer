@@ -38,4 +38,9 @@ public class TokenServiceImpl implements TokenService {
         result.setPages(pageInfo.getPages());
         return result;
     }
+
+    @Override
+    public BlToken selectByContractAddress(String contractAddress) {
+        return blTokenMapper.selectByContractAddress(contractAddress);
+    }
 }

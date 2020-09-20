@@ -35,6 +35,8 @@ public class TransactionController extends BaseController {
 	@Autowired
 	private TxEventsService txEventsService;
 	@Autowired
+	private SwapTransactionService swapTransactionService;
+	@Autowired
 	private TokenService tokenService;
 	@Autowired
 	private AssetService assetService;
@@ -103,6 +105,7 @@ public class TransactionController extends BaseController {
 			return resultMsg;
 		}
 		try {
+			transaction.setOpType(null); // 改成不需要前端传正确的opType
 			TransOpTypeRes data = transactionService.getOperationDetail(transaction);
 			if(data != null) {
 				// 查询events, contractBalanceChanges
@@ -135,6 +138,9 @@ public class TransactionController extends BaseController {
 				// 找到这笔交易对应的token流水
 				List<BlTokenTransaction> tokenTransactions = tokenTransactionService.selectAllByTrxId(transaction.getTrxId());
 				data.setTokenTransactions(tokenTransactions);
+				// 获取这笔交易对应的swap合约流水
+				List<BlSwapTransaction> swapTransactions = swapTransactionService.selectAllByTrxId(transaction.getTrxId());
+				data.setSwapTransactions(swapTransactions);
 			}
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
@@ -178,6 +184,27 @@ public class TransactionController extends BaseController {
 		}
 		try {
 			EUDataGridResult data = tokenTransactionService.selectListByUserAddress(transaction);
+			resultMsg.setRetCode(ResultMsg.HTTP_OK);
+			resultMsg.setData(data);
+		} catch (Exception e) {
+			logger.error("系统错误", e);
+			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+			resultMsg.setRetMsg(e.getMessage());
+		}
+		return resultMsg;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "querySwapTrxByAddr", method = { RequestMethod.POST })
+	public ResultMsg querySwapTrxByAddr(@RequestBody BlSwapTransaction transaction) {
+		ResultMsg resultMsg = new ResultMsg();
+		if(null==transaction.getAddress()) {
+			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
+			resultMsg.setRetMsg("参数不能为空");
+			return resultMsg;
+		}
+		try {
+			EUDataGridResult data = swapTransactionService.selectListByUserAddress(transaction);
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {

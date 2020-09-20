@@ -51,12 +51,6 @@
           <token-transfer-detail :detail="tokenTransfer"></token-transfer-detail>
           </div>
         </div>
-        <div class="contractBalanceChangeDetails"
-          v-if="detailsData && detailsData.txContractBalanceChanges && detailsData.txContractBalanceChanges.length>0">
-          <div v-for="(detail, idx) in detailsData.txContractBalanceChanges" :key="idx" class="token-transfer-detail">
-            <contract-balance-change-detail :detail="detail"></contract-balance-change-detail>
-          </div>
-        </div>
         <!-- Operation Details -->
         <div class="details">
           <h3>{{$t('transferDetails.details.title')}}</h3>
@@ -83,6 +77,22 @@
           ></acceptance>
           <operation-other v-else :detail="detailsData.operationData" :type="detailsData.txType"></operation-other>
         </div>
+        
+        <div class="swapEventsDetails"
+          v-if="detailsData && detailsData.swapTransactions && detailsData.swapTransactions.length>0">
+          <div v-for="(detail, idx) in detailsData.swapTransactions" :key="idx" class="swap-event-detail">
+            <swap-event-detail :detail="detail"></swap-event-detail>
+          </div>
+        </div>
+
+        
+        <div class="contractBalanceChangeDetails"
+          v-if="detailsData && detailsData.txContractBalanceChanges && detailsData.txContractBalanceChanges.length>0">
+          <div v-for="(detail, idx) in detailsData.txContractBalanceChanges" :key="idx" class="token-transfer-detail">
+            <contract-balance-change-detail :detail="detail"></contract-balance-change-detail>
+          </div>
+        </div>
+
       </template>
       <template v-if="tips[1] && tips[1].show">
         <div class="events">
@@ -108,6 +118,7 @@ import PayBack from "../components/operationDetails/wage/PayBack";
 import Acceptance from "../components/operationDetails/acceptance/Acceptance";
 import TokenTransferDetail from '../components/token/TokenTransferDetail';
 import ContractBalanceChangeDetail from '../components/contractBalanceChange/ContractBalanceChangeDetail';
+import SwapEventDetail from '../components/swap/SwapEventDetail';
 import typeObj from "../utils/type";
 
 export default {
@@ -124,6 +135,7 @@ export default {
     ContractInvoke,
     TokenTransferDetail,
     ContractBalanceChangeDetail,
+    SwapEventDetail,
     Tips
   },
   name: "transfer-details",

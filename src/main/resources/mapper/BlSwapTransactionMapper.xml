@@ -19,6 +19,8 @@
         <result column="change_address" property="changeAddress" jdbcType="VARCHAR"/>
         <result column="liquidity_token1_change_amount" property="liquidityToken1ChangeAmount" jdbcType="DECIMAL"/>
         <result column="liquidity_token2_change_amount" property="liquidityToken2ChangeAmount" jdbcType="DECIMAL"/>
+        <result column="liquidity_token1" property="liquidityToken1" jdbcType="VARCHAR"/>
+        <result column="liquidity_token2" property="liquidityToken2" jdbcType="VARCHAR"/>
         <result column="exchange_fee" property="exchangeFee" jdbcType="DECIMAL"/>
         <result column="buy_asset" property="buyAsset" jdbcType="VARCHAR"/>
         <result column="sell_asset" property="sellAsset" jdbcType="VARCHAR"/>
@@ -28,7 +30,7 @@
     <sql id="Base_Column_List">
         id, trx_id, block_id, block_num, caller_address, op_num, event_name, event_seq, event_arg,
          contract_address, trx_time, `change`, `reason`, `symbol`, change_address,
-          liquidity_token1_change_amount, liquidity_token2_change_amount, exchange_fee, buy_asset, sell_asset,
+          liquidity_token1_change_amount, liquidity_token2_change_amount, liquidity_token1, liquidity_token2, exchange_fee, buy_asset, sell_asset,
           buy_amount, sell_amount
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
@@ -37,6 +39,14 @@
         from bl_swap_transaction
         where id = #{id,jdbcType=INTEGER}
     </select>
+
+    <select id="selectListByUserAddress" resultMap="BaseResultMap" parameterType="com.browser.dao.entity.BlSwapTransaction">
+        select
+        <include refid="Base_Column_List"/>
+        from bl_swap_transaction
+        where caller_address = #{address,jdbcType=VARCHAR}
+    </select>
+
     <select id="selectAllByCond" resultMap="BaseResultMap" parameterType="com.browser.dao.entity.BlSwapTransaction">
         select
         <include refid="Base_Column_List"/>
@@ -91,6 +101,12 @@
             <if test="liquidityToken2ChangeAmount!=null">
                 and `liquidity_token2_change_amount` = #{liquidityToken2ChangeAmount,jdbcType=DECIMAL}
             </if>
+            <if test="liquidityToken1!=null">
+                and `liquidity_token1` = #{liquidityToken1,jdbcType=VARCHAR}
+            </if>
+            <if test="liquidityToken2!=null">
+                and `liquidity_token2` = #{liquidityToken2,jdbcType=VARCHAR}
+            </if>
             <if test="exchangeFee!=null">
                 and `exchange_fee` = #{exchangeFee,jdbcType=DECIMAL}
             </if>
@@ -113,13 +129,14 @@
     <insert id="insert" parameterType="com.browser.dao.entity.BlSwapTransaction">
     insert into bl_swap_transaction (trx_id, block_id, block_num, caller_address, op_num, event_name, event_seq, event_arg,
          contract_address, trx_time, `change`, `reason`, `symbol`, change_address,
-          liquidity_token1_change_amount, liquidity_token2_change_amount, exchange_fee, buy_asset, sell_asset,
+          liquidity_token1_change_amount, liquidity_token2_change_amount, liquidity_token1, liquidity_token2, exchange_fee, buy_asset, sell_asset,
           buy_amount, sell_amount)
     values (#{trxId,jdbcType=VARCHAR}, #{blockId,jdbcType=VARCHAR},
      #{blockNum, jdbcType=INTEGER}, #{callerAddress,jdbcType=VARCHAR}, #{opNum,jdbcType=INTEGER}, #{eventName,jdbcType=VARCHAR},
      #{eventSeq,jdbcType=INTEGER}, #{eventArg,jdbcType=VARCHAR}, #{contractAddress,jdbcType=VARCHAR},
       #{trxTime,jdbcType=TIMESTAMP}, #{change,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{symbol,jdbcType=VARCHAR}
       , #{changeAddress,jdbcType=VARCHAR}, #{liquidityToken1ChangeAmount,jdbcType=DECIMAL}
+      , #{liquidityToken1,jdbcType=VARCHAR}, #{liquidityToken2,jdbcType=VARCHAR}
       , #{liquidityToken2ChangeAmount,jdbcType=DECIMAL}, #{exchangeFee,jdbcType=DECIMAL}
       , #{buyAsset,jdbcType=VARCHAR}, #{sellAsset,jdbcType=VARCHAR}, #{buyAmount,jdbcType=DECIMAL}, #{sellAmount,jdbcType=DECIMAL}
      )

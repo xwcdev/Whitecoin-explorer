@@ -26,6 +26,7 @@ public class TransOpTypeRes {
 	private List<BlTxEvents> events;
 	private List<BlTxContractBalanceChange> txContractBalanceChanges;
 	private List<BlTokenTransaction> tokenTransactions;
+	private List<BlSwapTransaction> swapTransactions;
 	private Boolean fail;
 
 	public String getTxHash() {
@@ -98,6 +99,14 @@ public class TransOpTypeRes {
 
 	public void setTokenTransactions(List<BlTokenTransaction> tokenTransactions) {
 		this.tokenTransactions = tokenTransactions;
+	}
+
+	public List<BlSwapTransaction> getSwapTransactions() {
+		return swapTransactions;
+	}
+
+	public void setSwapTransactions(List<BlSwapTransaction> swapTransactions) {
+		this.swapTransactions = swapTransactions;
 	}
 
 	public Boolean getFail() {

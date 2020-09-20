@@ -79,6 +79,10 @@
               :class="{'choice':choiceFlag===2}"
             >{{$t('address.myTokenTransactions.title')}}</span>
             <span
+              @click="choiceFlagChange(3)"
+              :class="{'choice':choiceFlag===3}"
+            >{{$t('address.mySwapTransactions.title')}}</span>
+            <span
               @click="choiceFlagChange(1)"
               :class="{'choice':choiceFlag===1}"
             >{{$t('address.myContracts.title')}}</span>
@@ -255,6 +259,7 @@
             </el-table-column>
           </el-table>
         </div>
+
         <div v-if="choiceFlag===1" class="table-wrap">
           <el-table :data="contaracts" style="width: 100%" key="contaracts">
             <el-table-column
@@ -300,6 +305,50 @@
             </el-table-column>
           </el-table>
         </div>
+
+        <div v-if="choiceFlag===3" class="table-wrap">
+          <el-table :data="swapTransactions" style="width: 100%">
+            <el-table-column
+              align="center"
+              :label="$t('address.mySwapTransactions.txHash')"
+              show-overflow-tooltip
+            >
+              <template slot-scope="scope">
+                <!-- invoke contract type is 79 -->
+                <router-link
+                  :to="'/transfer_details/'+scope.row.trxId+'/'+79" 
+                >{{scope.row.trxId}}</router-link>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" :label="$t('address.myTransactions.block')" width="80">
+              <template slot-scope="scope">
+                <router-link :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="Event Name"
+              width="250"
+              show-overflow-tooltip
+            >
+              <template slot-scope="scope">
+                <span>{{scope.row.eventName}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="Event Arg"
+              width="500"
+              show-overflow-tooltip
+            >
+              <template slot-scope="scope">
+                <span>{{scope.row.eventArg}}</span>
+              </template>
+            </el-table-column>
+            
+          </el-table>
+        </div>
+
         <el-pagination
           class="pagination"
           layout="prev, pager, next, jumper"
@@ -340,6 +389,7 @@ export default {
       },
       transaction: [],
       tokenTransactions: [],
+      swapTransactions: [],
       contaracts: []
     };
   },
@@ -369,6 +419,8 @@ export default {
         this.getTransactionData();
       } else if (flag === 2) {
         this.getTokenTransactionData();
+      } else if(flag===3) {
+        this.getSwapTransactionData();
       } else {
         this.getContractData();
       }
@@ -387,6 +439,8 @@ export default {
         this.getTransactionData();
       } else if (flag === 2) {
         this.getTokenTransactionData();
+      } else if(flag===3) {
+        this.getSwapTransactionData();
       } else {
         this.getContractData();
       }
@@ -436,6 +490,20 @@ export default {
         .then(function(res) {
           let data = res.data;
           that.tokenTransactions = data.data.rows;
+          that.total = data.data.total;
+        });
+    },
+    getSwapTransactionData() {
+      let that = this;
+      this.$axios
+        .post("/querySwapTrxByAddr", {
+          address: this.minerInfo.address,
+          page: this.page,
+          rows: this.size
+        })
+        .then(function(res) {
+          let data = res.data;
+          that.swapTransactions = data.data.rows;
           that.total = data.data.total;
         });
     },

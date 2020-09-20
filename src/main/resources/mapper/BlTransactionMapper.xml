@@ -88,7 +88,9 @@
 		from bl_transaction
 		where
 		trx_id = #{trxId,jdbcType=VARCHAR}
-		and op_type =#{opType,jdbcType=INTEGER}
+		<if test="opType != null">
+			and op_type =#{opType,jdbcType=INTEGER}
+		</if>
 	</select>
 	
 	<!-- 根据区块高度查询区块交易信息 -->
@@ -314,6 +316,7 @@
 		#{calledAbi,jdbcType=VARCHAR}, #{abiParams,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},
 		#{extension,jdbcType=VARCHAR},#{extension1,jdbcType=INTEGER}, #{fail,jdbcType=INTEGER}
 		)
+		ON DUPLICATE KEY UPDATE created_time = CURRENT_TIMESTAMP
 	</insert>
 	<insert id="insertBatch" parameterType="java.util.List">
 		insert into bl_transaction (id, trx_id, block_id,
@@ -347,6 +350,7 @@
 			#{item.fail,jdbcType=INTEGER}
 			)
 		</foreach>
+		ON DUPLICATE KEY UPDATE created_time = CURRENT_TIMESTAMP
 	</insert>
 	<insert id="insertSelective"
 		parameterType="com.browser.dao.entity.BlTransaction">
@@ -517,6 +521,7 @@
 				#{fail,jdbcType=INTEGER},
 			</if>
 		</trim>
+		ON DUPLICATE KEY UPDATE created_time = CURRENT_TIMESTAMP
 	</insert>
 	<update id="updateByPrimaryKeySelective"
 		parameterType="com.browser.dao.entity.BlTransaction">

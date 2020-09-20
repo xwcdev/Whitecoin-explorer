@@ -19,4 +19,9 @@ public class AssetServiceImpl implements AssetService {
     public BlAsset selectByAssetId(String assetId) {
         return blAssetMapper.selectByAsset(assetId);
     }
+
+    @Override
+    public BlAsset selectByAssetSymbol(String assetSymbol) {
+        return blAssetMapper.selectBySymbol(assetSymbol);
+    }
 }

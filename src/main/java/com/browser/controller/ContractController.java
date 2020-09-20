@@ -1,5 +1,7 @@
 package com.browser.controller;
 
+import com.browser.dao.entity.*;
+import com.browser.service.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
-import com.browser.dao.entity.BlContractDetail;
-import com.browser.dao.entity.BlContractInfo;
-import com.browser.dao.entity.BlTransaction;
-import com.browser.dao.entity.ResultMsg;
 import com.browser.protocol.EUDataGridResult;
 import com.browser.service.StatisService;
 import com.browser.service.impl.ContractService;
@@ -29,6 +27,9 @@ public class ContractController {
     
     @Autowired
     private StatisService statisService;
+
+    @Autowired
+	private TokenService tokenService;
     
     private static Logger logger = LoggerFactory.getLogger(ContractController.class);
 
@@ -122,6 +123,10 @@ public class ContractController {
 		}
     	try {
 			BlContractDetail data = statisService.getContractsStatis(contractInfo);
+			if(data != null) {
+				BlToken token = tokenService.selectByContractAddress(contractInfo.getContractId());
+				data.setTokenContract(token);
+			}
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {

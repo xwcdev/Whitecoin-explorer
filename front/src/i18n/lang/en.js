@@ -81,6 +81,15 @@ const en = {
       deposit_contract: 'Deposit to contract',
       deposit_to_address: 'Address Received from contract',
     },
+    swapEvent: {
+      title: 'Swap Event',
+      NativeBalanceChange: 'Native Balance Change',
+      Exchanged: 'Exchange',
+      LiquidityTokenMinted: 'Minted Liquidity Token',
+      LiquidityTokenDestoryed: 'Destroyed Liquidity Token',
+      LiquidityAdded: 'Added Liquidity',
+      LiquidityRemoved: 'Removed Liquidity'
+    },
     details: {
       title: 'Details',
       transfer: 'Transfer',
@@ -301,6 +310,19 @@ const en = {
     },
     myTokenTransactions: {
       title: 'My Token Transactions',
+      txHash: 'TxHash',
+      block: 'Block',
+      types: 'Types',
+      age: 'Age',
+      from: 'From',
+      to: 'To',
+      value: 'Value',
+      fee: 'Fee',
+      symbol: 'Symbol'
+    },
+    mySwapTransactions: {
+      address: 'Address',
+      title: 'My Swap Transactions',
       txHash: 'TxHash',
       block: 'Block',
       types: 'Types',

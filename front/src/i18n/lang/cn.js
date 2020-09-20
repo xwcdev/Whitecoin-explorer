@@ -74,6 +74,25 @@ const cn = {
       height: '区块高度:',
       timeStamp: '时间:'
     },
+    tokenTransfers: {
+      title: 'Token转账',
+      transfer: '转账',
+    },
+    contractBalanceChangeDetail: {
+      title: '合约余额变化',
+      contract_withdraw: '从合约转出',
+      deposit_contract: '充入合约',
+      deposit_to_address: '合约提现到地址',
+    },
+    swapEvent: {
+      title: 'Swap事件',
+      NativeBalanceChange: '基础资产余额变化',
+      Exchanged: '兑换',
+      LiquidityTokenMinted: '流动性代币增加',
+      LiquidityTokenDestoryed: '流动性代币销毁',
+      LiquidityAdded: '添加流动性',
+      LiquidityRemoved: '移除流动性'
+    },
     details: {
       title: '明细',
       transfer: '转账',
@@ -294,6 +313,19 @@ const cn = {
     },
     myTokenTransactions: {
       title: '我的代币交易',
+      txHash: '交易hash',
+      block: '高度',
+      types: '类型',
+      age: '时间',
+      from: '发送方',
+      to: '接收方',
+      value: '金额',
+      fee: '手续费',
+      symbol: '代币'
+    },
+    mySwapTransactions: {
+      address: '地址',
+      title: '我的swap交易',
       txHash: '交易hash',
       block: '高度',
       types: '类型',

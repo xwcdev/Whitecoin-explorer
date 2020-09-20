@@ -24,9 +24,16 @@ public class BlSwapTransaction {
     private String changeAddress;
     private BigDecimal liquidityToken1ChangeAmount;
     private BigDecimal liquidityToken2ChangeAmount;
+    private String liquidityToken1;
+    private String liquidityToken2;
     private BigDecimal exchangeFee;
     private String buyAsset;
     private String sellAsset;
     private BigDecimal buyAmount;
     private BigDecimal sellAmount;
+
+    // 临时的查询用的字段
+    private Integer page;
+    private Integer rows;
+    private String address;
 }
