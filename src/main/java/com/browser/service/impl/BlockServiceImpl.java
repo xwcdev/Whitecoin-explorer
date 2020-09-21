@@ -56,7 +56,7 @@ public class BlockServiceImpl implements BlockService {
 	public EUDataGridResult getBlockInfoList(BlBlock blBlock) {
 		// 分页处理
 		PageHelper.startPage(blBlock.getPage(), blBlock.getRows());
-		// List<BlBlock> list = blBlockMapper.getBlockInfoList(blBlock);
+		// List<BlBlock> list = blBlockMapper.getBlockInfoList(blBlock); // 不能内存分页做
 		Integer limit = blBlock.getRows();
 		if(limit == null || limit<=0) {
 			limit = 10;
@@ -89,7 +89,7 @@ public class BlockServiceImpl implements BlockService {
 		result.setRows(list);
 		// 取记录总条数
 		PageInfo<BlBlock> pageInfo = new PageInfo<>(list);
-		result.setTotal(pageInfo.getTotal());
+		result.setTotal(latestBlockNumInDb);
 		result.setPages(pageInfo.getPages());
 		return result;
 	}
