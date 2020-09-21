@@ -38,7 +38,7 @@
     block_num, miner_name, block_time, trx_count,reward
     from bl_block where
     <![CDATA[
-     block_num &gt;= #{startBlockNum,jdbcType=INTEGER} and block_num &lt;= #{endBlockNum,jdbcType=INTEGER}
+     block_num >= #{startBlockNum,jdbcType=INTEGER} and block_num < #{endBlockNum,jdbcType=INTEGER}
       ]]>
     order by block_num DESC
   </select>
