@@ -33,6 +33,15 @@
     block_num, miner_name, block_time, trx_count,reward
     from bl_block order by block_num DESC
   </select>
+  <select id="getBlockInfoListByRange" resultMap="BaseResultMap">
+    select
+    block_num, miner_name, block_time, trx_count,reward
+    from bl_block where
+    <![CDATA[
+     block_num &gt;= #{startBlockNum,jdbcType=INTEGER} and block_num &lt;= #{endBlockNum,jdbcType=INTEGER}
+      ]]>
+    order by block_num DESC
+  </select>
   
   <!-- 获取最大的快号 -->
   <select id="queryBlockNum" resultType="java.lang.Long">

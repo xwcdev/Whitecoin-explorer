@@ -26,6 +26,8 @@ public interface BlBlockMapper {
     List<BlBlock> selectNewBlockInfo();
     
     List<BlBlock> getBlockInfoList(BlBlock record);
+
+    List<BlBlock> getBlockInfoListByRange(@Param("startBlockNum") Long startBlockNum, @Param("endBlockNum") Long endBlockNum);
     
     BlBlock getBlockByAddr(String address);
     
