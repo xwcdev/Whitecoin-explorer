@@ -173,7 +173,7 @@
                 show-overflow-tooltip
               >
                 <template slot-scope="scope">
-                  <router-link :to="'/transfer_details/'+scope.row.trxId+'/'+scope.row.opType">{{scope.row.trxId}}
+                  <router-link :to="'/transfer_details/'+scope.row.trxId+'/'+(scope.row.opType||79)">{{scope.row.trxId}}
                   </router-link>
                 </template>
               </el-table-column>
