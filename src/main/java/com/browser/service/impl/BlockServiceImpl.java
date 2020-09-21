@@ -55,7 +55,7 @@ public class BlockServiceImpl implements BlockService {
 	@Override
 	public EUDataGridResult getBlockInfoList(BlBlock blBlock) {
 		// 分页处理
-		PageHelper.startPage(blBlock.getPage(), blBlock.getRows());
+		// PageHelper.startPage(blBlock.getPage(), blBlock.getRows());
 		// List<BlBlock> list = blBlockMapper.getBlockInfoList(blBlock); // 不能内存分页做
 		Integer limit = blBlock.getRows();
 		if(limit == null || limit<=0) {
@@ -66,7 +66,10 @@ public class BlockServiceImpl implements BlockService {
 			offset = (blBlock.getPage()-1) * limit;
 		}
 		// 根据最新区块高度，offset, limit，推算出查询的block_num范围
-		long latestBlockNumInDb = blBlockMapper.queryBlockNum();
+		Long latestBlockNumInDb = blBlockMapper.queryBlockNum();
+		if(latestBlockNumInDb == null) {
+			latestBlockNumInDb = 0L;
+		}
 		long endBlockNum = latestBlockNumInDb - offset+1;
 		if(endBlockNum<1L) {
 			endBlockNum = 1L;
