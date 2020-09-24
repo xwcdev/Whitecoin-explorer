@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -22,6 +23,11 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public List<BlToken> selectAllNotActive() {
         return blTokenMapper.selectAllNotActive();
+    }
+
+    @Override
+    public List<BlToken> selectAllActive() {
+        return blTokenMapper.selectAllActive();
     }
 
     @Override
@@ -42,5 +48,13 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public BlToken selectByContractAddress(String contractAddress) {
         return blTokenMapper.selectByContractAddress(contractAddress);
+    }
+
+    @Override
+    public int updateTokenTotalSupplyByContractAddress(String contractAddress, BigDecimal totalSupply) {
+        BlToken cond = new BlToken();
+        cond.setContractAddress(contractAddress);
+        cond.setTokenSupply(totalSupply);
+        return blTokenMapper.updateTokenTotalSupplyByContractAddress(cond);
     }
 }

@@ -10,6 +10,7 @@ public interface BlTokenMapper {
     List<BlToken> selectAllByCond(BlToken cond);
     BlToken selectByContractAddress(@Param("contractAddress") String contractAddress);
     int insert(BlToken record);
+    int updateTokenTotalSupplyByContractAddress(BlToken cond);
     List<BlToken> selectAll();
     List<BlToken> selectAllActive();
     List<BlToken> selectAllNotActive();

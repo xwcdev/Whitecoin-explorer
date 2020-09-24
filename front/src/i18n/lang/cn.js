@@ -5,7 +5,7 @@ const cn = {
     blocks: '区块',
     transactions: '交易记录',
     contracts: '合约',
-    richlist: '富豪榜',
+    richlist: 'Richlist',
     tokens: '代币'
   },
   alert: {
