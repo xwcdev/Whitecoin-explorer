@@ -19,4 +19,14 @@ public class SwapContractServiceImpl implements SwapContractService {
     public List<BlSwapContract> selectAllActive() {
         return blSwapContractMapper.selectAll();
     }
+
+    @Override
+    public BlSwapContract selectByContractAddress(String contractAddress) {
+        return blSwapContractMapper.selectByContractAddress(contractAddress);
+    }
+
+    @Override
+    public int insert(BlSwapContract swapContract) {
+        return blSwapContractMapper.insert(swapContract);
+    }
 }

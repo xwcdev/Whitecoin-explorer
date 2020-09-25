@@ -1,15 +1,15 @@
 package com.browser.controller;
 
 import com.browser.dao.entity.*;
+import com.browser.service.SwapContractService;
 import com.browser.service.TokenService;
+import com.browser.tools.common.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import com.alibaba.fastjson.JSONObject;
 import com.browser.protocol.EUDataGridResult;
@@ -30,8 +30,52 @@ public class ContractController {
 
     @Autowired
 	private TokenService tokenService;
+    @Autowired
+	private SwapContractService swapContractService;
+
+    @Value("${swap_contract.admin.password}")
+	private String swapContractAdminPassword;
     
     private static Logger logger = LoggerFactory.getLogger(ContractController.class);
+
+    @ResponseBody
+	@GetMapping("add_swap_contract/{contractAddress}/{token1}/{token2}/{password}")
+	public String addSwapContract(@PathVariable("contractAddress") String contractAddress,
+								  @PathVariable("token1") String token1, @PathVariable("token2") String token2,
+								  @PathVariable("password") String password) {
+    	if(StringUtil.isEmpty(contractAddress)) {
+    		return "invalid contract address";
+		}
+    	if(StringUtil.isEmpty(token1)) {
+    		return "invalid token1";
+		}
+    	if(StringUtil.isEmpty(token2)) {
+    		return "invalid token2";
+		}
+    	if(token1.equals(token2)) {
+    		return "token1 should not be equal to token2";
+		}
+    	if(StringUtil.isEmpty(password)) {
+    		return "empty password";
+		}
+    	if(!password.equals(swapContractAdminPassword)) {
+    		return "invalid password";
+		}
+		contractAddress = contractAddress.trim();
+    	token1 = token1.trim();
+    	token2 = token2.trim();
+    	BlSwapContract swapContract = swapContractService.selectByContractAddress(contractAddress);
+    	if(swapContract != null) {
+    		return "added before";
+		}
+    	swapContract = new BlSwapContract();
+    	swapContract.setContractAddress(contractAddress);
+    	swapContract.setToken1(token1);
+    	swapContract.setToken2(token2);
+    	swapContract.setVerified(true);
+    	swapContractService.insert(swapContract);
+    	return "added";
+	}
 
     @ResponseBody
 	@RequestMapping(value = "queryContractList", method = { RequestMethod.POST })
