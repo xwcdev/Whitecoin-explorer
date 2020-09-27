@@ -34,6 +34,8 @@
               <span class="name">{{$t('transferDetails.information.timeStamp')}}</span>
               <span>
                 <timeago :since="detailsData.timeStamp" :locale="getBusLocal" :auto-update="0.2"></timeago>
+                &nbsp;
+                <span>{{new Date(detailsData.timeStamp)}}</span>
               </span>
             </li>
           </ul>
