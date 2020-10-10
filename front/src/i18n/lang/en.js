@@ -5,7 +5,8 @@ const en = {
     blocks: 'Blocks',
     transactions: 'Transactions',
     contracts: 'Contracts',
-    richlist: 'Richlist'
+    richlist: 'Richlist',
+    tokens: 'Tokens',
   },
   alert: {
     noSpace:'No space can be available',
@@ -69,6 +70,25 @@ const en = {
       type: 'TxReceipt Type:',
       height: 'Block Height:',
       timeStamp: 'TimeStamp:'
+    },
+    tokenTransfers: {
+      title: 'Token Transfers',
+      transfer: 'Transfer',
+    },
+    contractBalanceChangeDetail: {
+      title: 'Contract Balance Changes',
+      contract_withdraw: 'Withdraw from contract',
+      deposit_contract: 'Deposit to contract',
+      deposit_to_address: 'Address Received from contract',
+    },
+    swapEvent: {
+      title: 'Swap Event',
+      NativeBalanceChange: 'Native Balance Change',
+      Exchanged: 'Exchange',
+      LiquidityTokenMinted: 'Minted Liquidity Token',
+      LiquidityTokenDestoryed: 'Destroyed Liquidity Token',
+      LiquidityAdded: 'Added Liquidity',
+      LiquidityRemoved: 'Removed Liquidity'
     },
     details: {
       title: 'Details',
@@ -166,6 +186,20 @@ const en = {
     lastTime: 'The Last Time',
     total_span_before: 'A Total Of',
     total_span_after: 'verified contract source codes found'
+  },
+  tokens: {
+    title: 'Tokens',
+    contractAddress: 'Contract Address',
+    types: 'Types',
+    authorAddress: 'Author Address',
+    callTimes: 'CallTimes',
+    createTime: 'Create Time',
+    lastTime: 'The Last Time',
+    total_span_before: 'A Total Of',
+    total_span_after: 'verified tokens found',
+    tokenSymbol: 'Symbol',
+    precision: 'Precision',
+    tokenSupply: 'Supply'
   },
   richlist: {
     title: 'Rich List',
@@ -273,6 +307,31 @@ const en = {
       to: 'To',
       value: 'Value',
       fee: 'Fee'
+    },
+    myTokenTransactions: {
+      title: 'My Token Transactions',
+      txHash: 'TxHash',
+      block: 'Block',
+      types: 'Types',
+      age: 'Age',
+      from: 'From',
+      to: 'To',
+      value: 'Value',
+      fee: 'Fee',
+      symbol: 'Symbol'
+    },
+    mySwapTransactions: {
+      address: 'Address',
+      title: 'My Swap Transactions',
+      txHash: 'TxHash',
+      block: 'Block',
+      types: 'Types',
+      age: 'Age',
+      from: 'From',
+      to: 'To',
+      value: 'Value',
+      fee: 'Fee',
+      symbol: 'Symbol'
     },
     myContracts: {
       title: 'My Contracts',

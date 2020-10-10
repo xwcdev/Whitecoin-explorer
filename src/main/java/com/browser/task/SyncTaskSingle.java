@@ -12,6 +12,9 @@ import com.browser.service.SocketService;
 import com.browser.service.impl.RequestWalletService;
 import com.browser.service.impl.SyncService;
 
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
 /**
  * Created by mayakui on 2018/1/21 0021.
  * 每次同步一个块的定时任务
@@ -33,6 +36,9 @@ public class SyncTaskSingle {
     @Value("${safe.block}")
     private Integer safeBlock;
 
+    // 一次性的从这个区块高度扫描一部分区块
+    public static AtomicLong tmpScanFromBlockNum = new AtomicLong(0L);
+
     @Scheduled(cron="0/10 * * * * ? ")
     public void syncData(){
         logger.info("同步数据开始");
@@ -41,6 +47,11 @@ public class SyncTaskSingle {
         if(null == blockNum){
             blockNum = 0L;
         }
+        Long tmpScanFromBlock = tmpScanFromBlockNum.getAndSet(0L);
+        if(tmpScanFromBlock > 0L) {
+            blockNum = tmpScanFromBlock;
+        }
+
         Long total = requestWalletService.getBlockCount();
         total =total-safeBlock;
 

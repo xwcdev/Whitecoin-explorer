@@ -5,7 +5,8 @@ const cn = {
     blocks: '区块',
     transactions: '交易记录',
     contracts: '合约',
-    richlist: '富豪榜'
+    richlist: 'Richlist',
+    tokens: '代币'
   },
   alert: {
     noSpace:'没有足够空间',
@@ -72,6 +73,25 @@ const cn = {
       type: '交易结果类型:',
       height: '区块高度:',
       timeStamp: '时间:'
+    },
+    tokenTransfers: {
+      title: 'Token转账',
+      transfer: '转账',
+    },
+    contractBalanceChangeDetail: {
+      title: '合约余额变化',
+      contract_withdraw: '从合约转出',
+      deposit_contract: '充入合约',
+      deposit_to_address: '合约提现到地址',
+    },
+    swapEvent: {
+      title: 'Swap事件',
+      NativeBalanceChange: '基础资产余额变化',
+      Exchanged: '兑换',
+      LiquidityTokenMinted: '流动性代币增加',
+      LiquidityTokenDestoryed: '流动性代币销毁',
+      LiquidityAdded: '添加流动性',
+      LiquidityRemoved: '移除流动性'
     },
     details: {
       title: '明细',
@@ -169,6 +189,20 @@ const cn = {
     lastTime: '最后使用时间',
     total_span_before: '一共发现',
     total_span_after: '个合约'
+  },
+  tokens: {
+    title: '代币',
+    contractAddress: '合约地址',
+    types: '类型',
+    authorAddress: '创建人',
+    callTimes: '调用次数',
+    createTime: '创建时间',
+    lastTime: '最后使用时间',
+    total_span_before: '一共发现',
+    total_span_after: '个合约',
+    tokenSymbol: '代币符号',
+    precision: '精度',
+    tokenSupply: '供应量'
   },
   richlist: {
     title: '富豪榜',
@@ -276,6 +310,31 @@ const cn = {
       to: '接收方',
       value: '金额',
       fee: '手续费'
+    },
+    myTokenTransactions: {
+      title: '我的代币交易',
+      txHash: '交易hash',
+      block: '高度',
+      types: '类型',
+      age: '时间',
+      from: '发送方',
+      to: '接收方',
+      value: '金额',
+      fee: '手续费',
+      symbol: '代币'
+    },
+    mySwapTransactions: {
+      address: '地址',
+      title: '我的swap交易',
+      txHash: '交易hash',
+      block: '高度',
+      types: '类型',
+      age: '时间',
+      from: '发送方',
+      to: '接收方',
+      value: '金额',
+      fee: '手续费',
+      symbol: '代币'
     },
     myContracts: {
       title: '我的合约',

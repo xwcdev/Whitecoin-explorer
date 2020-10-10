@@ -174,8 +174,8 @@ public class TransactionServiceImpl implements TransactionService {
                 transOpTypeRes.setTxHash(trans.getTrxId());
                 transOpTypeRes.setTxType(trans.getOpType());
                 transOpTypeRes.setTxStatus(Constant.TRX_STATUS);
-                if (Constant.TRX_TYPE_WITHDRAW_REQ == transaction.getOpType()
-                        || Constant.GURANTEE_CREATE_OPERATION == transaction.getOpType()) {
+                if (Constant.TRX_TYPE_WITHDRAW_REQ == trans.getOpType()
+                        || Constant.GURANTEE_CREATE_OPERATION == trans.getOpType()) {
                     transOpTypeRes.setTxStatus(trans.getExtension1());
                 }
                 transOpTypeRes.setTimeStamp(trans.getTrxTime());
@@ -191,7 +191,7 @@ public class TransactionServiceImpl implements TransactionService {
                     }
                 }
 
-                JSONObject result = transTypeResolveService.transTypeResolve(transaction.getOpType(), json, trans);
+                JSONObject result = transTypeResolveService.transTypeResolve(trans.getOpType(), json, trans);
                 if (result != null) {
                     if (Constant.TRX_TYPE_WITHDRAW_REQ == trans.getOpType()) {
                         JSONObject withdrawResult = handleWithdrawData(trans);
@@ -201,6 +201,7 @@ public class TransactionServiceImpl implements TransactionService {
                 } else {
                     data.add(json);
                 }
+                transOpTypeRes.setFail(trans.getFail());
 
             }
             transOpTypeRes.setOperationData(data);
@@ -294,7 +295,9 @@ public class TransactionServiceImpl implements TransactionService {
     private void handleDiffOpTypeData(BlTransaction trx) {
         if (Constant.PARENT_CONTRACT == trx.getParentOpType()) {
             BlContractInfo contractInfo = blContractInfoMapper.selectByPrimaryKey(trx.getContractId());
-            trx.setAuthorAddr(contractInfo.getOwnerAddress());
+            if(contractInfo != null) {
+                trx.setAuthorAddr(contractInfo.getOwnerAddress());
+            }
         }
         if (Constant.GURANTEE_CREATE_OPERATION == trx.getOpType()) {
             JSONObject json = JSONObject.parseObject(trx.getExtension());

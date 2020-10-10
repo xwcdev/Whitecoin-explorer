@@ -36,6 +36,30 @@
                   </template>
                 </span>
             </li>
+            <li v-if="contractInfo && contractInfo.tokenContract">
+                <span>
+                  Token Symbol
+                </span>
+              <span>
+                  {{contractInfo.tokenContract.tokenSymbol}}
+                </span>
+            </li>
+            <li v-if="contractInfo && contractInfo.tokenContract">
+                <span>
+                  Token Precision
+                </span>
+              <span>
+                  {{contractInfo.tokenContract.precision}}
+                </span>
+            </li>
+            <li v-if="contractInfo && contractInfo.tokenContract">
+                <span>
+                  Token Supply
+                </span>
+              <span>
+                  {{contractInfo.tokenContract.tokenSupply}}
+                </span>
+            </li>
           </ul>
         </div>
         <div class="right">
@@ -64,6 +88,8 @@
           <div>
             <span @click="choiceFlagChange(0)"
                   :class="{'choice':choiceFlag===0}">{{$t('contractOverview.tableTitle')}}</span>
+            <span @click="choiceFlagChange(2)"
+                  :class="{'choice':choiceFlag===2}">Token Transfers</span>
             <span @click="choiceFlagChange(1)" :class="{'choice':choiceFlag===1}">{{$t('contractOverview.api')}}</span>
           </div>
           <div class="total">
@@ -135,7 +161,94 @@
             @current-change="pageChange">
           </el-pagination>
         </template>
-        <template v-else>
+        <template v-if="choiceFlag===2">
+          <div class="table-wrap">
+            <el-table
+              :data="tokenTransactions"
+              style="width: 100%"
+            >
+              <el-table-column
+                align="center"
+                :label="$t('contractOverview.txHash')"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <router-link :to="'/transfer_details/'+scope.row.trxId+'/'+(scope.row.opType||79)">{{scope.row.trxId}}
+                  </router-link>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                :label="$t('contractOverview.block')"
+                width="150">
+                <template slot-scope="scope">
+                  <router-link :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                :label="$t('contractOverview.time')"
+                width="150">
+                <template slot-scope="scope">
+                  <timeago :since="scope.row.trxTime" :locale="getBusLocal"></timeago>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="From"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <span class="link"
+                        @click="_mixin_address_jump(scope.row.fromAccount)">{{scope.row.fromAccount}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="To"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <span class="link"
+                        @click="_mixin_address_jump(scope.row.toAccount)">{{scope.row.toAccount}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="Amount"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <span>{{scope.row.amountStr}} &nbsp; {{scope.row.symbol}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="Memo"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <span>{{scope.row.memo}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="feeStr"
+                :label="$t('contractOverview.fee')"
+                width="150">
+              </el-table-column>
+            </el-table>
+          </div>
+          <el-pagination
+            class="pagination"
+            layout="prev, pager, next, jumper"
+            :current-page="page"
+            :page-size="size"
+            :total="total"
+            @current-change="pageChange">
+          </el-pagination>
+        </template>
+        <template v-if="choiceFlag===1">
           <div class="api-wrap">
             <template v-for="item in abi">
               <span class="abi">{{item}}</span>
@@ -158,6 +271,7 @@
       this.contractAddress = to.params.contractAddress;
       this.getContractInfo();
       this.getTransactionData();
+      this.getTokenTransactionData();
       next();
     },
     data() {
@@ -175,13 +289,15 @@
         },
         choiceFlag: 0,
         tableData: [],
-        abi: []
+        abi: [],
+        tokenTransactions: []
       }
     },
     created() {
       this.contractAddress = this.$route.params.contractAddress;
       this.getContractInfo();
       this.getTransactionData();
+      this.getTokenTransactionData();
       this.getAbiData();
     },
     methods: {
@@ -206,8 +322,24 @@
           that.total = data.total;
         })
       },
+      getTokenTransactionData() {
+        let that = this;
+        this.$axios.post('/getTokenTransactionList', {
+          contractId: this.contractAddress,
+          page: this.page,
+          rows: this.size
+        }).then(function (res) {
+          let data = res.data.data;
+          that.tokenTransactions = data.rows;
+          that.total = data.total;
+        })
+      },
       pageChange(page) {
         this.page = page;
+        if(this.choiceFlag == 2) {
+          this.getTokenTransactionData();
+          return;
+        }
         this.getTransactionData();
       },
       getAbiData() {

@@ -52,7 +52,7 @@
 		symbol,asset_id, amount, fee,
 		trx_time, extra_trx_id,guarantee_id, op_type, parent_op_type, gas_limit, gas_cost, gas_price,
 		contract_id,
-		created_time, called_abi, abi_params,memo,extension,extension1
+		created_time, called_abi, abi_params,memo,extension,extension1, `fail`
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.Integer">
@@ -88,7 +88,9 @@
 		from bl_transaction
 		where
 		trx_id = #{trxId,jdbcType=VARCHAR}
-		and op_type =#{opType,jdbcType=INTEGER}
+		<if test="opType != null">
+			and op_type =#{opType,jdbcType=INTEGER}
+		</if>
 	</select>
 	
 	<!-- 根据区块高度查询区块交易信息 -->
@@ -299,7 +301,7 @@
 		trx_time, extra_trx_id, guarantee_id,
 		op_type, parent_op_type, gas_limit, gas_cost,
 		gas_price, contract_id, created_time,
-		called_abi, abi_params, memo,extension,extension1
+		called_abi, abi_params, memo,extension,extension1, `fail`
 		)
 		values (#{id,jdbcType=INTEGER}, #{trxId,jdbcType=VARCHAR},
 		#{blockId,jdbcType=VARCHAR},
@@ -312,8 +314,9 @@
 		#{gasCost,jdbcType=INTEGER},
 		#{gasPrice,jdbcType=DECIMAL}, #{contractId,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP},
 		#{calledAbi,jdbcType=VARCHAR}, #{abiParams,jdbcType=VARCHAR},#{memo,jdbcType=VARCHAR},
-		#{extension,jdbcType=VARCHAR},#{extension1,jdbcType=INTEGER}
+		#{extension,jdbcType=VARCHAR},#{extension1,jdbcType=INTEGER}, #{fail,jdbcType=INTEGER}
 		)
+		ON DUPLICATE KEY UPDATE created_time = CURRENT_TIMESTAMP
 	</insert>
 	<insert id="insertBatch" parameterType="java.util.List">
 		insert into bl_transaction (id, trx_id, block_id,
@@ -322,7 +325,7 @@
 		trx_time, extra_trx_id,guarantee_id,
 		op_type, parent_op_type, gas_limit, gas_cost,
 		gas_price, contract_id, created_time,
-		called_abi, abi_params,memo, extension,extension1
+		called_abi, abi_params,memo, extension,extension1, `fail`
 		)
 		values
 		<foreach collection="list" item="item" index="index"
@@ -343,9 +346,11 @@
 			#{item.abiParams,jdbcType=VARCHAR},
 			#{item.memo,jdbcType=VARCHAR},
 			#{item.extension,jdbcType=VARCHAR},
-			#{item.extension1,jdbcType=INTEGER}
+			#{item.extension1,jdbcType=INTEGER},
+			#{item.fail,jdbcType=INTEGER}
 			)
 		</foreach>
+		ON DUPLICATE KEY UPDATE created_time = CURRENT_TIMESTAMP
 	</insert>
 	<insert id="insertSelective"
 		parameterType="com.browser.dao.entity.BlTransaction">
@@ -429,6 +434,9 @@
 			<if test="extension1 != null">
 				extension1,
 			</if>
+			<if test="fail != null">
+				`fail`,
+			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -509,7 +517,11 @@
 			<if test="extension1 != null">
 				#{extension1,jdbcType=INTEGER},
 			</if>
+			<if test="fail != null">
+				#{fail,jdbcType=INTEGER},
+			</if>
 		</trim>
+		ON DUPLICATE KEY UPDATE created_time = CURRENT_TIMESTAMP
 	</insert>
 	<update id="updateByPrimaryKeySelective"
 		parameterType="com.browser.dao.entity.BlTransaction">
@@ -590,6 +602,9 @@
 			<if test="extension1 != null">
 				extension1 = #{extension1,jdbcType=INTEGER},
 			</if>
+			<if test="fail != null">
+				`fail` = #{fail,jdbcType=INTEGER},
+			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
 	</update>
@@ -620,7 +635,8 @@
 		abi_params = #{abiParams,jdbcType=VARCHAR},
 		memo = #{memo,jdbcType=VARCHAR},
 		extension = #{extension,jdbcType=VARCHAR},
-		extension1 = #{extension1,jdbcType=INTEGER}
+		extension1 = #{extension1,jdbcType=INTEGER},
+		`fail` = #{fail,jdbcType=INTEGER}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>
