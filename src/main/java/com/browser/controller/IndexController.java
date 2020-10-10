@@ -12,6 +12,15 @@ import com.browser.service.impl.AddressBalanceServiceImpl;
 import com.browser.service.impl.RedisService;
 import com.browser.task.vo.PriceInfo;
 import com.browser.tools.common.DateUtil;
+import com.google.gson.JsonObject;
+import net.sf.json.util.JSONUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,12 +56,70 @@ public class IndexController extends BaseController {
 	@GetMapping("mainCoinPrice")
 	public ResultMsg mainCoinPrice() {
 		ResultMsg resultMsg = new ResultMsg();
+		JSONObject coinPriceInfo = new JSONObject();
+
+
 		try {
-			PriceInfo mainCoinUsdtPriceInfo = redisService.getMainCoinUsdtPrice();
-			PriceInfo mainCoinBtcPriceInfo = redisService.getMainCoinBtcPrice();
-			JSONObject coinPriceInfo = new JSONObject();
-			coinPriceInfo.put("in_usdt", mainCoinUsdtPriceInfo);
-			coinPriceInfo.put("in_btc", mainCoinBtcPriceInfo);
+
+			String urlNameStringUsdt = "https://api.xt.pub/data/api/v1/getTicker?market=xwc_usdt";
+			String urlNameStringBtc = "https://api.xt.pub/data/api/v1/getTicker?market=xwc_btc";
+
+
+			String usdtResult="";
+			String btcResult="";
+
+			// 根据地址获取请求
+			HttpGet requestUsdt = new HttpGet(urlNameStringUsdt);
+			requestUsdt.setHeader("Content-Type","application/x-www-form-urlencoded");
+			// 获取当前客户端对象
+			HttpClient httpClient = new DefaultHttpClient();
+			// 通过请求对象获取响应对象
+			HttpResponse response = httpClient.execute(requestUsdt);
+			logger.info("调用聚合行情接口返回:{}",response);
+
+			// 判断网络连接状态码是否正常(0--200都数正常)
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				usdtResult= EntityUtils.toString(response.getEntity(),"utf-8");
+				JSONObject jsStr = JSONObject.parseObject(usdtResult);
+				BigDecimal price = new BigDecimal(jsStr.get("price").toString());
+				BigDecimal rate = new BigDecimal(jsStr.get("rate").toString());
+				BigDecimal low = new BigDecimal(jsStr.get("low").toString());
+				BigDecimal high = new BigDecimal(jsStr.get("high").toString());
+				PriceInfo mainCoinUsdtPriceInfo = new PriceInfo();
+				mainCoinUsdtPriceInfo.setChange(rate);
+				mainCoinUsdtPriceInfo.setPrice(price);
+				mainCoinUsdtPriceInfo.setLow(low);
+				mainCoinUsdtPriceInfo.setHigh(high);
+				coinPriceInfo.put("in_usdt", mainCoinUsdtPriceInfo);
+			}
+
+
+			// 根据地址获取请求
+			HttpGet requestBtc = new HttpGet(urlNameStringBtc);
+			requestBtc.setHeader("Content-Type","application/x-www-form-urlencoded");
+
+			// 通过请求对象获取响应对象
+			HttpResponse responseBtc = httpClient.execute(requestBtc);
+			logger.info("调用聚合行情接口返回:{}",responseBtc);
+
+			// 判断网络连接状态码是否正常(0--200都数正常)
+			if (responseBtc.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				btcResult= EntityUtils.toString(responseBtc.getEntity(),"utf-8");
+				JSONObject jsStr = JSONObject.parseObject(btcResult);
+				BigDecimal price = new BigDecimal(jsStr.get("price").toString());
+				BigDecimal rate = new BigDecimal(jsStr.get("rate").toString());
+				BigDecimal low = new BigDecimal(jsStr.get("low").toString());
+				BigDecimal high = new BigDecimal(jsStr.get("high").toString());
+				PriceInfo mainCoinBtcPriceInfo = new PriceInfo();
+				mainCoinBtcPriceInfo.setChange(rate);
+				mainCoinBtcPriceInfo.setPrice(price);
+				mainCoinBtcPriceInfo.setLow(low);
+				mainCoinBtcPriceInfo.setHigh(high);
+				coinPriceInfo.put("in_btc", mainCoinBtcPriceInfo);
+			}
+
+
+
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(coinPriceInfo);
 		} catch (Exception e) {
@@ -198,5 +265,39 @@ public class IndexController extends BaseController {
 			resultMsg.setRetMsg(e.getMessage());
 		}
 		return resultMsg;
+	}
+
+	public static void main(String[] args) {
+
+
+		String urlNameString = "https://api.xt.pub/data/api/v1/getTicker?market=xwc_btc";
+
+
+		String result="";
+		try {
+			// 根据地址获取请求
+			HttpGet request = new HttpGet(urlNameString);
+			request.setHeader("Content-Type","application/x-www-form-urlencoded");
+			// 获取当前客户端对象
+			HttpClient httpClient = new DefaultHttpClient();
+			// 通过请求对象获取响应对象
+			HttpResponse response = httpClient.execute(request);
+
+			// 判断网络连接状态码是否正常(0--200都数正常)
+			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+				result= EntityUtils.toString(response.getEntity(),"utf-8");
+
+			}
+		} catch (Exception e) {
+
+			e.printStackTrace();
+		}
+		Object jsStr = (Object)JSONObject.parseObject(result);
+		/*String price = jsStr.get("price").toString();
+		String rate = jsStr.get("rate").toString();*/
+		PriceInfo priceInfo = (PriceInfo)jsStr;
+		System.out.println(priceInfo);
+		//System.out.println(rate);
+
 	}
 }
