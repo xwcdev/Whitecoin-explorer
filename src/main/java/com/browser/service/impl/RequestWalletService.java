@@ -30,7 +30,6 @@ public class RequestWalletService {
     private String walletRpcCaller;
 
 
-
     private static Set<String> logSet = new HashSet<>();
     static{
 //        logSet.add("info");
@@ -78,6 +77,10 @@ public class RequestWalletService {
         }
 
         return resultStr;
+    }
+
+    public String getWalletRpcCaller() {
+        return walletRpcCaller;
     }
 
     /**

@@ -10,6 +10,7 @@ public interface TokenService {
     List<BlToken> selectAllNotActive();
     List<BlToken> selectAllActive();
     EUDataGridResult getActiveTokenList(BlToken token);
+    List<BlToken> selectAllTopActiveTokenList();
     BlToken selectByContractAddress(String contractAddress);
     int updateTokenTotalSupplyByContractAddress(String contractAddress, BigDecimal totalSupply);
 }

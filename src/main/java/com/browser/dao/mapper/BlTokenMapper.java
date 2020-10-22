@@ -15,4 +15,5 @@ public interface BlTokenMapper {
     List<BlToken> selectAllActive();
     List<BlToken> selectAllNotActive();
     List<BlToken> getActiveTokenList(BlToken cond);
+    List<BlToken> selectAllTopActiveTokenList();
 }

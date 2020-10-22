@@ -46,6 +46,11 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
+    public List<BlToken> selectAllTopActiveTokenList() {
+        return blTokenMapper.selectAllTopActiveTokenList();
+    }
+
+    @Override
     public BlToken selectByContractAddress(String contractAddress) {
         return blTokenMapper.selectByContractAddress(contractAddress);
     }

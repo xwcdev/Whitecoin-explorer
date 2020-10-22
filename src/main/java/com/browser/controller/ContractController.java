@@ -3,9 +3,13 @@ package com.browser.controller;
 import com.browser.dao.entity.*;
 import com.browser.service.SwapContractService;
 import com.browser.service.TokenService;
+import com.browser.service.impl.RequestWalletService;
 import com.browser.tools.common.StringUtil;
+import com.browser.wallet.PrecisionUtils;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -15,6 +19,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.browser.protocol.EUDataGridResult;
 import com.browser.service.StatisService;
 import com.browser.service.impl.ContractService;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /** 合约信息处理入口
  * Created by Administrator on 2017/12/8 0008.
@@ -32,6 +43,8 @@ public class ContractController {
 	private TokenService tokenService;
     @Autowired
 	private SwapContractService swapContractService;
+    @Autowired
+	private RequestWalletService requestWalletService;
 
     @Value("${swap_contract.admin.password}")
 	private String swapContractAdminPassword;
@@ -180,5 +193,55 @@ public class ContractController {
 		}
     	return resultMsg;
     }
+
+    @Data
+    public static class TokenBalanceVo extends BlToken {
+    	private String address;
+    	private BigDecimal balance;
+
+    	public static TokenBalanceVo fromToken(BlToken token) {
+    		TokenBalanceVo item = new TokenBalanceVo();
+			BeanUtils.copyProperties(token, item);
+			return item;
+		}
+	}
+
+    @ResponseBody
+	@RequestMapping(value = "top_tokens", method = RequestMethod.GET)
+	public ResultMsg getTopTokens(HttpServletRequest request) {
+		ResultMsg resultMsg = new ResultMsg();
+		resultMsg.setRetCode(ResultMsg.HTTP_OK);
+		List<BlToken>  topActiveTokens = tokenService.selectAllTopActiveTokenList();
+		String address = request.getParameter("address");
+		if(StringUtil.isEmpty(address)) {
+			resultMsg.setData(topActiveTokens);
+		} else {
+			List<TokenBalanceVo> tokenBalances = new ArrayList<>();
+			for(BlToken token : topActiveTokens) {
+				TokenBalanceVo balanceItem = TokenBalanceVo.fromToken(token);
+				balanceItem.setAddress(address);
+				balanceItem.setBalance(BigDecimal.ZERO);
+				// TODO: query balance use cache
+				// query balance
+				try {
+					String res = requestWalletService.invokeContractOffline(requestWalletService.getWalletRpcCaller(), token.getContractAddress(), "balanceOf", address);
+					if(res.length()>2 && res.startsWith("\"") && res.endsWith("\"")) {
+						res = res.substring(1, res.length()-1); // 如果返回包含双引号，去掉
+					}
+					BigInteger fullBalance = new BigInteger(res);
+					if(fullBalance.compareTo(BigInteger.ZERO)<0) {
+						fullBalance = BigInteger.ZERO;
+					}
+					BigDecimal balance = PrecisionUtils.fullAmountToDecimal(fullBalance, token.getPrecision());
+					balanceItem.setBalance(balance);
+				} catch (Exception e) {
+
+				}
+				tokenBalances.add(balanceItem);
+			}
+			resultMsg.setData(tokenBalances);
+		}
+		return resultMsg;
+	}
 
 }

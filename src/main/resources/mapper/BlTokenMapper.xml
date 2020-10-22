@@ -9,9 +9,10 @@
         <result column="creator_address" property="creatorAddress" jdbcType="VARCHAR"/>
         <result column="create_trx_id" property="createTrxId" jdbcType="VARCHAR"/>
         <result column="token_supply" property="tokenSupply" jdbcType="DECIMAL"/>
+        <result column="top_sort" property="topSort" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
-        id, contract_address, token_symbol, `precision`, creator_address, create_trx_id, token_supply
+        id, contract_address, token_symbol, `precision`, creator_address, create_trx_id, token_supply, top_sort
     </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
         select
@@ -45,6 +46,13 @@
         order by id asc
     </select>
 
+    <select id="selectAllTopActiveTokenList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from bl_token where top_sort is not null and `precision` is not null and `token_supply` is not null and `token_symbol` is not null
+        order by top_sort asc, id asc
+    </select>
+
     <select id="selectAllNotActive" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -76,15 +84,18 @@
             <if test="tokenSupply!=null">
                 and token_supply = #{tokenSupply,jdbcType=DECIMAL}
             </if>
+            <if test="topSort != null">
+                and top_sort = #{topSort,jdbcType=INTEGER}
+            </if>
         </trim>
         order by id asc
     </select>
 
     <insert id="insert" parameterType="com.browser.dao.entity.BlToken">
-    insert into bl_token (contract_address, token_symbol, `precision`, creator_address, create_trx_id, token_supply)
+    insert into bl_token (contract_address, token_symbol, `precision`, creator_address, create_trx_id, token_supply, top_sort)
     values (#{contractAddress,jdbcType=VARCHAR}, #{tokenSymbol,jdbcType=VARCHAR},
      #{precision, jdbcType=INTEGER}, #{creatorAddress,jdbcType=VARCHAR}, #{createTrxId,jdbcType=VARCHAR},
-    #{tokenSupply,jdbcType=DECIMAL}
+    #{tokenSupply,jdbcType=DECIMAL}, #{topSort,jdbcType=INTEGER}
      )
   </insert>
     <update id="updateTokenTotalSupplyByContractAddress" parameterType="com.browser.dao.entity.BlToken">

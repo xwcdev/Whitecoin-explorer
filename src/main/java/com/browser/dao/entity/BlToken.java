@@ -13,6 +13,7 @@ public class BlToken {
     private String creatorAddress;
     private String createTrxId;
     private BigDecimal tokenSupply;
+    private Integer topSort;
 
     // 暂存的查询参数
     private Integer page;
