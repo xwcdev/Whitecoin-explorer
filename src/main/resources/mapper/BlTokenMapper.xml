@@ -99,7 +99,7 @@
      )
   </insert>
     <update id="updateTokenTotalSupplyByContractAddress" parameterType="com.browser.dao.entity.BlToken">
-        update bl_token set token_supply = #{totalSupply,jdbcType=DECIMAL}
+        update bl_token set token_supply = #{tokenSymbol,jdbcType=DECIMAL}
         where contract_address = #{contractAddress,jdbcType=VARCHAR}
     </update>
 </mapper>
