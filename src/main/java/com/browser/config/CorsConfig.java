@@ -19,6 +19,7 @@ public class CorsConfig {
         return corsConfiguration;
     }
 
+    // dont't create the corsFilter bean in production environment. because of cors has been configured in nginx.
 //    @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
