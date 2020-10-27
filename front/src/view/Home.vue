@@ -8,6 +8,10 @@
             <div class="box -left-box" style>
               <ul>
                 <li class="clear" style="border-bottom: 0; border-top: 0; border-radius: 10px;">
+                  <div class="name left">Max Supply</div>
+                  <div class="value right">1,000,000,000 XWC</div>
+                </li>
+                <li class="clear" style="border-bottom: 0; border-top: 0; border-radius: 10px;">
                   <div class="name left">{{$t('home.blockchinaInfo.totalSupply')}}</div>
                   <div class="value right">{{blockInfo.totalAmount}}</div>
                 </li>
