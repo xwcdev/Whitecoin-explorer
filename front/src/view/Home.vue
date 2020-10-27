@@ -600,7 +600,7 @@ footer {
   color: white;
   padding: 20px;
   border-radius: 10px;
-  height: 200px;
+  height: 260px;
   background-image: url(/static/img/browser_b_bg.png);
   background-repeat: no-repeat;
 }
@@ -609,7 +609,7 @@ footer {
   color: white;
   padding: 25px;
   border-radius: 10px;
-  height: 200px;
+  height: 260px;
   background-image: url(/static/img/browser_v_bg.png);
   background-repeat: no-repeat;
 }
