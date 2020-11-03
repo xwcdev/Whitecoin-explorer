@@ -83,7 +83,7 @@
               :class="{'choice':choiceFlag===3}"
             >{{$t('address.mySwapTransactions.title')}}</span>
             <span
-              @click="choiceFlagChange(3)"
+              @click="choiceFlagChange(4)"
               :class="{'choice':choiceFlag===4}"
             >Tokens</span>
             <span
