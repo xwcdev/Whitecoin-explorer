@@ -83,6 +83,10 @@
               :class="{'choice':choiceFlag===3}"
             >{{$t('address.mySwapTransactions.title')}}</span>
             <span
+              @click="choiceFlagChange(3)"
+              :class="{'choice':choiceFlag===4}"
+            >Tokens</span>
+            <span
               @click="choiceFlagChange(1)"
               :class="{'choice':choiceFlag===1}"
             >{{$t('address.myContracts.title')}}</span>
@@ -349,6 +353,39 @@
           </el-table>
         </div>
 
+        <div v-if="choiceFlag===4" class="table-wrap">
+          <el-table :data="tokenBalances" style="width: 100%">
+            <el-table-column
+              align="center"
+              label="Symbol"
+              show-overflow-tooltip
+            >
+              <template slot-scope="scope">
+                <span>{{scope.row.tokenSymbol}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="Token Contract"
+              show-overflow-tooltip
+            >
+              <template slot-scope="scope">
+                <span>{{scope.row.tokenContract}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="Balance"
+              show-overflow-tooltip
+            >
+              <template slot-scope="scope">
+                <span>{{scope.row.amount}}</span>
+              </template>
+            </el-table-column>
+            
+          </el-table>
+        </div>
+
         <el-pagination
           class="pagination"
           layout="prev, pager, next, jumper"
@@ -390,6 +427,7 @@ export default {
       transaction: [],
       tokenTransactions: [],
       swapTransactions: [],
+      tokenBalances: [],
       contaracts: []
     };
   },
@@ -421,6 +459,8 @@ export default {
         this.getTokenTransactionData();
       } else if(flag===3) {
         this.getSwapTransactionData();
+      } else if(flag===4) {
+        this.getTokenBalancesData();
       } else {
         this.getContractData();
       }
@@ -441,6 +481,8 @@ export default {
         this.getTokenTransactionData();
       } else if(flag===3) {
         this.getSwapTransactionData();
+      } else if(flag===4) {
+        this.getTokenBalancesData();
       } else {
         this.getContractData();
       }
@@ -477,6 +519,16 @@ export default {
           let data = res.data;
           that.transaction = data.data.rows;
           that.total = data.data.total;
+        });
+    },
+    getTokenBalancesData() {
+      let that = this;
+      this.$axios
+        .get(`/user_tokens/${this.minerInfo.address}`)
+        .then(function(res) {
+          let data = res.data;
+          that.tokenBalances = data.data;
+          that.total = data.data.length;
         });
     },
     getTokenTransactionData() {

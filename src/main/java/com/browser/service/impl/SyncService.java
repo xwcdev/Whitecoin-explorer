@@ -92,6 +92,9 @@ public class SyncService {
     @Autowired
     private SwapTransactionService swapTransactionService;
 
+    @Autowired
+    private TokenBalanceService tokenBalanceService;
+
     @Value("${wallet.caller}")
     private String walletRpcCaller;
 
@@ -273,6 +276,34 @@ public class SyncService {
                 blTokenTransaction.setToAccount(transferTo);
                 blTokenTransaction.setMemo(transferMemo);
                 tokenTransactionService.insert(blTokenTransaction);
+
+                // update token balances
+                try {
+                    if(token.getPrecision()!=null) {
+                        if (transferFrom != null && transferFrom.length() > 10) {
+                            String fromBalanceStr = requestWalletService.invokeContractOffline(requestWalletService.getWalletRpcCaller(),
+                                    token.getContractAddress(), "balanceOf", transferFrom);
+                            if(fromBalanceStr!=null&& fromBalanceStr.length()>2 && fromBalanceStr.startsWith("\"") && fromBalanceStr.endsWith("\"")) {
+                                 fromBalanceStr = fromBalanceStr.substring(1, fromBalanceStr.length()-1);
+                            }
+                            BigDecimal fromBalance = PrecisionUtils.fullAmountToDecimal(new BigInteger(fromBalanceStr), token.getPrecision());
+                            // update/insert balances to db
+                            tokenBalanceService.updateOrInsertTokenBalance(transferFrom, token.getContractAddress(), token.getTokenSymbol(), fromBalance);
+                        }
+                        if (transferTo != null && transferTo.length() > 10) {
+                            String toBalanceStr = requestWalletService.invokeContractOffline(requestWalletService.getWalletRpcCaller(),
+                                    token.getContractAddress(), "balanceOf", transferTo);
+                            if(toBalanceStr!=null&& toBalanceStr.length()>2 && toBalanceStr.startsWith("\"") && toBalanceStr.endsWith("\"")) {
+                                toBalanceStr = toBalanceStr.substring(1, toBalanceStr.length()-1);
+                            }
+                            BigDecimal toBalance = PrecisionUtils.fullAmountToDecimal(new BigInteger(toBalanceStr), token.getPrecision());
+                            // update/insert balances to db
+                            tokenBalanceService.updateOrInsertTokenBalance(transferTo, token.getContractAddress(), token.getTokenSymbol(), toBalance);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.error("query and update token balance error", e);
+                }
             } catch (Exception e) {
                 logger.error("parse transfer log of txid {} error", txId, e);
             }

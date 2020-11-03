@@ -1,8 +1,13 @@
 package com.browser.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.browser.dao.entity.*;
+import com.browser.protocol.EUDataGridResult;
+import com.browser.service.StatisService;
 import com.browser.service.SwapContractService;
+import com.browser.service.TokenBalanceService;
 import com.browser.service.TokenService;
+import com.browser.service.impl.ContractService;
 import com.browser.service.impl.RequestWalletService;
 import com.browser.tools.common.StringUtil;
 import com.browser.wallet.PrecisionUtils;
@@ -15,19 +20,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSONObject;
-import com.browser.protocol.EUDataGridResult;
-import com.browser.service.StatisService;
-import com.browser.service.impl.ContractService;
-
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-/** 合约信息处理入口
+/**
+ * 合约信息处理入口
  * Created by Administrator on 2017/12/8 0008.
  */
 @Controller
@@ -35,213 +35,255 @@ public class ContractController {
 
     @Autowired
     private ContractService contractService;
-    
+
     @Autowired
     private StatisService statisService;
 
     @Autowired
-	private TokenService tokenService;
+    private TokenService tokenService;
     @Autowired
-	private SwapContractService swapContractService;
+    private SwapContractService swapContractService;
     @Autowired
-	private RequestWalletService requestWalletService;
+    private RequestWalletService requestWalletService;
+    @Autowired
+    private TokenBalanceService tokenBalanceService;
 
     @Value("${swap_contract.admin.password}")
-	private String swapContractAdminPassword;
-    
+    private String swapContractAdminPassword;
+
     private static Logger logger = LoggerFactory.getLogger(ContractController.class);
 
     @ResponseBody
-	@GetMapping("add_swap_contract/{contractAddress}/{token1}/{token2}/{password}")
-	public String addSwapContract(@PathVariable("contractAddress") String contractAddress,
-								  @PathVariable("token1") String token1, @PathVariable("token2") String token2,
-								  @PathVariable("password") String password) {
-    	if(StringUtil.isEmpty(contractAddress)) {
-    		return "invalid contract address";
-		}
-    	if(StringUtil.isEmpty(token1)) {
-    		return "invalid token1";
-		}
-    	if(StringUtil.isEmpty(token2)) {
-    		return "invalid token2";
-		}
-    	if(token1.equals(token2)) {
-    		return "token1 should not be equal to token2";
-		}
-    	if(StringUtil.isEmpty(password)) {
-    		return "empty password";
-		}
-    	if(!password.equals(swapContractAdminPassword)) {
-    		return "invalid password";
-		}
-		contractAddress = contractAddress.trim();
-    	token1 = token1.trim();
-    	token2 = token2.trim();
-    	BlSwapContract swapContract = swapContractService.selectByContractAddress(contractAddress);
-    	if(swapContract != null) {
-    		return "added before";
-		}
-    	swapContract = new BlSwapContract();
-    	swapContract.setContractAddress(contractAddress);
-    	swapContract.setToken1(token1);
-    	swapContract.setToken2(token2);
-    	swapContract.setVerified(true);
-    	swapContractService.insert(swapContract);
-    	return "added";
-	}
+    @GetMapping("add_swap_contract/{contractAddress}/{token1}/{token2}/{password}")
+    public String addSwapContract(@PathVariable("contractAddress") String contractAddress,
+                                  @PathVariable("token1") String token1, @PathVariable("token2") String token2,
+                                  @PathVariable("password") String password) {
+        if (StringUtil.isEmpty(contractAddress)) {
+            return "invalid contract address";
+        }
+        if (StringUtil.isEmpty(token1)) {
+            return "invalid token1";
+        }
+        if (StringUtil.isEmpty(token2)) {
+            return "invalid token2";
+        }
+        if (token1.equals(token2)) {
+            return "token1 should not be equal to token2";
+        }
+        if (StringUtil.isEmpty(password)) {
+            return "empty password";
+        }
+        if (!password.equals(swapContractAdminPassword)) {
+            return "invalid password";
+        }
+        contractAddress = contractAddress.trim();
+        token1 = token1.trim();
+        token2 = token2.trim();
+        BlSwapContract swapContract = swapContractService.selectByContractAddress(contractAddress);
+        if (swapContract != null) {
+            return "added before";
+        }
+        swapContract = new BlSwapContract();
+        swapContract.setContractAddress(contractAddress);
+        swapContract.setToken1(token1);
+        swapContract.setToken2(token2);
+        swapContract.setVerified(true);
+        swapContractService.insert(swapContract);
+        return "added";
+    }
 
     @ResponseBody
-	@RequestMapping(value = "queryContractList", method = { RequestMethod.POST })
+    @RequestMapping(value = "queryContractList", method = {RequestMethod.POST})
     public ResultMsg queryContractList(@RequestBody BlContractInfo contractInfo) {
-    	ResultMsg resultMsg = new ResultMsg();
-    	try {
-			EUDataGridResult data = contractService.getContractList(contractInfo);
-			resultMsg.setRetCode(ResultMsg.HTTP_OK);
-			resultMsg.setData(data);
-		} catch (Exception e) {
-			logger.error("系统错误", e);
-			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
-			resultMsg.setRetMsg(e.getMessage());
-		}
+        ResultMsg resultMsg = new ResultMsg();
+        try {
+            EUDataGridResult data = contractService.getContractList(contractInfo);
+            resultMsg.setRetCode(ResultMsg.HTTP_OK);
+            resultMsg.setData(data);
+        } catch (Exception e) {
+            logger.error("系统错误", e);
+            resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+            resultMsg.setRetMsg(e.getMessage());
+        }
         return resultMsg;
     }
 
     @ResponseBody
-	@RequestMapping(value = "getContractTrxList", method = { RequestMethod.POST })
+    @RequestMapping(value = "getContractTrxList", method = {RequestMethod.POST})
     public ResultMsg getContractTrxList(@RequestBody BlTransaction transaction) {
-    	ResultMsg resultMsg = new ResultMsg();
-    	if(null==transaction.getContractId()) {
-			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
-			return resultMsg;
-		}
-    	try {
-			EUDataGridResult data = contractService.getContractTrxList(transaction);
-			resultMsg.setRetCode(ResultMsg.HTTP_OK);
-			resultMsg.setData(data);
-		} catch (Exception e) {
-			logger.error("系统错误", e);
-			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
-			resultMsg.setRetMsg(e.getMessage());
-		}
+        ResultMsg resultMsg = new ResultMsg();
+        if (null == transaction.getContractId()) {
+            resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
+            resultMsg.setRetMsg("参数不能为空");
+            return resultMsg;
+        }
+        try {
+            EUDataGridResult data = contractService.getContractTrxList(transaction);
+            resultMsg.setRetCode(ResultMsg.HTTP_OK);
+            resultMsg.setData(data);
+        } catch (Exception e) {
+            logger.error("系统错误", e);
+            resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+            resultMsg.setRetMsg(e.getMessage());
+        }
         return resultMsg;
     }
-    
+
     @ResponseBody
-    @RequestMapping(value = "getAbi", method = { RequestMethod.POST })
+    @RequestMapping(value = "getAbi", method = {RequestMethod.POST})
     public ResultMsg getAbi(@RequestBody BlContractInfo contractInfo) {
-    	ResultMsg resultMsg = new ResultMsg();
-    	if(null==contractInfo.getContractId()) {
-			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
-			return resultMsg;
-		}
-    	try {
-			JSONObject data = contractService.getAbi(contractInfo);
-			resultMsg.setRetCode(ResultMsg.HTTP_OK);
-			resultMsg.setData(data);
-		} catch (Exception e) {
-			logger.error("系统错误", e);
-			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
-			resultMsg.setRetMsg(e.getMessage());
-		}
-    	return resultMsg;
+        ResultMsg resultMsg = new ResultMsg();
+        if (null == contractInfo.getContractId()) {
+            resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
+            resultMsg.setRetMsg("参数不能为空");
+            return resultMsg;
+        }
+        try {
+            JSONObject data = contractService.getAbi(contractInfo);
+            resultMsg.setRetCode(ResultMsg.HTTP_OK);
+            resultMsg.setData(data);
+        } catch (Exception e) {
+            logger.error("系统错误", e);
+            resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+            resultMsg.setRetMsg(e.getMessage());
+        }
+        return resultMsg;
     }
-    
+
     @ResponseBody
-    @RequestMapping(value = "getEvents", method = { RequestMethod.POST })
+    @RequestMapping(value = "getEvents", method = {RequestMethod.POST})
     public ResultMsg getEvents(@RequestBody BlContractInfo contractInfo) {
-    	ResultMsg resultMsg = new ResultMsg();
-    	if(null==contractInfo.getContractId()) {
-			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
-			return resultMsg;
-		}
-    	try {
-			JSONObject data = contractService.getEvents(contractInfo);
-			resultMsg.setRetCode(ResultMsg.HTTP_OK);
-			resultMsg.setData(data);
-		} catch (Exception e) {
-			logger.error("系统错误", e);
-			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
-			resultMsg.setRetMsg(e.getMessage());
-		}
-    	return resultMsg;
+        ResultMsg resultMsg = new ResultMsg();
+        if (null == contractInfo.getContractId()) {
+            resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
+            resultMsg.setRetMsg("参数不能为空");
+            return resultMsg;
+        }
+        try {
+            JSONObject data = contractService.getEvents(contractInfo);
+            resultMsg.setRetCode(ResultMsg.HTTP_OK);
+            resultMsg.setData(data);
+        } catch (Exception e) {
+            logger.error("系统错误", e);
+            resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+            resultMsg.setRetMsg(e.getMessage());
+        }
+        return resultMsg;
     }
-    
+
     @ResponseBody
-    @RequestMapping(value = "getContractStatis", method = { RequestMethod.POST })
+    @RequestMapping(value = "getContractStatis", method = {RequestMethod.POST})
     public ResultMsg getContractTrxList(@RequestBody BlContractInfo contractInfo) {
-    	ResultMsg resultMsg = new ResultMsg();
-    	if(null==contractInfo.getContractId()) {
-			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
-			return resultMsg;
-		}
-    	try {
-			BlContractDetail data = statisService.getContractsStatis(contractInfo);
-			if(data != null) {
-				BlToken token = tokenService.selectByContractAddress(contractInfo.getContractId());
-				data.setTokenContract(token);
-			}
-			resultMsg.setRetCode(ResultMsg.HTTP_OK);
-			resultMsg.setData(data);
-		} catch (Exception e) {
-			logger.error("系统错误", e);
-			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
-			resultMsg.setRetMsg(e.getMessage());
-		}
-    	return resultMsg;
+        ResultMsg resultMsg = new ResultMsg();
+        if (null == contractInfo.getContractId()) {
+            resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
+            resultMsg.setRetMsg("参数不能为空");
+            return resultMsg;
+        }
+        try {
+            BlContractDetail data = statisService.getContractsStatis(contractInfo);
+            if (data != null) {
+                BlToken token = tokenService.selectByContractAddress(contractInfo.getContractId());
+                data.setTokenContract(token);
+            }
+            resultMsg.setRetCode(ResultMsg.HTTP_OK);
+            resultMsg.setData(data);
+        } catch (Exception e) {
+            logger.error("系统错误", e);
+            resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+            resultMsg.setRetMsg(e.getMessage());
+        }
+        return resultMsg;
     }
 
     @Data
     public static class TokenBalanceVo extends BlToken {
-    	private String address;
-    	private BigDecimal balance;
+        private String address;
+        private BigDecimal balance;
 
-    	public static TokenBalanceVo fromToken(BlToken token) {
-    		TokenBalanceVo item = new TokenBalanceVo();
-			BeanUtils.copyProperties(token, item);
-			return item;
-		}
-	}
+        public static TokenBalanceVo fromToken(BlToken token) {
+            TokenBalanceVo item = new TokenBalanceVo();
+            BeanUtils.copyProperties(token, item);
+            return item;
+        }
+    }
 
     @ResponseBody
-	@RequestMapping(value = "top_tokens", method = RequestMethod.GET)
-	public ResultMsg getTopTokens(HttpServletRequest request) {
+    @RequestMapping(value = "user_tokens/{addr}", method = {RequestMethod.GET})
+    public ResultMsg getUserTokenBalances(@PathVariable("addr") String addr) {
+        ResultMsg resultMsg = new ResultMsg();
+        resultMsg.setRetCode(ResultMsg.HTTP_OK);
+        try {
+            if (StringUtil.isEmpty(addr)) {
+                resultMsg.setData(new ArrayList<>());
+            } else {
+                List<BlTokenBalance> tokenBalances = tokenBalanceService.findAllTokenBalancesByAddr(addr);
+                resultMsg.setData(tokenBalances);
+            }
+        } catch (Exception e) {
+            logger.error("系统错误", e);
+            resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+            resultMsg.setRetMsg(e.getMessage());
+        }
+        return resultMsg;
+    }
+
+	@ResponseBody
+	@RequestMapping(value = "token_holders/{tokenContract}", method = {RequestMethod.GET})
+	public ResultMsg getTokenHolders(@PathVariable("tokenContract") String tokenContract) {
 		ResultMsg resultMsg = new ResultMsg();
 		resultMsg.setRetCode(ResultMsg.HTTP_OK);
-		List<BlToken>  topActiveTokens = tokenService.selectAllTopActiveTokenList();
-		String address = request.getParameter("address");
-		if(StringUtil.isEmpty(address)) {
-			resultMsg.setData(topActiveTokens);
-		} else {
-			List<TokenBalanceVo> tokenBalances = new ArrayList<>();
-			for(BlToken token : topActiveTokens) {
-				TokenBalanceVo balanceItem = TokenBalanceVo.fromToken(token);
-				balanceItem.setAddress(address);
-				balanceItem.setBalance(BigDecimal.ZERO);
-				// TODO: query balance use cache
-				// query balance
-				try {
-					String res = requestWalletService.invokeContractOffline(requestWalletService.getWalletRpcCaller(), token.getContractAddress(), "balanceOf", address);
-					if(res.length()>2 && res.startsWith("\"") && res.endsWith("\"")) {
-						res = res.substring(1, res.length()-1); // 如果返回包含双引号，去掉
-					}
-					BigInteger fullBalance = new BigInteger(res);
-					if(fullBalance.compareTo(BigInteger.ZERO)<0) {
-						fullBalance = BigInteger.ZERO;
-					}
-					BigDecimal balance = PrecisionUtils.fullAmountToDecimal(fullBalance, token.getPrecision());
-					balanceItem.setBalance(balance);
-				} catch (Exception e) {
-
-				}
-				tokenBalances.add(balanceItem);
+		try {
+			if (StringUtil.isEmpty(tokenContract)) {
+				resultMsg.setData(new ArrayList<>());
+			} else {
+				List<BlTokenBalance> tokenBalances = tokenBalanceService.findAllTokenBalancesByTokenContract(tokenContract);
+				resultMsg.setData(tokenBalances);
 			}
-			resultMsg.setData(tokenBalances);
+		} catch (Exception e) {
+			logger.error("系统错误", e);
+			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+			resultMsg.setRetMsg(e.getMessage());
 		}
 		return resultMsg;
 	}
+
+    @ResponseBody
+    @RequestMapping(value = "top_tokens", method = RequestMethod.GET)
+    public ResultMsg getTopTokens(HttpServletRequest request) {
+        ResultMsg resultMsg = new ResultMsg();
+        resultMsg.setRetCode(ResultMsg.HTTP_OK);
+        List<BlToken> topActiveTokens = tokenService.selectAllTopActiveTokenList();
+        String address = request.getParameter("address");
+        if (StringUtil.isEmpty(address)) {
+            resultMsg.setData(topActiveTokens);
+        } else {
+            List<TokenBalanceVo> tokenBalances = new ArrayList<>();
+            for (BlToken token : topActiveTokens) {
+                TokenBalanceVo balanceItem = TokenBalanceVo.fromToken(token);
+                balanceItem.setAddress(address);
+                balanceItem.setBalance(BigDecimal.ZERO);
+                // TODO: query balance use cache
+                // query balance
+                try {
+                    String res = requestWalletService.invokeContractOffline(requestWalletService.getWalletRpcCaller(), token.getContractAddress(), "balanceOf", address);
+                    if (res.length() > 2 && res.startsWith("\"") && res.endsWith("\"")) {
+                        res = res.substring(1, res.length() - 1); // 如果返回包含双引号，去掉
+                    }
+                    BigInteger fullBalance = new BigInteger(res);
+                    if (fullBalance.compareTo(BigInteger.ZERO) < 0) {
+                        fullBalance = BigInteger.ZERO;
+                    }
+                    BigDecimal balance = PrecisionUtils.fullAmountToDecimal(fullBalance, token.getPrecision());
+                    balanceItem.setBalance(balance);
+                } catch (Exception e) {
+
+                }
+                tokenBalances.add(balanceItem);
+            }
+            resultMsg.setData(tokenBalances);
+        }
+        return resultMsg;
+    }
 
 }
