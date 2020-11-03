@@ -445,7 +445,7 @@ export default {
         }
         li {
           width: 428px;
-          padding: 24px 0 8px;
+          padding: 20px 0 8px;
         }
         .cross_asset {
           position: absolute;
