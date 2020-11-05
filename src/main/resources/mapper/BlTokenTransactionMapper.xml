@@ -68,7 +68,7 @@
                 and `event_seq` = #{eventSeq,jdbcType=INTEGER}
             </if>
         </trim>
-        order by id asc
+        order by id desc
     </select>
 
     <select id="selectListByUserAddress" resultMap="BaseResultMap" parameterType="com.browser.dao.entity.BlTokenTransaction">
