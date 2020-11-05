@@ -34,6 +34,13 @@
         order by amount desc
         limit 1000
     </select>
+    <select id="getSumBalanceByTokenContract" resultMap="BaseResultMap" parameterType="com.browser.dao.entity.BlTokenBalance">
+        select
+        sum(amount) as amount
+        from bl_token_balance
+        where token_contract=#{tokenContract,jdbcType=VARCHAR} and amount > 0
+        order by amount desc
+    </select>
 
     <insert id="insert" parameterType="com.browser.dao.entity.BlTokenBalance" >
     insert into bl_token_balance (addr, amount, token_contract, token_symbol)

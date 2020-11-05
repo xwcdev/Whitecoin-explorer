@@ -10,4 +10,5 @@ public interface TokenBalanceService {
     List<BlTokenBalance> findAllTokenBalancesByAddr(String addr);
     List<BlTokenBalance> findAllTokenBalancesByTokenContract(String tokenContract);
     int updateOrInsertTokenBalance(String addr, String tokenContract, String tokenSymbol, BigDecimal amount);
+    BigDecimal getSumBalanceByTokenContract(String tokenContract);
 }

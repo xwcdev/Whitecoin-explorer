@@ -56,4 +56,15 @@ public class TokenBalanceServiceImpl implements TokenBalanceService {
             return tokenBalanceMapper.insert(record);
         }
     }
+
+    @Override
+    public BigDecimal getSumBalanceByTokenContract(String tokenContract) {
+        BlTokenBalance cond = new BlTokenBalance();
+        cond.setTokenContract(tokenContract);
+        BlTokenBalance sumRecord = tokenBalanceMapper.getSumBalanceByTokenContract(cond);
+        if(sumRecord == null) {
+            return BigDecimal.ZERO;
+        }
+        return sumRecord.getAmount() != null ? sumRecord.getAmount() : BigDecimal.ZERO;
+    }
 }

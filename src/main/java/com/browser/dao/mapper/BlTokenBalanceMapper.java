@@ -9,6 +9,7 @@ public interface BlTokenBalanceMapper {
     BlTokenBalance selectByAddrAndTokenContract(BlTokenBalance cond);
     List<BlTokenBalance> selectAllByAddr(BlTokenBalance cond);
     List<BlTokenBalance> selectAllByTokenContract(BlTokenBalance cond);
+    BlTokenBalance getSumBalanceByTokenContract(BlTokenBalance cond);
     int updateByPrimaryKeySelective(BlTokenBalance record);
     int updateByPrimaryKey(BlTokenBalance record);
 }
