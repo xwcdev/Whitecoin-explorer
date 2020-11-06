@@ -13,6 +13,7 @@ import com.browser.service.impl.RedisService;
 import com.browser.task.vo.PriceInfo;
 import com.browser.tools.common.DateUtil;
 import com.google.gson.JsonObject;
+import kong.unirest.Unirest;
 import net.sf.json.util.JSONUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -80,6 +81,8 @@ public class IndexController extends BaseController {
 			// 判断网络连接状态码是否正常(0--200都数正常)
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				usdtResult= EntityUtils.toString(response.getEntity(),"utf-8");
+				usdtResult = Unirest.get(urlNameStringUsdt).asString().getBody();
+				logger.info("调用聚合行情接口返回str: {}", usdtResult);
 				JSONObject jsStr = JSONObject.parseObject(usdtResult);
 				BigDecimal price = new BigDecimal(jsStr.get("price").toString());
 				BigDecimal rate = new BigDecimal(jsStr.get("rate").toString());
@@ -105,6 +108,8 @@ public class IndexController extends BaseController {
 			// 判断网络连接状态码是否正常(0--200都数正常)
 			if (responseBtc.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				btcResult= EntityUtils.toString(responseBtc.getEntity(),"utf-8");
+				btcResult = Unirest.get(urlNameStringBtc).asString().getBody();
+				logger.info("调用聚合行情接口返回str: {}", btcResult);
 				JSONObject jsStr = JSONObject.parseObject(btcResult);
 				BigDecimal price = new BigDecimal(jsStr.get("price").toString());
 				BigDecimal rate = new BigDecimal(jsStr.get("rate").toString());
