@@ -1,6 +1,7 @@
 package com.browser.controller;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,8 +63,8 @@ public class IndexController extends BaseController {
 
 		try {
 
-			String urlNameStringUsdt = "https://api.xt.pub/data/api/v1/getTicker?market=xwc_usdt";
-			String urlNameStringBtc = "https://api.xt.pub/data/api/v1/getTicker?market=xwc_btc";
+			String urlNameStringXwcUsdt = "https://api.xt.pub/data/api/v1/getTicker?market=xwc_usdt";
+			String urlNameStringBtcUsdt = "https://api.xt.pub/data/api/v1/getTicker?market=btc_usdt";
 
 
 			String usdtResult="";
@@ -71,9 +72,10 @@ public class IndexController extends BaseController {
 
 			// 获取当前客户端对象
 			HttpClient httpClient = new DefaultHttpClient();
+			PriceInfo mainCoinUsdtPriceInfo = null;
 			try {
 				// 根据地址获取请求
-				HttpGet requestUsdt = new HttpGet(urlNameStringUsdt);
+				HttpGet requestUsdt = new HttpGet(urlNameStringXwcUsdt);
 				requestUsdt.setHeader("Content-Type", "application/x-www-form-urlencoded");
 				// 通过请求对象获取响应对象
 				HttpResponse response = httpClient.execute(requestUsdt);
@@ -89,7 +91,7 @@ public class IndexController extends BaseController {
 					BigDecimal rate = new BigDecimal(jsStr.get("rate").toString());
 					BigDecimal low = new BigDecimal(jsStr.get("low").toString());
 					BigDecimal high = new BigDecimal(jsStr.get("high").toString());
-					PriceInfo mainCoinUsdtPriceInfo = new PriceInfo();
+					mainCoinUsdtPriceInfo = new PriceInfo();
 					mainCoinUsdtPriceInfo.setChange(rate);
 					mainCoinUsdtPriceInfo.setPrice(price);
 					mainCoinUsdtPriceInfo.setLow(low);
@@ -100,36 +102,39 @@ public class IndexController extends BaseController {
 				logger.error("fetch usdt price error", e);
 			}
 
+			if(mainCoinUsdtPriceInfo != null) {
+				try {
+					// 根据地址获取请求
+					HttpGet requestBtc = new HttpGet(urlNameStringBtcUsdt);
+					requestBtc.setHeader("Content-Type", "application/x-www-form-urlencoded");
 
-			try {
-				// 根据地址获取请求
-				HttpGet requestBtc = new HttpGet(urlNameStringBtc);
-				requestBtc.setHeader("Content-Type", "application/x-www-form-urlencoded");
+					// 通过请求对象获取响应对象
+					HttpResponse responseBtc = httpClient.execute(requestBtc);
+					logger.info("调用聚合行情接口返回:{}", responseBtc);
 
-				// 通过请求对象获取响应对象
-				HttpResponse responseBtc = httpClient.execute(requestBtc);
-				logger.info("调用聚合行情接口返回:{}", responseBtc);
-
-				// 判断网络连接状态码是否正常(0--200都数正常)
-				if (responseBtc.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-					btcResult = EntityUtils.toString(responseBtc.getEntity(), "utf-8");
+					// 判断网络连接状态码是否正常(0--200都数正常)
+					if (responseBtc.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+						btcResult = EntityUtils.toString(responseBtc.getEntity(), "utf-8");
 //					btcResult = Unirest.get(urlNameStringBtc).asString().getBody();
-					logger.info("调用聚合行情接口返回str: {}", btcResult);
-					JSONObject jsStr = JSONObject.parseObject(btcResult);
-					BigDecimal price = new BigDecimal(jsStr.get("price").toString());
-					BigDecimal rate = new BigDecimal(jsStr.get("rate").toString());
-					BigDecimal low = new BigDecimal(jsStr.get("low").toString());
-					BigDecimal high = new BigDecimal(jsStr.get("high").toString());
-					PriceInfo mainCoinBtcPriceInfo = new PriceInfo();
-					mainCoinBtcPriceInfo.setChange(rate);
-					mainCoinBtcPriceInfo.setPrice(price);
-					mainCoinBtcPriceInfo.setLow(low);
-					mainCoinBtcPriceInfo.setHigh(high);
-					coinPriceInfo.put("in_btc", mainCoinBtcPriceInfo);
-				}
+						logger.info("调用聚合行情接口返回str: {}", btcResult);
+						JSONObject jsStr = JSONObject.parseObject(btcResult);
+						BigDecimal price = new BigDecimal(jsStr.get("price").toString());
+						BigDecimal rate = new BigDecimal(jsStr.get("rate").toString());
+						BigDecimal low = new BigDecimal(jsStr.get("low").toString());
+						BigDecimal high = new BigDecimal(jsStr.get("high").toString());
+						if(price.compareTo(BigDecimal.ZERO) > 0) {
+							PriceInfo mainCoinBtcPriceInfo = new PriceInfo();
+							mainCoinBtcPriceInfo.setChange(BigDecimal.ZERO);
+							mainCoinBtcPriceInfo.setPrice(mainCoinUsdtPriceInfo.getPrice().setScale(8, RoundingMode.FLOOR).divide(price, RoundingMode.FLOOR));
+							mainCoinBtcPriceInfo.setLow(mainCoinUsdtPriceInfo.getLow().setScale(8, RoundingMode.FLOOR).divide(low, RoundingMode.FLOOR));
+							mainCoinBtcPriceInfo.setHigh(mainCoinUsdtPriceInfo.getHigh().setScale(8, RoundingMode.FLOOR).divide(high, RoundingMode.FLOOR));
+							coinPriceInfo.put("in_btc", mainCoinBtcPriceInfo);
+						}
+					}
 
-			} catch (Exception e) {
-				logger.error("get btc price error", e);
+				} catch (Exception e) {
+					logger.error("get btc price error", e);
+				}
 			}
 
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
