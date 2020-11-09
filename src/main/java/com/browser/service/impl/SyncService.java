@@ -684,7 +684,7 @@ public class SyncService {
     }
 
     /**
-     * 普通、跨链交易解析
+     * decode common and crosschain tx
      *
      * @param json
      * @param opType
@@ -695,7 +695,7 @@ public class SyncService {
         blTransaction.setOpType(opType);
         blTransaction.setFee(json.getJSONObject("fee").getBigDecimal("amount"));
         blTransaction.setGuaranteeId(json.getString("guarantee_id"));
-        // 普通link链交易
+        // common transaction
         if (Constant.TRX_TYPE_TRANSFER == opType) {
             blTransaction.setAmount(json.getJSONObject("amount").getBigDecimal("amount"));
             blTransaction.setAssetId(json.getJSONObject("amount").getString("asset_id"));
@@ -706,7 +706,7 @@ public class SyncService {
                 blTransaction.setMemo(LengthCheck(jsonObject.getString("message")));
             }
             blTransaction.setParentOpType(Constant.PARENT_TRANSFER);
-        } else {// 跨链交易
+        } else {// cross-chain tx
             blTransaction.setAmount(json.getJSONObject("cross_chain_trx").getBigDecimal("amount"));
             blTransaction.setAssetId(json.getString("asset_id"));
             blTransaction.setFromAccount(json.getJSONObject("cross_chain_trx").getString("from_account"));
@@ -718,7 +718,7 @@ public class SyncService {
     }
 
     /**
-     * 提现流程解析
+     * cross-chain withdraw tx decode
      *
      * @param json
      * @param opType
@@ -734,7 +734,7 @@ public class SyncService {
 
         switch (opType) {
             case Constant.TRX_TYPE_WITHDRAW_REQ:
-                // 交易请求
+                // withdraw request
                 withdrawTransaction.setFromAccount(json.getString("withdraw_account"));
                 withdrawTransaction.setToAccount(json.getString("crosschain_account"));
                 withdrawTransaction.setAmount(json.getBigDecimal("amount"));
@@ -742,22 +742,22 @@ public class SyncService {
                 withdrawTransaction.setMemo(json.getString("memo"));
                 withdrawTransaction.setExtension1(Constant.WITHDRAW_REQ);
 
-                // 缓存提现流程状态
+                // cache withdraw request state
                 redisService.putWithdrawStatus(trxId, Constant.WITHDRAW_REQ);
-                // 缓存提现跨链方地址、后续更改流程状态使用
+                // cache withdraw to addr
                 redisService.putCrosschainAddr(trxId, withdrawTransaction.getToAccount());
                 break;
 
             case Constant.TRX_TYPE_WITHDRAW_CREATE:
-                // 交易创建
-                // 交易创建收集的原始提现请求交易id集合
+                // withdraw tx create
+                // origin withdraw txid collection
                 JSONArray withdrawTxId = json.getJSONArray("ccw_trx_ids");
                 if (withdrawTxId != null && withdrawTxId.size() > 0) {
                     withdrawTransaction.setExtraTrxId(json.getJSONArray("ccw_trx_ids").toJSONString());
 
                     updateWithdrawStatus(withdrawTxId, Constant.WITHDRAW_CREATE);
 
-                    // 缓存创建提现交易的id、后续更改流程状态使用
+                    // cache created withdraw txid
                     redisService.putUnSignTxId(trxId, withdrawTxId.toJSONString());
                 }
                 withdrawTransaction.setExtension(LengthCheck(json.toJSONString()));
@@ -765,8 +765,8 @@ public class SyncService {
                 break;
 
             case Constant.TRX_TYPE_WITHDRAW_SIGN:
-                // 交易签名
-                // 创建提现交易的id
+                // withdraw tx sign
+                // create withdraw tx id
                 String signedTxId = json.getString("ccw_trx_id");
 
                 String withdrawTrxId = redisService.getUnSignTxId(signedTxId);
@@ -783,8 +783,8 @@ public class SyncService {
                 break;
 
             case Constant.TRX_TYPE_WITHDRAW_SEND:
-                // 交易广播
-                // 创建提现交易的id
+                // broadcast withdraw tx
+                // created withdraw tx id
                 String sendTxId = json.getString("withdraw_trx");
 
                 String sendWithdrawTrxId = redisService.getUnSignTxId(sendTxId);
@@ -802,7 +802,7 @@ public class SyncService {
                 break;
 
             case Constant.TRX_TYPE_WITHDRAW_SUCC:
-                // 交易成功
+                // withdraw tx success
                 JSONObject cross = json.getJSONObject("cross_chain_trx");
                 withdrawTransaction.setFromAccount(cross.getString("from_account"));
                 withdrawTransaction.setToAccount(cross.getString("to_account"));
@@ -846,7 +846,7 @@ public class SyncService {
     }
 
     /**
-     * 其他交易类型
+     * decode other tx types
      *
      * @param json
      * @param opType
@@ -871,7 +871,7 @@ public class SyncService {
             transactionService.updateGuranteeStatus(json.getString("owner_addr"), Constant.GURANTEE_INVALID);
         }
 
-        //注册
+        // register
         if (Constant.ACCOUNT_REGISTER == opType) {
             blTransaction.setParentOpType(Constant.PARENT_OTHER);
             blTransaction.setFromAccount(json.getString("payer"));
@@ -881,7 +881,7 @@ public class SyncService {
             redisService.putAccountAddr(json.getString("name"), json.getString("payer"));
         }
 
-        //质押
+        // mortgage
         if (Constant.ASSET_MORGAGE == opType) {
             blTransaction.setParentOpType(Constant.PARENT_MORTGAGE);
             blTransaction.setFromAccount(json.getString("lock_balance_addr"));
@@ -890,7 +890,7 @@ public class SyncService {
                 blTransaction.setToAccount(jsonObject.getString("addr"));
                 blTransaction.setExtension(jsonObject.getString("name"));
 
-                //更新内存中miner权重
+                // update weight of miner in memory
                 updateMinerWeight(jsonObject.getString("addr"));
             }
 
@@ -901,7 +901,7 @@ public class SyncService {
 
         }
 
-        //赎回
+        // foreclose
         if (Constant.ASSET_REDEEM == opType) {
             blTransaction.setParentOpType(Constant.PARENT_FORECLOSE);
             JSONObject jsonObject = getMinerAddr(json.getString("foreclose_miner_account"));
@@ -921,13 +921,13 @@ public class SyncService {
 
         }
 
-        //绑定、解绑
+        // account bind and unbind
         if (Constant.BINDING == opType || Constant.UNBINDING == opType) {
             blTransaction.setParentOpType(Constant.PARENT_OTHER);
             blTransaction.setFromAccount(json.getString("addr"));
         }
 
-        //领取工资
+        // payback
         if (Constant.TRX_TYPE_PAY_BACK == opType) {
             blTransaction.setParentOpType(Constant.PARENT_WAGE);
             blTransaction.setToAccount(json.getString("pay_back_owner"));
@@ -947,7 +947,7 @@ public class SyncService {
     }
 
     /**
-     * 更新提现流程状态
+     * update withdraw request state
      *
      * @param array
      * @param status
@@ -962,7 +962,7 @@ public class SyncService {
     }
 
     /**
-     * 信息长度过滤
+     * filter message length
      *
      * @param str
      * @return
