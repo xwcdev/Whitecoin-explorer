@@ -1,5 +1,6 @@
 package com.browser.controller;
 
+import com.browser.service.ScanInfoService;
 import com.browser.task.SyncTaskSingle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ public class BlockController extends BaseController {
 
 	@Autowired
 	private TransactionService transactionService;
+	@Autowired
+	private ScanInfoService scanInfoService;
 	
 	private static Logger logger = LoggerFactory.getLogger(BlockController.class);
 
@@ -32,12 +35,22 @@ public class BlockController extends BaseController {
 	 * @return
 	 */
 	@ResponseBody
+	@GetMapping("/set_scan_from_block_once/{blockNum}")
+	public String setScanFromBlockOnce(@PathVariable("blockNum") Long blockNum) {
+		if(blockNum == null || blockNum <= 0) {
+			return "error blockNum " + blockNum;
+		}
+		SyncTaskSingle.tmpScanFromBlockNum.set(blockNum);
+		return "ok";
+	}
+
+	@ResponseBody
 	@GetMapping("/set_scan_from_block/{blockNum}")
 	public String setScanFromBlock(@PathVariable("blockNum") Long blockNum) {
 		if(blockNum == null || blockNum <= 0) {
 			return "error blockNum " + blockNum;
 		}
-		SyncTaskSingle.tmpScanFromBlockNum.set(blockNum);
+		scanInfoService.updateOrInsertBlockNum(blockNum);
 		return "ok";
 	}
 

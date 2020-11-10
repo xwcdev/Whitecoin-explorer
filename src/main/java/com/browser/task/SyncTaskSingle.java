@@ -1,6 +1,7 @@
 package com.browser.task;
 
 import com.browser.service.BlockService;
+import com.browser.service.ScanInfoService;
 import com.browser.service.impl.RequestWalletService;
 import com.browser.service.impl.SyncService;
 import org.slf4j.Logger;
@@ -28,6 +29,8 @@ public class SyncTaskSingle {
 
     @Autowired
     private SyncService syncService;
+    @Autowired
+    private ScanInfoService scanInfoService;
 
     @Value("${safe.block}")
     private Integer safeBlock;
@@ -38,10 +41,14 @@ public class SyncTaskSingle {
     @Scheduled(cron = "0/10 * * * * ? ")
     public void syncData() {
         logger.info("begin sync data");
-        // latest block num in db
-        Long blockNum = blockService.queryBlockNum();
+        // latest block num from db
+        Long blockNumSynced = blockService.queryBlockNum();
+        Long blockNum = scanInfoService.queryBlockNum();
         if (null == blockNum) {
             blockNum = 0L;
+        }
+        if(blockNumSynced != null && blockNum>blockNumSynced) {
+            blockNum = blockNumSynced;
         }
         Long tmpScanFromBlock = tmpScanFromBlockNum.getAndSet(0L);
         if (tmpScanFromBlock > 0L) {
@@ -55,6 +62,7 @@ public class SyncTaskSingle {
             for (Long i = blockNum; i < total; i++) {
                 logger.info("sync block " + (i + 1));
                 syncService.blockSync(i + 1);
+                scanInfoService.updateOrInsertBlockNum(i+1);
             }
         }
 
