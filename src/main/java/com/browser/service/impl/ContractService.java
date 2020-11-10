@@ -51,8 +51,21 @@ public class ContractService {
      */
     public EUDataGridResult getContractList(BlContractInfo blContractInfo) {
     	// 分页处理
-    	PageHelper.startPage(blContractInfo.getPage(), blContractInfo.getRows());
-    	List<BlContractInfo> list = blContractInfoMapper.selectContractList(blContractInfo);
+//    	PageHelper.startPage(blContractInfo.getPage(), blContractInfo.getRows());
+//    	List<BlContractInfo> list = blContractInfoMapper.selectContractList(blContractInfo);
+		int offset = 0;
+		int limit = 20;
+		if (blContractInfo.getPage() != null && blContractInfo.getRows() != null) {
+			offset = (blContractInfo.getPage() - 1) * blContractInfo.getRows();
+			if (offset < 0) {
+				offset = 0;
+			}
+			limit = blContractInfo.getRows();
+			if (limit <= 0) {
+				limit = 20;
+			}
+		}
+		List<BlContractInfo> list = blContractInfoMapper.selectContractListPage(blContractInfo, offset, limit);
     	if(list!=null && list.size()>0){
     		for(BlContractInfo contractInfo:list){
 //				BlContractStatis blContractStatis=new BlContractStatis();
@@ -76,9 +89,17 @@ public class ContractService {
     	EUDataGridResult result = new EUDataGridResult();
     	result.setRows(list);
     	// 取记录总条数
-    	PageInfo<BlContractInfo> pageInfo = new PageInfo<>(list);
-    	result.setTotal(pageInfo.getTotal());
-    	result.setPages(pageInfo.getPages());
+		int total;
+		if (StringUtil.isEmpty(blContractInfo.getOnwerAddress())) {
+			total = blContractInfoMapper.countAll();
+		} else {
+			total = blContractInfoMapper.countContracts(blContractInfo.getOnwerAddress());
+		}
+		result.setTotal(total);
+		result.setPages((total + 1) / limit);
+//    	PageInfo<BlContractInfo> pageInfo = new PageInfo<>(list);
+//    	result.setTotal(pageInfo.getTotal());
+//    	result.setPages(pageInfo.getPages());
     	return result;
     }
     
