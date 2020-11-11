@@ -140,18 +140,13 @@ public class IndexController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(coinPriceInfo);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
 		return resultMsg;
 	}
 
-	/**
-	 * 获取最新统计信息
-	 * 
-	 * @return
-	 */
 	@ResponseBody
 	@RequestMapping(value = "getStatis", method = { RequestMethod.POST })
 	public ResultMsg getStatis() {
@@ -161,7 +156,7 @@ public class IndexController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
@@ -177,18 +172,13 @@ public class IndexController extends BaseController {
             resultMsg.setRetCode(ResultMsg.HTTP_OK);
             resultMsg.setData(topBalances);
         } catch (Exception e) {
-            logger.error("系统错误", e);
+            logger.error("system error", e);
             resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
             resultMsg.setRetMsg(e.getMessage());
         }
         return resultMsg;
     }
 
-	/**
-	 * 获取最新区块信息
-	 * 
-	 * @return
-	 */
 	@ResponseBody
 	@RequestMapping(value = "blocksInfo", method = { RequestMethod.POST })
 	public ResultMsg blocksInfo() {
@@ -198,18 +188,13 @@ public class IndexController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
 		return resultMsg;
 	}
 
-	/**
-	 * 获取最新交易信息
-	 * 
-	 * @return
-	 */
 	@ResponseBody
 	@RequestMapping(value = "getTrxance", method = { RequestMethod.POST })
 	public ResultMsg getTrxance(HttpServletRequest request) {
@@ -219,25 +204,20 @@ public class IndexController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
 		return resultMsg;
 	}
 
-	/**
-	 * 获取每天图表最新交易量
-	 * 
-	 * @return
-	 */
 	@ResponseBody
 	@RequestMapping(value = "getDayTrxNum", method = { RequestMethod.POST })
 	public ResultMsg getTrxNum(@RequestBody BlTransaction transaction) {
 		ResultMsg resultMsg = new ResultMsg();
 		if (StringUtil.isEmpty(transaction.getEndTime()) || StringUtil.isEmpty(transaction.getStartTime())) {
 			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("查询参数不允许为空！");
+			resultMsg.setRetMsg("param can't be empty");
 			return resultMsg;
 		}
 		try {
@@ -251,25 +231,20 @@ public class IndexController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
 		return resultMsg;
 	}
-	
-	/**
-	 * 获取每小时图表最新交易量
-	 * 
-	 * @return
-	 */
+
 	@ResponseBody
 	@RequestMapping(value = "getHourTrxNum", method = { RequestMethod.POST })
 	public ResultMsg getHourTrxNum(@RequestBody BlTransaction transaction) {
 		ResultMsg resultMsg = new ResultMsg();
 		if (StringUtil.isEmpty(transaction.getEndTime()) || StringUtil.isEmpty(transaction.getStartTime())) {
 			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("查询参数不允许为空！");
+			resultMsg.setRetMsg("param can't be empty");
 			return resultMsg;
 		}
 		try {
@@ -277,7 +252,7 @@ public class IndexController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
@@ -292,15 +267,11 @@ public class IndexController extends BaseController {
 
 		String result="";
 		try {
-			// 根据地址获取请求
 			HttpGet request = new HttpGet(urlNameString);
 			request.setHeader("Content-Type","application/x-www-form-urlencoded");
-			// 获取当前客户端对象
 			HttpClient httpClient = new DefaultHttpClient();
-			// 通过请求对象获取响应对象
 			HttpResponse response = httpClient.execute(request);
 
-			// 判断网络连接状态码是否正常(0--200都数正常)
 			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				result= EntityUtils.toString(response.getEntity(),"utf-8");
 

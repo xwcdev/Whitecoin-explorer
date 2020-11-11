@@ -52,16 +52,13 @@ public class TransactionController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
 		return resultMsg;
 	}
 
-	/**
-	 * 返回合约代币列表
-	 */
 	@ResponseBody
 	@RequestMapping(value = "listTokens", method = RequestMethod.POST)
 	public ResultMsg listTokens(@RequestBody BlToken token) {
@@ -71,14 +68,13 @@ public class TransactionController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
 		return resultMsg;
 	}
 
-	// 根据条件返回token转账流水
 	@ResponseBody
 	@RequestMapping(value = "getTokenTransactionList", method = RequestMethod.POST)
 	public ResultMsg getTokenTransactionList(@RequestBody BlTokenTransaction transaction) {
@@ -88,7 +84,7 @@ public class TransactionController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
@@ -101,7 +97,7 @@ public class TransactionController extends BaseController {
 		ResultMsg resultMsg = new ResultMsg();
 		if(null==transaction.getTrxId()||null==transaction.getOpType()) {
 			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
+			resultMsg.setRetMsg("param can't be empty");
 			return resultMsg;
 		}
 		try {
@@ -145,7 +141,7 @@ public class TransactionController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
@@ -158,7 +154,7 @@ public class TransactionController extends BaseController {
 		ResultMsg resultMsg = new ResultMsg();
 		if(null==transaction.getAddress()) {
 			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
+			resultMsg.setRetMsg("param can't be empty");
 			return resultMsg;
 		}
 		try {
@@ -166,7 +162,7 @@ public class TransactionController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
@@ -179,7 +175,7 @@ public class TransactionController extends BaseController {
 		ResultMsg resultMsg = new ResultMsg();
 		if(null==transaction.getAddress()) {
 			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
+			resultMsg.setRetMsg("param can't be empty");
 			return resultMsg;
 		}
 		try {
@@ -187,7 +183,7 @@ public class TransactionController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
@@ -200,7 +196,7 @@ public class TransactionController extends BaseController {
 		ResultMsg resultMsg = new ResultMsg();
 		if(null==transaction.getAddress()) {
 			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
+			resultMsg.setRetMsg("param can't be empty");
 			return resultMsg;
 		}
 		try {
@@ -208,7 +204,7 @@ public class TransactionController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}

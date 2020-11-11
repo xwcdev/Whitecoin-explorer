@@ -63,7 +63,7 @@ public class BlockController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
 			resultMsg.setRetMsg(e.getMessage());
 		}
@@ -76,7 +76,7 @@ public class BlockController extends BaseController {
 		ResultMsg resultMsg = new ResultMsg();
 		if(null==blBlock.getBlockNum()) {
 			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
+			resultMsg.setRetMsg("param can't be empty");
 			return resultMsg;
 		}
 		try {
@@ -84,7 +84,7 @@ public class BlockController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
@@ -97,7 +97,7 @@ public class BlockController extends BaseController {
 		ResultMsg resultMsg = new ResultMsg();
 		if(null==transaction.getBlockNum()) {
 			resultMsg.setRetCode(ResultMsg.HTTP_CHECK_VALID);
-			resultMsg.setRetMsg("参数不能为空");
+			resultMsg.setRetMsg("param can't be empty");
 			return resultMsg;
 		}
 		try {
@@ -105,7 +105,7 @@ public class BlockController extends BaseController {
 			resultMsg.setRetCode(ResultMsg.HTTP_OK);
 			resultMsg.setData(data);
 		} catch (Exception e) {
-			logger.error("系统错误", e);
+			logger.error("system error", e);
 			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
 			resultMsg.setRetMsg(e.getMessage());
 		}
