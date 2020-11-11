@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap" :class="{mobile: isMobile}">
+  <div class="wrap" >
     <div class="head-part">
       <div class="info-wrap">
         <div class="info clear">
@@ -195,7 +195,7 @@ import typeObj from "../utils/type";
 var echarts = require("echarts");
 export default {
   name: "home",
-  inject: ['isMobile'],
+  // inject: ['isMobile'],
   data() {
     return {
       blockInfo: {
