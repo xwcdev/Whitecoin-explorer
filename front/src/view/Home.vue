@@ -30,7 +30,7 @@
               </ul>
             </div>
           </section>
-          <aside class="right">
+          <aside class="right">    
             <h3>{{$t('home.valueInfo.title')}}</h3>
             <div class="box -right-box" style>
               <ul>
