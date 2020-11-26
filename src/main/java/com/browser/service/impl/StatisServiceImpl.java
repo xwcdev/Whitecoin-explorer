@@ -65,13 +65,29 @@ public class StatisServiceImpl implements StatisService {
     public List<BlBlock> newBlockStatic() {
         List<BlBlock> blockList = blBlockMapper.selectNewBlockInfo();
         if (null != blockList && blockList.size() > 0) {
-            for (BlBlock block : blockList) {
-                if (null != block.getReward()) {
-                    block.setRewards(block.getReward().divide(new BigDecimal(Constant.PRECISION)).stripTrailingZeros()
+            for (int i=0;i<blockList.size();i++) {
+                if (null != blockList.get(i).getReward()) {
+                    blockList.get(i).setRewards(blockList.get(i).getReward().divide(new BigDecimal(Constant.PRECISION)).stripTrailingZeros()
                             .toPlainString() + " " + Constant.SYMBOL);
+                }
+
+                if(blockList.size() > 1) {
+
+                    //计算完成时间，当前条数据blockTime减上一条数据blockTime
+                    if(i != blockList.size()-1) {
+                        Date currentBlockTime = blockList.get(i).getBlockTime();
+                        Date beforeBlockTime = blockList.get(i+1).getBlockTime();
+                        if(null != currentBlockTime && null != beforeBlockTime) {
+                            Long intervalMileSeconds = currentBlockTime.getTime() - beforeBlockTime.getTime();
+                            blockList.get(i).setSeconds(intervalMileSeconds/1000);
+                        }
+                    } else if(i == blockList.size()-1) {
+                        blockList.get(i).setSeconds(0L);
+                    }
                 }
             }
         }
+
         return blockList;
     }
 

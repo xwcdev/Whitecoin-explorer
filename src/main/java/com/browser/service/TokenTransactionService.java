@@ -11,5 +11,6 @@ public interface TokenTransactionService {
     BlTokenTransaction selectByTrxIdAndEventSeq(String trxId, int eventSeq);
     EUDataGridResult getTokenTransactionList(BlTokenTransaction transaction);
     EUDataGridResult selectListByUserAddress(BlTokenTransaction transaction);
+    EUDataGridResult selectTrxList(BlTokenTransaction transaction);
     List<BlTokenTransaction> selectAllByTrxId(String trxId);
 }

@@ -79,6 +79,13 @@
         order by id asc
     </select>
 
+    <select id="selectTrxList" resultMap="BaseResultMap" parameterType="com.browser.dao.entity.BlTokenTransaction">
+        select
+        <include refid="Base_Column_List"/>
+        from bl_token_transaction
+        order by id asc
+    </select>
+
     <insert id="insert" parameterType="com.browser.dao.entity.BlTokenTransaction">
     insert into bl_token_transaction (trx_id, block_id, block_num, from_account, to_account, `symbol`, amount, `fee`, trx_time, contract_id, memo, event_seq)
     values (#{trxId,jdbcType=VARCHAR}, #{blockId,jdbcType=VARCHAR},
