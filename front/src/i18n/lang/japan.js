@@ -312,6 +312,31 @@ const japan = {
             value: '金額',
             fee: '手数料'
         },
+        myTokenTransactions: {
+            title: '私のトークントランザクション',
+            txHash: '取引ハッシュ',
+            block: '高さ',
+            types: '種類',
+            age: '時間',
+            from: '送信者',
+            to: '受取人',
+            value: '金額',
+            fee: '手数料',
+            symbol: 'トークン'
+        },
+        mySwapTransactions: {
+            address: '住所',
+            title: 'スワップトランザクション',
+            txHash: '取引ハッシュ',
+            block: '高さ',
+            types: '種類',
+            age: '時間',
+            from: '送信者',
+            to: '受取人',
+            value: '金額',
+            fee: '手数料',
+            symbol: 'トークン'
+        },
         myContracts: {
             title: '私のコントラクト',
             address: 'コントラクトアドレス',

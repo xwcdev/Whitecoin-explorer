@@ -303,6 +303,31 @@ const korea = {
       value: '금액',
       fee: '수수료'
     },
+    myTokenTransactions: {
+      title: '내 토큰 거래',
+      txHash: '거래 해시',
+      block: '블록',
+      types: '유형',
+      age: '시간',
+      from: '에서',
+      to: '~로',   
+      value: '금액',
+      fee: '수수료',
+      symbol: '토큰'
+    }, 
+    mySwapTransactions: {
+      address: '주소',
+      title: '내 스왑 거래',
+      txHash: '거래 해시',
+      block: '블록',
+      types: '유형',
+      age: '시간',
+      from: '에서',
+      to: '~로', 
+      value: '금액',
+      fee: '수수료',
+      symbol: '토큰'
+    },
     myContracts: {
       title: '내 컨트렉트',
       address: '컨트렉트 주소',
