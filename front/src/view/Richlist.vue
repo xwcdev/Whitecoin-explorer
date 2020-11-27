@@ -1,31 +1,34 @@
 <template>
   <div class="wrap">
-    <div class="background"></div>
-    <div class="top-line"></div>
-    <main>
-      <h2>{{$t('richlist.title')}}</h2>
-      <div class="table-wrap">
-        <el-table :data="richlist" style="width: 100%">
-          <el-table-column type="index" width="50"></el-table-column>
-          <el-table-column align="center" :label="$t('richlist.address')" show-overflow-tooltip>
-            <template slot-scope="scope">
-              <router-link :to="'/address?address='+scope.row.addr">{{scope.row.addr}}</router-link>
-              <span style="color: red;" v-if="scope.row.addr==='XWCNWKLUcsybWt4bW5EXV1CfdaSNHiSKj4Hzw' || scope.row.addr==='XWCNi146ffqUffGJk3tTjnY1MdVGJn3m8jH29'">({{$t('address.overview.abnormal_address')}})</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" show-overflow-tooltip :label="$t('richlist.accountName')">
-            <template slot-scope="scope">
-              <span>{{scope.row.name}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" show-overflow-tooltip :label="$t('richlist.amount')">
-            <template slot-scope="scope">
-              <span>{{scope.row.amount}} XWC</span>
-            </template>
-          </el-table-column>
-        </el-table>
+    <div class="tr_main">
+      <div class="con_top">
+        <p>{{$t('richlist.title')}}</p>
+        <Search class="search_con"/>
       </div>
-    </main>
+      <div class="con_all">
+        <div class="table-wrap">
+          <el-table :data="richlist" style="width: 100%">
+            <el-table-column type="index" width="50"></el-table-column>
+            <el-table-column align="center" :label="$t('richlist.address')" show-overflow-tooltip>
+              <template slot-scope="scope">
+                <router-link :to="'/address?address='+scope.row.addr">{{scope.row.addr}}</router-link>
+                <span style="color: red;" v-if="scope.row.addr==='XWCNWKLUcsybWt4bW5EXV1CfdaSNHiSKj4Hzw' || scope.row.addr==='XWCNi146ffqUffGJk3tTjnY1MdVGJn3m8jH29'">({{$t('address.overview.abnormal_address')}})</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" show-overflow-tooltip :label="$t('richlist.accountName')">
+              <template slot-scope="scope">
+                <span>{{scope.row.name}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" show-overflow-tooltip :label="$t('richlist.amount')">
+              <template slot-scope="scope">
+                <span>{{scope.row.amount}} XWC</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -33,9 +36,11 @@
 import bus from "../utils/bus";
 import common from "../utils/common";
 import mixin from "../utils/mixin";
+import Search from "../components/search/Search";
 export default {
   mixins: [mixin],
   name: "contracts",
+  components:{Search},
   data() {
     return {
       page: 1,
@@ -86,29 +91,38 @@ export default {
     getBusLocal() {
       return bus.local;
     }
+  },
+  mounted(){
+    bus.local = 4
   }
 };
 </script>
 
 <style lang="less" scoped>
 .wrap {
-  .top-line {
-    height: 1px;
-  }
-  .background {
-    width: 100%;
-    height: 338px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: white;
-  }
-  main {
-    width: 77%;
-    min-width: 1160px;
-    margin: 120px auto;
+  .tr_main {
+    width: 1140px;
+    margin: 0 auto;
     position: relative;
     color: black;
+    .con_top{
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 30px;
+      p{
+        font-size: 22px;
+        color: #333333;
+        font-weight: 600;
+      }
+    }
+    .con_all{
+      background: #fff;
+      box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
+      margin: 30px 0;
+      padding: 30px;
+      border-radius: 5px;
+    }
     .search {
       position: absolute;
       right: 0;

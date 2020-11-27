@@ -1,119 +1,122 @@
 <template>
   <div class="wrap">
-    <div class="background"></div>
-    <div class="top-line"></div>
-    <main>
-      <tips :tips="tips"></tips>
-      <div v-if="tips[0].show" class="overview-div">
-        <h2>
-          {{$t('blocks.overview.title')}}
-        </h2>
-        <div class="list">
-          <ul>
-            <li>
-              <span class="name">{{$t('blocks.overview.hash')}}</span>
-              <span>
-                  {{blockData.blockId}}
-                </span>
-            </li>
-            <li>
-              <span class="name">{{$t('blocks.overview.height')}}</span>
-              <span>
-                <router-link :to="'/blockDetails/'+height">
-                  {{height}}
-                </router-link>
-                </span>
-            </li>
-            <li>
-              <span class="name">{{$t('blocks.overview.timeStamp')}}</span>
-              <span>
-                  <timeago :since="blockData.blockTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
-                </span>
-            </li>
-            <li>
-              <span class="name">{{$t('blocks.overview.transactions')}}</span>
-              <span>
-                 {{blockData.trxCount}}
-                </span>
-            </li>
-            <li>
-              <span class="name">{{$t('blocks.overview.miner')}}</span>
-              <span>
-                <router-link :to="'/address?minerName='+blockData.minerName">
-                  {{blockData.minerName}}
-                </router-link>
-                </span>
-            </li>
-            <li>
-              <span class="name">{{$t('blocks.overview.rewards')}}</span>
-              <span>
-                {{blockData.rewards}}
-              </span>
-            </li>
-            <!--<li>-->
-              <!--<span class="name">{{$t('blocks.overview.version')}}</span>-->
-              <!--<span>-->
-                  <!--0-->
-                <!--</span>-->
-            <!--</li>-->
-            <li>
-              <span class="name">{{$t('blocks.overview.merkleRoot')}}</span>
-              <span>
-                  {{blockData.merkleRoot}}
-                </span>
-            </li>
-          </ul>
-        </div>
+    <div class="tr_main">
+      <div class="con_top">
+        <p>{{$t('transferDetails.tips.overview')}}</p>
+        <Search class="search_con"/>
       </div>
-      <div v-else class="transaction-div">
-        <div class="total">
-          A Total Of {{total}} transactions found
+      <div class="con_all">
+        <div v-if="tips[0].show" class="overview-div">
+          <h2>
+            {{$t('blocks.overview.title')}}
+          </h2>
+          <div class="list">
+            <ul>
+              <li>
+                <span class="name">{{$t('blocks.overview.hash')}}</span>
+                <span>
+                    {{blockData.blockId}}
+                  </span>
+              </li>
+              <li>
+                <span class="name">{{$t('blocks.overview.height')}}</span>
+                <span>
+                  <router-link :to="'/blockDetails/'+height">
+                    {{height}}
+                  </router-link>
+                  </span>
+              </li>
+              <li>
+                <span class="name">{{$t('blocks.overview.timeStamp')}}</span>
+                <span>
+                    <timeago :since="blockData.blockTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
+                  </span>
+              </li>
+              <li>
+                <span class="name">{{$t('blocks.overview.transactions')}}</span>
+                <span>
+                  {{blockData.trxCount}}
+                  </span>
+              </li>
+              <li>
+                <span class="name">{{$t('blocks.overview.miner')}}</span>
+                <span>
+                  <router-link :to="'/address?minerName='+blockData.minerName">
+                    {{blockData.minerName}}
+                  </router-link>
+                  </span>
+              </li>
+              <li>
+                <span class="name">{{$t('blocks.overview.rewards')}}</span>
+                <span>
+                  {{blockData.rewards}}
+                </span>
+              </li>
+              <!--<li>-->
+                <!--<span class="name">{{$t('blocks.overview.version')}}</span>-->
+                <!--<span>-->
+                    <!--0-->
+                  <!--</span>-->
+              <!--</li>-->
+              <li>
+                <span class="name">{{$t('blocks.overview.merkleRoot')}}</span>
+                <span>
+                    {{blockData.merkleRoot}}
+                  </span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div class="table-wrap">
-          <el-table
-            :data="transaction"
+        <div v-else class="transaction-div">
+          <div class="total">
+            A Total Of {{total}} transactions found
+          </div>
+          <div class="table-wrap">
+            <el-table
+              :data="transaction"
 
-            style="width: 100%"
-          >
-            <el-table-column
-              align="center"
-              :label="$t('blocks.transaction.txHash')"
-              show-overflow-tooltip
+              style="width: 100%"
             >
-              <template slot-scope="scope">
-                <router-link    :to="'/transfer_details/'+scope.row.trxId+'/'+scope.row.opType">{{scope.row.trxId}}</router-link>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :formatter="getTypeName"
-              :label="$t('blocks.transaction.types')"
-              width="220">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="amountStr"
-              :label="$t('blocks.transaction.value')"
-              width="220">
-            </el-table-column>
-            <el-table-column
-              align="center"
-              prop="feeStr"
-              :label="$t('blocks.transaction.fee')"
-              width="220"
-            >
-            </el-table-column>
-          </el-table>
+              <el-table-column
+                align="center"
+                :label="$t('blocks.transaction.txHash')"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <router-link    :to="'/transfer_details/'+scope.row.trxId+'/'+scope.row.opType">{{scope.row.trxId}}</router-link>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                :formatter="getTypeName"
+                :label="$t('blocks.transaction.types')"
+                width="220">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="amountStr"
+                :label="$t('blocks.transaction.value')"
+                width="220">
+              </el-table-column>
+              <el-table-column
+                align="center"
+                prop="feeStr"
+                :label="$t('blocks.transaction.fee')"
+                width="220"
+              >
+              </el-table-column>
+            </el-table>
+          </div>
+          <el-pagination
+            class="pagination"
+            layout="prev, pager, next, jumper"
+            :current-page="page"
+            :page-size="size"
+            :total="total">
+          </el-pagination>
         </div>
-        <el-pagination
-          class="pagination"
-          layout="prev, pager, next, jumper"
-          :current-page="page"
-          :page-size="size"
-          :total="total">
-        </el-pagination>
       </div>
-    </main>
+    </div>
   </div>
 </template>
 
@@ -121,9 +124,10 @@
   import Tips from "../components/tips/Tips";
   import bus from "../utils/bus";
   import typeObj from '../utils/type';
+  import Search from "../components/search/Search";
   export default {
     components: {
-      Tips
+      Tips,Search
     },
     name: "block-details",
     beforeRouteUpdate (to, from, next) {
@@ -203,28 +207,41 @@
       getBusLocal() {
         return bus.local;
       }
+    },
+    mounted(){
+      bus.navChoice = 1;
     }
   }
 </script>
 
 <style lang="less" scoped>
   .wrap {
-    .top-line {
-      height: 1px;
-    }
-    .background {
-      width: 100%;
-      height: 168px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: white;
-    }
-    main {
-      width: 77%;
-      min-width: 1160px;
-      margin: 120px auto;
+    .tr_main {
+      width: 1140px;
+      margin: 0 auto;
       position: relative;
+      color: black;
+      .con_top{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 30px;
+        p{
+          font-size: 22px;
+          color: #333333;
+          font-weight: 600;
+          .normal&.choice{
+            font-size: 22px;
+          }
+        }
+      }
+      .con_all{
+        background: #fff;
+        box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
+        margin: 30px 0;
+        padding: 30px;
+      
+      }
       .search {
         position: absolute;
         right: 0;
@@ -233,8 +250,9 @@
       .overview-div {
         h2 {
           margin: 40px 0 20px;
-          font-size: 20px;
-          color: #5688ED;
+          font-size: 18px;
+          color: #333;
+          font-weight: 600;
         }
         .list {
           ul li {
@@ -245,7 +263,7 @@
               display: inline-block;
             }
             .name {
-              width: 240px;
+              width: 160px;
             }
           }
         }

@@ -6,6 +6,7 @@ import router from './router';
 import Element from 'element-ui';
 
 import device from "current-device";
+import VueCookies from 'vue-cookies'
 
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/less/resetElement.less';
@@ -14,6 +15,11 @@ import './assets/less/common.less';
 import i18n from './i18n/i18n';
 import VueTimeago from 'vue-timeago'
 Vue.config.productionTip = false;
+
+//cookie管理
+Vue.use(VueCookies)
+
+console.log(this.$cookies,'04444')
 
 if (device.mobile()) {
   ; (function (win, lib) {

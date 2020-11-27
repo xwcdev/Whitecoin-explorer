@@ -5,7 +5,13 @@ const japan = {
         blocks: 'ブロックチェーン',
         transactions: '取引履歴',
         contracts: 'コントラクト',
-        richlist: '豊富なリスト'
+        richlist: '豊富なリスト',
+        tokens: 'トークン',
+        ziyuan: 'リソース',
+    },
+    maxTitle:{
+        t1:'取引履歴',
+        t2:'トークン 取引履歴',
     },
     alert: {
         noSpace: '十分なスペースがありません',
@@ -23,7 +29,7 @@ const japan = {
             blockHeight: 'ブロックの高さ',
             blockReward: 'ブロック報酬',
             crossAsset: 'その他の資産',
-            accountCount: 'アカウントの数'
+            accountCount: '総発行量'
         },
         valueInfo: {
             title: 'バリューの情報',
@@ -40,7 +46,10 @@ const japan = {
             transactions: 'トランザクション',
             miner: 'マイナー',
             size: 'サイズ',
-            reward: '報酬'
+            reward: '報酬',
+            minerFee:'マイニング費用',
+            over:'実施する',
+            success:'件の注文',
         },
         transaction: {
             title: 'トランザクション',
@@ -51,14 +60,22 @@ const japan = {
             types: 'タイプ ',
             age: '時間',
             value: '金額',
-            fee: '手数料'
+            fee: '手数料',
+            numberss:'数量'
         },
         transactionLine: {
             today: '今日',
             week: '今週',
             month: '今月',
             summary: 'トランザクション統計'
-        }
+        },
+        footer: {
+            t1: "ホワイトペーパー",
+            t2: "お問い合わせください",
+            t3: "イベント",
+            t4: "サポート",
+            t5: "リンク",
+        },
     },
     transferDetails: {
         tips: {
@@ -73,6 +90,25 @@ const japan = {
             height: 'ブロックの高さ',
             timeStamp: '時間'
         },
+        tokenTransfers: {
+            title: 'Token 送金',
+            transfer: '送金',
+        },
+        contractBalanceChangeDetail: {
+            title: '契約残高の変更',
+            contract_withdraw: '契約残高の変更...',
+            deposit_contract: '預金契約',
+            deposit_to_address: '契約撤回アドレス',
+        },
+        swapEvent: {
+            title: 'Swap Event',
+            NativeBalanceChange: 'Native Balance Change',
+            Exchanged: 'Exchange',
+            LiquidityTokenMinted: 'Minted Liquidity Token',
+            LiquidityTokenDestoryed: 'Destroyed Liquidity Token',
+            LiquidityAdded: 'Added Liquidity',
+            LiquidityRemoved: 'Removed Liquidity'
+          },
         details: {
             title: '明細',
             transfer: '送金',
