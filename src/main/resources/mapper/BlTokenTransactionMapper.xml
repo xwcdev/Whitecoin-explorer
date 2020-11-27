@@ -83,7 +83,7 @@
         select
         <include refid="Base_Column_List"/>
         from bl_token_transaction
-        order by id asc
+        order by id desc
     </select>
 
     <insert id="insert" parameterType="com.browser.dao.entity.BlTokenTransaction">
