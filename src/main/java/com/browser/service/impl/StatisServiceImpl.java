@@ -485,7 +485,11 @@ public class StatisServiceImpl implements StatisService {
                 String balance = jsonObject.getBigDecimal("amount").
                         divide(new BigDecimal(blAsset.getPrecision()), 8, BigDecimal.ROUND_HALF_UP).
                         stripTrailingZeros().toPlainString();
-                balanceList.add(balance + " " + blAsset.getSymbol());
+                String symbol = blAsset.getSymbol();
+                if(!StringUtils.isEmpty(symbol) && "XWC".equals(symbol.toUpperCase())) {
+                    balanceList.add(balance + " " + blAsset.getSymbol());
+                }
+
 
             }
         }
