@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="tr_main">
       <div class="con_top">
-        <p>{{$t('richlist.title')}}</p>
+        <p>RICHLIST</p>
         <Search class="search_con"/>
       </div>
       <div class="con_all">

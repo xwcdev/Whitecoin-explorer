@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="wrap_two">
       <div class="con_aside">
-        <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.png" @click="logoClick"></a>
+        <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.svg" @click="logoClick"></a>
         <div class="navbar">
           <ul>
             <router-link to="/">
@@ -34,7 +34,7 @@
                 <el-option :value="$t('nav.contracts')" :class="{'choice':getChoiceIndex === 3}" @click="navChange(3)">{{$t('nav.contracts')}}</el-option>
               </router-link>
               <router-link to="/richlist">
-                <el-option :value="$t('nav.richlist')"  :class="{'choice':getChoiceIndex === 4}" @click="navChange(4)">{{$t('nav.richlist')}}</el-option>
+                <el-option :value="$t('nav.richlist')"  :class="{'choice':getChoiceIndex === 4}" @click="navChange(4)">RICHLIST</el-option>
               </router-link>
             </el-select>
           </ul>
@@ -169,7 +169,7 @@ export default {
           color: #333333;
           font-size: 16px;
           cursor: pointer;
-          line-height: 45px;
+          line-height: 65px;
           border-bottom: 4px solid #fff;
           box-sizing: border-box;
           &:hover {
@@ -212,13 +212,20 @@ export default {
       height: 46px!important;
       line-height: 46px !important;
       font-weight: normal !important;
-      font-family: "Microsoft Yahei",STHeiTi, sans-serif !important;
+      font-family: "Avenir", Helvetica, Arial, sans-serif;
       border-bottom: 4px solid #fff;
     }
   }
 }
+.el-input--medium{
+  font-size: 16px !important;
+  margin-bottom: 2px;
+}
  .el-input--medium .el-input__icon{
   line-height: 50px;
+}
+.el-select-dropdown__item{
+  text-align: center;
 }
  .el-select-dropdown__item.selected{
   color: #735DFF !important;

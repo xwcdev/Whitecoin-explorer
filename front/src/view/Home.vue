@@ -103,8 +103,8 @@
                 <p><timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
               </div>
               <div class="block_san">
-                <p><span>FROM:</span> {{item.fromAccount!==null?(item.fromAccount.substring(0,11) + '...' ):'--'}}</p>
-                <p class="toAccount"><span>TO:</span> {{item.toAccount!==null? (item.toAccount.substring(0,16) + '...') : '--'}}</p>
+                <p><span>FROM:</span> <router-link :to="`/address?address=${item.fromAccount}`">{{item.fromAccount!==null?(item.fromAccount.substring(0,11) + '...' ):'--'}} </router-link></p>
+                <p class="toAccount"><span>TO:</span> <router-link :to="`/address?address=${item.toAccount}`"> {{item.toAccount!==null? (item.toAccount.substring(0,16) + '...') : '--'}} </router-link></p>
               </div>
               <div class="block_si">
                 <p><span>{{item.amountStr !== null ? item.amountStr : '--'}}</span></p>
@@ -123,9 +123,11 @@ import bus from "../utils/bus";
 import common from "../utils/common";
 import typeObj from "../utils/type";
 import Search from "../components/search/Search";
+import mixin from '../utils/mixin';
 
 var echarts = require("echarts");
 export default {
+  mixins: [mixin],
   name: "home",
   // inject: ['isMobile'],
   components:{Search},
@@ -508,6 +510,9 @@ main {
         }
         .block_san{
           width: 35%;
+          P{
+            cursor: pointer;
+          }
         }
         .block_si{
           width: 23%;
