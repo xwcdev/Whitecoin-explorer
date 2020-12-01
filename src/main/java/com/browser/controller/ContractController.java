@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 合约信息处理入口
@@ -213,19 +215,54 @@ public class ContractController {
     public ResultMsg getUserTokenBalances(@PathVariable("addr") String addr) {
         ResultMsg resultMsg = new ResultMsg();
         resultMsg.setRetCode(ResultMsg.HTTP_OK);
+        NewBalance data = new NewBalance();
+
+
+
+        BlMinerStatis blMinerStatis = new BlMinerStatis();
+        blMinerStatis.setAddress(addr);
+
         try {
+
             if (StringUtil.isEmpty(addr)) {
                 resultMsg.setData(new ArrayList<>());
-            } else {
-                List<BlTokenBalance> tokenBalances = tokenBalanceService.findAllTokenBalancesByAddr(addr);
-                resultMsg.setData(tokenBalances);
             }
+            List<BlTokenBalance> tokenBalances = tokenBalanceService.findAllTokenBalancesByAddr(addr);
+            BlMinerStatis balanceData = statisService.getAddrStatis(blMinerStatis);
+            List<String> balanceList = balanceData.getBalances();
+            if(!CollectionUtils.isEmpty(balanceList)) {
+                List<String> newBalanceList = balanceList.stream().filter(item -> item.contains("XWC")).collect(Collectors.toList());
+                balanceData.setBalances(newBalanceList);
+            }
+            data.setXwcBanlance(balanceData);
+
+            for (String typeBalance:balanceList) {
+                /// TODO: 2020/12/1 id不好设置
+                if(typeBalance.contains("XWC")) {
+                    balanceList.remove(typeBalance);
+                    continue;
+                }
+
+                BlTokenBalance blTokenBalance = new BlTokenBalance();
+                String[] chars = typeBalance.split(" ");
+
+                blTokenBalance.setTokenSymbol(chars[0]);
+                blTokenBalance.setAmount(new BigDecimal(chars[1]));
+                tokenBalances.add(blTokenBalance);
+
+            }
+
+            data.setTokenBalances(tokenBalances);
+            resultMsg.setRetCode(ResultMsg.HTTP_OK);
+            resultMsg.setData(data);
         } catch (Exception e) {
             logger.error("system error", e);
             resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
             resultMsg.setRetMsg(e.getMessage());
         }
+
         return resultMsg;
+
     }
 
 	@ResponseBody
