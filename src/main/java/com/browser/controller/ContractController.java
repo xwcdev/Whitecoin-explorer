@@ -237,21 +237,30 @@ public class ContractController {
             }
             data.setXwcBanlance(balanceData);
 
-            for (String typeBalance:balanceList) {
-                /// TODO: 2020/12/1 id不好设置
-                if(typeBalance.contains("XWC")) {
-                    balanceList.remove(typeBalance);
-                    continue;
+            if(!CollectionUtils.isEmpty(balanceList)) {
+
+                for (String typeBalance:balanceList) {
+                    /// TODO: 2020/12/1 id不好设置
+                    if(typeBalance.contains("XWC")) {
+                        balanceList.remove(typeBalance);
+                        if(balanceList.size() == 0) {
+                            break;
+                        }
+                        continue;
+                    }
+
+                    BlTokenBalance blTokenBalance = new BlTokenBalance();
+                    String[] chars = typeBalance.split(" ");
+
+                    blTokenBalance.setTokenSymbol(chars[1]);
+                    blTokenBalance.setAmount(new BigDecimal(chars[0]));
+                    tokenBalances.add(blTokenBalance);
+
                 }
 
-                BlTokenBalance blTokenBalance = new BlTokenBalance();
-                String[] chars = typeBalance.split(" ");
-
-                blTokenBalance.setTokenSymbol(chars[0]);
-                blTokenBalance.setAmount(new BigDecimal(chars[1]));
-                tokenBalances.add(blTokenBalance);
-
             }
+
+
 
             data.setTokenBalances(tokenBalances);
             resultMsg.setRetCode(ResultMsg.HTTP_OK);
