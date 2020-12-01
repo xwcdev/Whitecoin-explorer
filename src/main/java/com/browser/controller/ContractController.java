@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -239,23 +240,27 @@ public class ContractController {
 
             if(!CollectionUtils.isEmpty(balanceList)) {
 
-                for (String typeBalance:balanceList) {
-                    /// TODO: 2020/12/1 id不好设置
+                Iterator<String> it = balanceList.iterator();
+
+                while(it.hasNext()){
+                    String typeBalance = it.next();
+
                     if(typeBalance.contains("XWC")) {
-                        balanceList.remove(typeBalance);
-                        if(balanceList.size() == 0) {
-                            break;
-                        }
-                        continue;
+                        it.remove();
                     }
+                }
 
-                    BlTokenBalance blTokenBalance = new BlTokenBalance();
-                    String[] chars = typeBalance.split(" ");
+                if(!CollectionUtils.isEmpty(balanceList)) {
+                    for (String typeBalance:balanceList) {
 
-                    blTokenBalance.setTokenSymbol(chars[1]);
-                    blTokenBalance.setAmount(new BigDecimal(chars[0]));
-                    tokenBalances.add(blTokenBalance);
+                        BlTokenBalance blTokenBalance = new BlTokenBalance();
+                        String[] chars = typeBalance.split(" ");
 
+                        blTokenBalance.setTokenSymbol(chars[1]);
+                        blTokenBalance.setAmount(new BigDecimal(chars[0]));
+                        tokenBalances.add(blTokenBalance);
+
+                    }
                 }
 
             }
