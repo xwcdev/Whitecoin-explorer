@@ -226,6 +226,7 @@ public class ContractController {
 
             if (StringUtil.isEmpty(addr)) {
                 resultMsg.setData(new ArrayList<>());
+                return resultMsg;
             }
             List<BlTokenBalance> tokenBalances = tokenBalanceService.findAllTokenBalancesByAddr(addr);
             BlMinerStatis balanceData = statisService.getAddrStatis(blMinerStatis);
