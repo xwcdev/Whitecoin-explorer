@@ -105,7 +105,6 @@
                 <el-table-column
                   align="center"
                   :label="$t('contractOverview.txHash')"
-                  show-overflow-tooltip
                 >
                   <template slot-scope="scope">
                     <router-link :to="'/transfer_details/'+scope.row.trxId+'/'+scope.row.opType">{{scope.row.trxId}}
@@ -131,7 +130,6 @@
                 <el-table-column
                   align="center"
                   :label="$t('contractOverview.callerAddress')"
-                  show-overflow-tooltip
                 >
                   <template slot-scope="scope">
                     <span class="link"
@@ -170,7 +168,6 @@
                 <el-table-column
                   align="center"
                   :label="$t('contractOverview.txHash')"
-                  show-overflow-tooltip
                 >
                   <template slot-scope="scope">
                     <router-link :to="'/transfer_details/'+scope.row.trxId+'/'+(scope.row.opType||79)">{{scope.row.trxId}}
@@ -196,7 +193,6 @@
                 <el-table-column
                   align="center"
                   label="From"
-                  show-overflow-tooltip
                 >
                   <template slot-scope="scope">
                     <span class="link"
@@ -206,7 +202,6 @@
                 <el-table-column
                   align="center"
                   label="To"
-                  show-overflow-tooltip
                 >
                   <template slot-scope="scope">
                     <span class="link"
@@ -216,7 +211,6 @@
                 <el-table-column
                   align="center"
                   label="Amount"
-                  show-overflow-tooltip
                 >
                   <template slot-scope="scope">
                     <span>{{scope.row.amountStr}} &nbsp; {{scope.row.symbol}}</span>
@@ -225,7 +219,6 @@
                 <el-table-column
                   align="center"
                   label="Memo"
-                  show-overflow-tooltip
                 >
                   <template slot-scope="scope">
                     <span>{{scope.row.memo}}</span>
@@ -264,10 +257,12 @@
 <script>
   import bus from "../utils/bus";
   import mixin from '../utils/mixin';
+  import Search from "../components/search/Search";
 
   export default {
     mixins: [mixin],
     name: "contract-overview",
+    components:{Search},
     beforeRouteUpdate(to, from, next) {
       this.contractAddress = to.params.contractAddress;
       this.getContractInfo();

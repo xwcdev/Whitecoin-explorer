@@ -28,13 +28,14 @@
             </router-link>
             <el-select
               :value="$t('nav.ziyuan')"
-              class="-lang-select"
+              :class="['-lang-select',{'choice':getChoiceIndex === 4}]"
+              @click="navChange(4)"
             >
               <router-link to="/contracts">
-                <el-option :value="$t('nav.contracts')" :class="{'choice':getChoiceIndex === 3}" @click="navChange(3)">{{$t('nav.contracts')}}</el-option>
+                <el-option :value="$t('nav.contracts')">{{$t('nav.contracts')}}</el-option>
               </router-link>
               <router-link to="/richlist">
-                <el-option :value="$t('nav.richlist')"  :class="{'choice':getChoiceIndex === 4}" @click="navChange(4)">RICHLIST</el-option>
+                <el-option :value="$t('nav.richlist')">RICHLIST</el-option>
               </router-link>
             </el-select>
           </ul>
@@ -98,7 +99,7 @@ export default {
       this.$i18n.locale = newLocale;
       bus.local = newLocale;
       localStorage.setItem('lang',bus.local);
-      // console.log(localStorage,'pppp')
+      console.log(bus.local,'pppp')
     },
     navChange(index) {
       bus.navChoice = index;
@@ -203,23 +204,22 @@ export default {
     input::-webkit-input-placeholder{
       color: #333333 !important;
       font-size: 14px !important;
-      padding-top: 3px;
     }
     .el-input__inner {
       color: #333333 !important;
       text-align: center;
       padding: 0;
-      height: 46px!important;
-      line-height: 46px !important;
+      height: 65px;
+      line-height: 65px !important;
       font-weight: normal !important;
       font-family: "Avenir", Helvetica, Arial, sans-serif;
       border-bottom: 4px solid #fff;
+      box-sizing: border-box;
     }
   }
 }
 .el-input--medium{
   font-size: 16px !important;
-  margin-bottom: 2px;
 }
  .el-input--medium .el-input__icon{
   line-height: 50px;

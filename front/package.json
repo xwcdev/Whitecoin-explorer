@@ -17,6 +17,7 @@
     "echarts": "^4.0.4",
     "element-ui": "^2.3.7",
     "vue": "^2.5.2",
+    "vue-clipboard2": "^0.3.1",
     "vue-cookies": "^1.7.4",
     "vue-i18n": "^7.7.0",
     "vue-router": "^3.0.1",

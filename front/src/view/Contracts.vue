@@ -16,7 +16,7 @@
               :label="$t('contracts.contractAddress')"
             >
               <template slot-scope="scope">
-                <router-link   :to="'/contractOverview/'+scope.row.contractAddress">
+                <router-link  :to="'/contractOverview/'+scope.row.contractAddress">
                   {{scope.row.contractAddress}}
                 </router-link>
               </template>
@@ -26,7 +26,9 @@
               :label="$t('contracts.authorAddress')"
             >
               <template slot-scope="scope">
-                <span class="link" @click="_mixin_address_jump(scope.row.onwerAddress)">{{scope.row.onwerAddress}}</span>
+                 <router-link  :to="'/address?address='+scope.row.onwerAddress">
+                  {{scope.row.onwerAddress}}
+                </router-link>
               </template>
             </el-table-column>
             <el-table-column
@@ -51,6 +53,7 @@
             >
               <template slot-scope="scope">
                 <timeago v-if="scope.row.lastTime !== null" :since="scope.row.lastTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
+                <span v-else> -- </span>
               </template>
             </el-table-column>
           </el-table>
@@ -87,6 +90,8 @@
     },
     created() {
       this.getContractsData();
+
+      bus.navChoice = 4
     },
     methods: {
       getContractsData() {
@@ -138,6 +143,12 @@
         margin: 30px 0;
         padding: 30px;
         border-radius: 5px;
+        a{
+          color: #0279FF;
+          &:hover{
+            color: #333;
+          }
+        }
       }
       .pagination {
         text-align: center;

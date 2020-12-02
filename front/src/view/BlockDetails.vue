@@ -239,8 +239,7 @@
         background: #fff;
         box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
         margin: 30px 0;
-        padding: 30px;
-      
+        padding-bottom: 30px;
       }
       .search {
         position: absolute;
@@ -249,12 +248,18 @@
       }
       .overview-div {
         h2 {
-          margin: 40px 0 20px;
-          font-size: 18px;
+          margin: 0 0 20px 0;
+          font-size: 16px;
           color: #333;
           font-weight: 600;
+          border-bottom: 1px #EEEEEE solid;
+          padding: 20px 0 20px 30px;
         }
         .list {
+          border-radius: 8px;
+          border: 1px solid #B8C8DA;
+          padding: 20px 10px;
+          margin: 0 30px;
           ul li {
             font-size: 14px;
             border-bottom: 1px solid #FCFCFC;
@@ -264,6 +269,12 @@
             }
             .name {
               width: 160px;
+            }
+          }
+          a{
+            color: #0279FF;
+            &:hover{
+              color: #333;
             }
           }
         }
