@@ -19,7 +19,8 @@ const korea = {
     notSearch:'검색 결과를 찾을 수 없습니다'
   },
   search: {
-    placeholder: '주소/컨트렉트 주소/블록/계정명'
+    placeholder: '주소/컨트렉트 주소/블록/계정명',
+    placeholder2:'코인명 또는 계약 주소를 입력해 주세요',
   },
   home: {
     blockchinaInfo: {
@@ -167,7 +168,7 @@ const korea = {
       rewards: '리워드:'
     },
     myTransactions: {
-      title: '내 거래', 
+      title: '이체', 
       txHash: '거래 해시',
       block: '블록',
       types: '유형',
@@ -196,6 +197,20 @@ const korea = {
     lastTime: '마지막 사용 시간',
     total_span_before: '총 발견',
     total_span_after: '_개의 컨트렉트'
+  },
+  tokens: {
+    title: '화폐',
+    contractAddress: '컨트렉트 주소',
+    types: '유형',
+    authorAddress: '생성자',
+    callTimes: '호출 횟수',
+    createTime: '생성 시간',
+    lastTime: '마지막 사용 시간',
+    total_span_before: '총 발견',
+    total_span_after: '_개의 컨트렉트',
+    tokenSymbol: '토큰 기호',
+    precision: '정도',
+    tokenSupply: '공급'
   },
   richlist: {
     title: '풍부한 목록',
@@ -290,7 +305,8 @@ const korea = {
       rewards: '리워드:',
       balances: '잔액:',
       lockBalance:'투표 자산:',
-      paybackBalances: '상금 금액:'
+      paybackBalances: '상금 금액:',
+      tokenBalances: '화폐잔액:',
     },
     myTransactions: {
       title: '내 거래',
@@ -336,6 +352,10 @@ const korea = {
       create: '생성 시간',
       last: '마지막 시용 시간'
     }
+  },
+  message:{
+    success:'복사성공!',
+    failed:'복사실패!'
   },
   ...enLocale
 }

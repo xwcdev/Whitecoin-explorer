@@ -19,7 +19,8 @@ const cn = {
     notSearch:'没找到对应的搜索结果'
   },
   search: {
-    placeholder: '地址/交易hash/合约地址/块高/账户名'
+    placeholder: '地址/交易hash/合约地址/块高/账户名',
+    placeholder2:'请输入代币名称或合约地址', 
   },
   home: {
     blockchinaInfo: {
@@ -91,7 +92,7 @@ const cn = {
       timeStamp: '时间:'
     },
     tokenTransfers: {
-      title: 'Token转账',
+      title: '代币转账',
       transfer: '转账',
     },
     contractBalanceChangeDetail: {
@@ -172,7 +173,7 @@ const cn = {
       name: '名称:',
       address: '地址:',
       contracts: '合约:',
-      transaction: '交易:',
+      transaction: '交易数:',
       rewards: '奖励:'
     },
     myTransactions: {
@@ -246,7 +247,7 @@ const cn = {
     title: '区块',
     height: '高度',
     age: '时间',
-    txn: '交易数',
+    txn: '交易',
     miner: '播报者',
     size: '大小',
     reward: '奖励',
@@ -305,20 +306,21 @@ const cn = {
   },
   address: {
     overview: {
-      title: '地址概览',
+      title: '地址',
       name: '账户名:',
       address: '地址:',
       contracts: '合约:',
-      transaction: '交易:',
+      transaction: '交易:', 
       rewards: '奖励:',
       balances: '余额:',
-      lockBalance:'投票资产:',
+      lockBalance:'质押资产:',
       paybackBalances: '奖励金额:',
-      abnormal_address: '异常地址'
+      abnormal_address: '异常地址',
+      tokenBalances: '代币余额:',
     },
     myTransactions: {
-      title: '我的交易',
-      txHash: '交易hash',
+      title: '转账',
+      txHash: '交易',
       block: '高度',
       types: '类型',
       age: '时间',
@@ -360,6 +362,10 @@ const cn = {
       create: '创建时间',
       last: '最后使用时间'
     }
+  },
+  message:{
+    success:'复制成功!',
+    failed:'复制失败!'
   },
   ...zhLocale
 }

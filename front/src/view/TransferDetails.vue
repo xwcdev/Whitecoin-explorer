@@ -290,7 +290,7 @@ export default {
     .con_all{
       background: #fff;
       box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
-      margin-top: 30px;
+      margin: 30px 0;
       padding-bottom: 30px;
       .information,.details,.tokenTransfers,.contractBalanceChangeDetails,.swapEventsDetails{
         h3 {

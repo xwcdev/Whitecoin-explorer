@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="tr_main">
       <div class="con_top">
-        <p>{{$t('tokens.title')}}</p>
+        <p>{{$t('tokens.title')}} <span>{{$t('tokens.total_span_before')}} {{total}} {{$t('tokens.total_span_after')}}</span></p>
         <Search class="search_con"/>
       </div>
       <div class="con_all">
@@ -10,13 +10,13 @@
           <el-table
           :data="tokens"
           style="width: 100%"
-          >
+          > 
           <el-table-column
               align="center"
               :label="$t('tokens.tokenSymbol')"
             >
               <template slot-scope="scope">
-                <span class="link">{{scope.row.tokenSymbol}}</span>
+                <span>{{scope.row.tokenSymbol}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -34,7 +34,7 @@
               :label="$t('tokens.precision')"
             >
               <template slot-scope="scope">
-                <span class="link">{{scope.row.precision}}</span>
+                <span>{{scope.row.precision}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -42,7 +42,7 @@
               :label="$t('tokens.tokenSupply')"
             >
               <template slot-scope="scope">
-                <span class="link">{{scope.row.tokenSupply}}</span>
+                <span>{{scope.row.tokenSupply}}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -125,39 +125,30 @@
           font-size: 22px;
           color: #333333;
           font-weight: 600;
+          display: flex;
+          align-items: center;
+          span{
+            font-size: 16px;
+            font-weight: normal;
+            margin-left: 15px;
+          }
         }
       }
       .con_all{
         background: #fff;
         box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
         margin-top: 30px;
-        padding-bottom: 30px;
+        padding: 30px 0;
         border-radius: 5px;
-        .all_title{
-          display: flex;
-          align-items: center;
-          border-bottom:1px solid #EEEEEE;
-          line-height: 30px;
-          padding:10px 0 0 30px;
-          margin-bottom: 30px;
-          color: #333333;
-          li{
-            list-style: none;
-            padding: 15px;
-            border-bottom:2px solid #fff;
-          }
-          li:hover{
-            border-bottom:2px solid #735DFF;
-            cursor: pointer;
-          }
-          .active{
-            border-bottom:2px solid #735DFF;
-            color: #333333;
-            font-weight: bold;
-          }
-        }
+        margin-bottom: 30px;
         .con_table{
           margin: 0 30px;
+          a{
+            color: #0279FF;
+            &:hover{
+              color: #333;
+            }
+          }
         }
       }
 

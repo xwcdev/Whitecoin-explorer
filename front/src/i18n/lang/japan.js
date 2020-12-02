@@ -19,7 +19,8 @@ const japan = {
         notSearch: '対応する検索結果が見つかりません。'
     },
     search: {
-        placeholder: 'アドレス/トランザクションハッシュ/コントラクトアドレス/ブロックの高さ/アカウント名'
+        placeholder: 'アドレス/トランザクションハッシュ/コントラクトアドレス/ブロックの高さ/アカウント名',
+        placeholder2:'トークン名または先物契約のアドレスを入力してください',
     },
     home: {
         blockchinaInfo: {
@@ -176,7 +177,7 @@ const japan = {
             rewards: '報酬'
         },
         myTransactions: {
-            title: '私の取引',
+            title: '',
             txHash: '取引ハッシュ',
             block: 'ブロック',
             types: '種類',
@@ -201,10 +202,24 @@ const japan = {
         types: '種類',
         authorAddress: '作成者',
         callTimes: '呼び出し回数',
-        createTime: '作成時間',
+        createTime: '作成時間',  
         lastTime: '最後使用時間',
-        total_span_before: 'total_span_before',
-        total_span_after: 'total_span_after'
+        total_span_before: '合計',
+        total_span_after: '件の契約が見つかりました'
+    },
+    tokens: {
+        title: 'トークン',
+        contractAddress: 'コントラクトアドレス',
+        types: '種類',
+        authorAddress: '作成者',
+        callTimes: '呼び出し回数',
+        createTime: '作成時間',  
+        lastTime: '最後使用時間',
+        total_span_before: '合計',
+        total_span_after: '件の契約が見つかりました',
+        tokenSymbol: 'トークンシンボル',
+        precision: '精度',
+        tokenSupply: '供給' 
     },
     richlist: {
         title: '豊富なリスト',
@@ -236,8 +251,8 @@ const japan = {
         miner: 'マイナー',
         size: 'サイズ',
         reward: '報酬',
-        total_span_before: 'total_span_before:',
-        total_span_after: 'total_span_after',
+        total_span_before: '合計',
+        total_span_after: '件の契約が見つかりました',
         overview: {
             name: '概要',
             title: 'タイトル',
@@ -291,18 +306,19 @@ const japan = {
     },
     address: {
         overview: {
-            title: 'タイトル',
-            name: 'アカウント名',
-            address: 'アドレス',
-            contracts: 'コントラクト',
-            transaction: 'トランザクション',
-            rewards: '報酬',
-            balances: '残高',
-            lockBalance: '投票資産',
-            paybackBalances: '報酬金額'
+            title: 'タイトル:',
+            name: 'アカウント名:',
+            address: 'アドレス:',
+            contracts: 'コントラクト:',
+            transaction: 'トランザクション:',
+            rewards: '報酬:',
+            balances: '残高:',
+            lockBalance: '投票資産:',
+            paybackBalances: '報酬金額:',
+            tokenBalances: 'トークン残高:',
         },
         myTransactions: {
-            title: '私の取引',
+            title: '送金',
             txHash: '取引ハッシュ',
             block: '高さ',
             types: '種類',
@@ -345,6 +361,10 @@ const japan = {
             create: '作成時間',
             last: '最終使用時間'
         }
+    },
+    message:{
+        success:'コピー！',
+        failed:'コピーに失敗しました！'
     },
     ...enLocale
 }

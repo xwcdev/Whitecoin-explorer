@@ -19,7 +19,8 @@ const en = {
     notSearch:'Not searching for relevant content'
   },
   search: {
-    placeholder: 'Address/TxHash/Contract/Height/Account Name'
+    placeholder: 'Address/TxHash/Contract/Height/Account Name',
+    placeholder2:'Please enter your token name/contract address',
   },
   home: {
     blockchinaInfo: {
@@ -174,7 +175,7 @@ const en = {
       rewards: 'Rewards:'
     },
     myTransactions: {
-      title: 'My Transactions',
+      title: 'Transfer',
       txHash: 'TxHash',
       block: 'Block',
       types: 'Types',
@@ -312,7 +313,8 @@ const en = {
       balances: 'Balances:',
       lockBalance:'Mortgaged assets:',
       paybackBalances: 'Payback:',
-      abnormal_address: 'Abnormal Address'
+      abnormal_address: 'Abnormal Address',
+      tokenBalances: 'Token Balances:',
     },
     myTransactions: {
       title: 'My Transactions',
@@ -358,6 +360,10 @@ const en = {
       create: 'Create Times',
       last: 'The Last Time'
     }
+  },
+  message:{
+    success:'Copy successfully!',
+    failed:'Copy failed!'
   },
   ...enLocale
 }

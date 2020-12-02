@@ -8,21 +8,21 @@
       <div class="con_all">
         <div class="table-wrap">
           <el-table :data="richlist" style="width: 100%">
-            <el-table-column type="index" width="50"></el-table-column>
-            <el-table-column align="center" :label="$t('richlist.address')" show-overflow-tooltip>
+            <el-table-column align="center" type="index" width="120"></el-table-column>
+            <el-table-column align="center" :label="$t('richlist.address')">
               <template slot-scope="scope">
-                <router-link :to="'/address?address='+scope.row.addr">{{scope.row.addr}}</router-link>
+                <router-link :to="'/address?address='+scope.row.addr">{{scope.row.addr !==null ? scope.row.addr : '--'}}</router-link>
                 <span style="color: red;" v-if="scope.row.addr==='XWCNWKLUcsybWt4bW5EXV1CfdaSNHiSKj4Hzw' || scope.row.addr==='XWCNi146ffqUffGJk3tTjnY1MdVGJn3m8jH29'">({{$t('address.overview.abnormal_address')}})</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" show-overflow-tooltip :label="$t('richlist.accountName')">
+            <el-table-column align="center" :label="$t('richlist.accountName')">
               <template slot-scope="scope">
-                <span>{{scope.row.name}}</span>
+                <span>{{scope.row.name !==null ? scope.row.name : '--'}}</span>
               </template>
             </el-table-column>
-            <el-table-column align="center" show-overflow-tooltip :label="$t('richlist.amount')">
+            <el-table-column align="center" :label="$t('richlist.amount')">
               <template slot-scope="scope">
-                <span>{{scope.row.amount}} XWC</span>
+                <span>{{scope.row.amount !==null ? scope.row.amount : '--'}} XWC</span>
               </template>
             </el-table-column>
           </el-table>
@@ -51,6 +51,8 @@ export default {
   },
   created() {
     this.getRichlistData();
+
+    bus.navChoice = 4
   },
   methods: {
     getRichlistData() {
@@ -122,6 +124,12 @@ export default {
       margin: 30px 0;
       padding: 30px;
       border-radius: 5px;
+      a{
+        color: #0279FF;
+        &:hover{
+          color: #333;
+        }
+      }
     }
     .search {
       position: absolute;

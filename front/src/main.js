@@ -6,7 +6,8 @@ import router from './router';
 import Element from 'element-ui';
 
 import device from "current-device";
-import VueCookies from 'vue-cookies'
+
+import VueClipboard from "vue-clipboard2";
 
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/less/resetElement.less';
@@ -16,8 +17,7 @@ import i18n from './i18n/i18n';
 import VueTimeago from 'vue-timeago'
 Vue.config.productionTip = false;
 
-//cookie管理
-Vue.use(VueCookies)
+Vue.use(VueClipboard)
 
 console.log(this.$cookies,'04444')
 
@@ -158,7 +158,6 @@ Vue.use(VueTimeago, {
     'ja': require('date-fns/locale/ja')
   }
 })
-
 
 new Vue({
   el: '#app',

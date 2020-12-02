@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="tr_main">
       <div class="con_top">
-        <p>{{$t('blocks.title')}}</p>
+        <p>{{$t('blocks.title')}} <span>{{$t('blocks.total_span_before')}} {{total}} {{$t('blocks.total_span_after')}}</span></p>
         <Search class="search_con"/>
       </div>
       <div class="con_all">
@@ -121,6 +121,13 @@
           font-size: 22px;
           color: #333333;
           font-weight: 600;
+          display: flex;
+          align-items: center;
+          span{
+            font-size: 16px;
+            font-weight: normal;
+            margin-left: 15px;
+          }
         }
       }
       .con_all{
@@ -154,6 +161,12 @@
         }
         .con_table{
           margin: 0 30px;
+          a{
+            color: #0279FF;
+            &:hover{
+              color: #333;
+            }
+          }
         }
       }
       .pagination {

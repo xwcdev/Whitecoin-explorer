@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap" @click="isShow = false">
+  <div class="wrap">
     <div class="tr_main">
       <div class="con_top">
         <p>
@@ -8,7 +8,7 @@
                     style="color: red;"
                     v-if="minerInfo.address==='XWCNWKLUcsybWt4bW5EXV1CfdaSNHiSKj4Hzw' || minerInfo.address==='XWCNi146ffqUffGJk3tTjnY1MdVGJn3m8jH29'"
                   >({{$t('address.overview.abnormal_address')}})</span></span>
-          <span class="copy" v-clipboard:copy="minerInfo.address" v-clipboard:success="onCopy" v-clipboard:error="onError"></span>
+          <span class="copy"></span>
         </p>
         <Search class="search_con"/>
       </div>
@@ -42,63 +42,69 @@
           <div class="right">
             <ul>
               <li>
-                <span>XWC{{$t('address.overview.balances')}}</span>
-                <span v-if="minerInfo.balances">{{minerInfo.balances[0]}}</span>
+                <span v-if="minerInfo.balances.length>1">{{$t('address.overview.balances')}}</span>
+                <span v-else>XWC{{$t('address.overview.balances')}}</span>
+                <span>
+                  <template v-for="(item, index) in minerInfo.balances">
+                    {{item}}
+                    <template v-if="index < minerInfo.balances.length - 1">,</template>
+                  </template>
+                </span>
               </li>
-              <li @click.stop="isShow = !isShow">
-                <span>{{$t('address.overview.tokenBalances')}}</span>
-                <span v-if="tokenBalances.length>0">{{tokenAmount}} <em class="tp_click">{{tokenName}} <strong></strong></em> </span>
-                <div class="ser_input" v-show="isShow">
-                  <div class="ser_icon" @click.stop="isShow=true">
-                    <b></b>
-                    <input type="text" :placeholder="$t('search.placeholder2')" @input="tokenBalancesData($event)">
-                  </div>
-                  <div class="daibi"  v-if="tokenBalancesResult.length>0">
-                    <div class="daibi_li" v-for="(item,index) of tokenBalancesResult" :key="index" @click.stop="changeToken(index)">
-                      <img :src="require('../assets/img/icon_logo/'+item.tokenSymbol+'.png')" alt="">
-                      <div class="daibi_p">
-                        <p>{{item.tokenSymbol}}</p>
-                        <p>{{item.tokenContract.substring(0,29)}}...</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="daibi" v-else-if="tokenBalancesResult.length==0 && serValue !=''">
-                    <div class="daibi_li">
-                      NO Data
-                    </div>
-                  </div>
-                  <div class="daibi" v-else>
-                    <div class="daibi_li" v-for="(item,index) of tokenBalances" :key="index" @click.stop="changeToken(index)">
-                      <img :src="require('../assets/img/icon_logo/'+item.tokenSymbol+'.png')" alt="">
-                      <div class="daibi_p">
-                        <p>{{item.tokenSymbol}}</p>
-                        <p>{{item.tokenContract.substring(0,29)}}...</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <li>
+                <span>代币余额:</span>
+                <span>28848.02000198 <em class="tp_click">TP <strong></strong></em> </span>
               </li>
             </ul>
           </div>
         </div>
+        <div class="ser_input">
+          <div class="ser_icon">
+            <span></span>
+            <input type="text" placeholder="请输入代币名称或合约地址">
+          </div>
+          <div class="daibi" v-for="(item,index) of tokenBalances.data" :key="index">
+            <div class="daibi_li" >
+              <img src="../assets/img/cusd.png" alt="">
+              <div class="daibi_p">
+                <p>{{item.tokenSymbol}}</p>
+                <p>{{item.tokenContract}}...</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="all_aside">
           <div class="all_header">
-            <div>   
+            <div>
               <span
                 @click="choiceFlagChange(0)"
                 :class="{'choice':choiceFlag===0}"
-              >{{$t('transferDetails.tokenTransfers.transfer')}}</span>
+              >{{$t('address.myTransactions.title')}}</span>
               <span
                 @click="choiceFlagChange(2)"
                 :class="{'choice':choiceFlag===2}"
-              >{{$t('transferDetails.tokenTransfers.title')}}</span>
+              >{{$t('address.myTokenTransactions.title')}}</span>
+              <!-- <span
+                @click="choiceFlagChange(3)"
+                :class="{'choice':choiceFlag===3}"
+              >{{$t('address.mySwapTransactions.title')}}</span>
+              <span
+                @click="choiceFlagChange(4)"
+                :class="{'choice':choiceFlag===4}"  
+              >Tokens</span>
+              <span
+                @click="choiceFlagChange(1)"
+                :class="{'choice':choiceFlag===1}"
+              >{{$t('address.myContracts.title')}}</span> -->
             </div>
+            <!-- <div class="total">A Total Of {{total}} transactions found</div> -->
           </div>
           <div v-if="choiceFlag===0" class="table-wrap">
             <el-table :data="transaction" style="width: 100%">
               <el-table-column
                 align="center"
                 :label="$t('address.myTransactions.txHash')"
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   <router-link
@@ -116,18 +122,21 @@
                 :label="$t('address.myTransactions.types')"
                 :formatter="getTypeName"
                 width="80"
+                show-overflow-tooltip
               ></el-table-column>
               <el-table-column
                 align="center"
                 :label="$t('address.myTransactions.age')"
                 width="120"
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
-                  <timeago :since="scope.row.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
+                  <timeago :since="scope.row.trxTime" :locale="getBusLocal"></timeago>
                 </template>
               </el-table-column>
               <el-table-column
                 align="center"
+                show-overflow-tooltip
                 :label="$t('address.myTransactions.from')"
               >
                 <template slot-scope="scope">
@@ -139,6 +148,7 @@
               </el-table-column>
               <el-table-column
                 align="center"
+                show-overflow-tooltip
                 :label="$t('address.myTransactions.to')"
               >
                 <template slot-scope="scope">
@@ -153,11 +163,13 @@
                 prop="amountStr"
                 :label="$t('miner.myTransactions.value')"
                 width="100"
+                show-overflow-tooltip
               ></el-table-column>
               <el-table-column
                 align="center"
                 :label="$t('address.myTransactions.fee')"
                 width="130"
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   {{scope.row.feeStr}}
@@ -175,6 +187,7 @@
               <el-table-column
                 align="center"
                 :label="$t('address.myTransactions.txHash')"
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   <!-- invoke contract type is 79 -->
@@ -192,6 +205,7 @@
                 align="center"
                 :label="$t('address.myTokenTransactions.symbol')"
                 width="150"
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   <span>{{scope.row.symbol}}</span>
@@ -201,6 +215,7 @@
                 align="center"
                 :label="$t('address.myTransactions.age')"
                 width="120"
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   <timeago :since="scope.row.trxTime" :locale="getBusLocal"></timeago>
@@ -208,6 +223,7 @@
               </el-table-column>
               <el-table-column
                 align="center"
+                show-overflow-tooltip
                 :label="$t('address.myTransactions.from')"
               >
                 <template slot-scope="scope">
@@ -219,6 +235,7 @@
               </el-table-column>
               <el-table-column
                 align="center"
+                show-overflow-tooltip
                 :label="$t('address.myTransactions.to')"
               >
                 <template slot-scope="scope">
@@ -233,11 +250,13 @@
                 prop="amountStr"
                 :label="$t('miner.myTransactions.value')"
                 width="100"
+                show-overflow-tooltip
               ></el-table-column>
               <el-table-column
                 align="center"
                 :label="$t('address.myTransactions.fee')"
                 width="130"
+                show-overflow-tooltip
               >
                 <template slot-scope="scope">
                   {{scope.row.feeStr}}
@@ -248,6 +267,128 @@
                   />
                 </template>
               </el-table-column>
+            </el-table>
+          </div>
+
+          <div v-if="choiceFlag===1" class="table-wrap">
+            <el-table :data="contaracts" style="width: 100%" key="contaracts">
+              <el-table-column
+                align="center"
+                :label="$t('address.myContracts.address')"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <i class="el-icon-circle-check-outline" v-if="scope.row.status === 2"></i>
+                  <span
+                    class="link"
+                    @click="_mixin_address_jump(scope.row.contractAddress)"
+                  >{{scope.row.contractAddress}}</span>
+                </template>
+              </el-table-column>
+              <!--<el-table-column-->
+              <!--align="center"-->
+              <!--:formatter="getTypeName"-->
+              <!--:label="$t('address.myContracts.types')"-->
+              <!--show-overflow-tooltip>-->
+              <!--</el-table-column>-->
+              <el-table-column
+                align="center"
+                prop="callTimes"
+                :label="$t('address.myContracts.call')"
+                width="200"
+              ></el-table-column>
+              <el-table-column
+                align="center"
+                :formatter="dateFormate"
+                :label="$t('address.myContracts.create')"
+                width="220"
+              ></el-table-column>
+              <el-table-column
+                align="center"
+                show-overflow-tooltip
+                :label="$t('address.myContracts.last')"
+                width="220"
+              >
+                <template slot-scope="scope">
+                  <timeago :since="scope.row.lastTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+
+          <div v-if="choiceFlag===3" class="table-wrap">
+            <el-table :data="swapTransactions" style="width: 100%">
+              <el-table-column
+                align="center"
+                :label="$t('address.mySwapTransactions.txHash')"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <!-- invoke contract type is 79 -->
+                  <router-link
+                    :to="'/transfer_details/'+scope.row.trxId+'/'+79" 
+                  >{{scope.row.trxId}}</router-link>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" :label="$t('address.myTransactions.block')" width="80">
+                <template slot-scope="scope">
+                  <router-link :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="Event Name"
+                width="250"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <span>{{scope.row.eventName}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="Event Arg"
+                width="500"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <span>{{scope.row.eventArg}}</span>
+                </template>
+              </el-table-column>
+              
+            </el-table>
+          </div>
+
+          <div v-if="choiceFlag===4" class="table-wrap">
+            <el-table :data="tokenBalances" style="width: 100%">
+              <el-table-column
+                align="center"
+                label="Symbol"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <span>{{scope.row.tokenSymbol}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="Token Contract"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <span>{{scope.row.tokenContract}}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="Balance"
+                show-overflow-tooltip
+              >
+                <template slot-scope="scope">
+                  <span>{{scope.row.amount}}</span>
+                </template>
+              </el-table-column>
+              
             </el-table>
           </div>
 
@@ -296,12 +437,7 @@ export default {
       tokenTransactions: [],
       swapTransactions: [],
       tokenBalances: [],
-      tokenBalancesResult: [],
-      contaracts: [],
-      isShow:false,
-      tokenAmount:0,
-      tokenName:'',
-      serValue:'',
+      contaracts: []
     };
   },
   beforeRouteUpdate(to, from, next) {
@@ -315,14 +451,10 @@ export default {
     next();
   },
   created() {
+    console.log(this.$route.query.address,'000')
     if (this.$route.query.address) {
       this.address = this.$route.query.address;
       this.getDataByAddress();
-      this.getTokenBalancesData();
-      console.log(this.isShow,'ccc')
-
-      bus.navChoice = 4
-
     } else {
       this.minerName = this.$route.query.minerName;
       this.getDataByMinerName();
@@ -335,13 +467,14 @@ export default {
         this.getTransactionData();
       } else if (flag === 2) {
         this.getTokenTransactionData();
-      } else if(flag===3) {
-        this.getSwapTransactionData();
-      } else if(flag===4) {
-        this.getTokenBalancesData();
-      } else {
-        this.getContractData();
-      }
+      } 
+      // else if(flag===3) {
+      //   this.getSwapTransactionData();
+      // } else if(flag===4) {
+      //   this.getTokenBalancesData();
+      // } else {
+      //   this.getContractData();
+      // }
     },
     getTypeName(row) {
       if (row.opType || row.opType === 0) {
@@ -357,13 +490,14 @@ export default {
         this.getTransactionData();
       } else if (flag === 2) {
         this.getTokenTransactionData();
-      } else if(flag===3) {
-        this.getSwapTransactionData();
-      } else if(flag===4) {
-        this.getTokenBalancesData();
-      } else {
-        this.getContractData();
-      }
+      } 
+      // else if(flag===3) {
+      //   this.getSwapTransactionData();
+      // } else if(flag===4) {
+      //   this.getTokenBalancesData();
+      // } else {
+      //   this.getContractData();
+      // }
     },
     getDataByMinerName() {
       let that = this;
@@ -407,13 +541,9 @@ export default {
         .get(`/user_tokens/${this.address}`)
         .then(function(res) {
           let data = res.data;
-          that.tokenBalances = data.data.tokenBalances;
-          console.log(that.tokenBalances,6666)
-          // 代币余额默认值 
-          if(that.tokenBalances.length>0){
-            that.tokenAmount = that.tokenBalances[0].amount;
-            that.tokenName = that.tokenBalances[0].tokenSymbol
-          }
+          that.tokenBalances = data.data;
+          console.log(that.tokenBalances,'3333')
+          that.total = data.data.length;
         });
     },
     getTokenTransactionData() {
@@ -460,33 +590,13 @@ export default {
     },
     dateFormate(row) {
       return common.format(new Date(row.createTime), "yyyy-MM-dd hh:mm:ss");
-    },
-    tokenBalancesData(e){
-      this.serValue = e.target.value.trim();
-      this.tokenBalancesResult = this.tokenBalances.filter(item=>{
-        if(item.tokenSymbol.includes(this.serValue.toUpperCase()) || item.tokenContract.includes(this.serValue)){
-          return item
-        }
-      })
-    },
-    changeToken(index){
-      let that = this;
-      that.tokenAmount = that.tokenBalances[index].amount;
-      that.tokenName = that.tokenBalances[index].tokenSymbol
-    },
-    //点击复制成功
-    onCopy() {
-      this.$message(this.$t('message.success'));
-    },
-    onError() {
-      this.$message(this.$t('message.failed'));
-    },
+    }
   },
   computed: {
     getBusLocal() {
       return bus.local;
     }
-  },
+  }
 };
 </script>
 
@@ -516,13 +626,12 @@ export default {
           font-weight: normal;
           margin: 0 20px;
         }
-        span.copy{
+        .copy{
           width: 29px;
           height: 29px;
           display: block;
           background: url(../assets/img/copy.png) no-repeat;
           background-size: 100%;
-          cursor: pointer;
         }
       }
       .search_con{
@@ -603,16 +712,21 @@ export default {
           padding-left: 7px;
           outline: none;
           border: 0;
-          height:35px;
-          line-height: 35px;
-          text-decoration: none;
+          line-height: 0;
+          &::placeholder{
+            padding-bottom: 3px;
+            margin-bottom: 5px;
+            color:#999999
+          }
+          &::-webkit-input-placeholder{
+            padding-bottom: 5px;
+          }
         }
-        b{
+        span{
           width: 15px;
           height: 15px;
           background: url(../assets/img/ser_icon.png) no-repeat;
           background-size: 100%;
-          margin-top: 5px;
         }
       }
       .daibi{
@@ -620,15 +734,10 @@ export default {
         .daibi_li{
           display: flex;
           align-items: center;
-          margin-bottom: 8px;
-          padding-top: 5px;
-          cursor: pointer;
-          .default-image{
-            background: url(../assets/img/icon_logo/XWC.png) no-repeat;
-          }
+          margin-bottom: 5px;
           img{
-            width: 35px;
-            margin-right: 8px;
+            width: 40px;
+            height: 40px;
           }
           .daibi_p{
             p:first-child{
@@ -664,7 +773,7 @@ export default {
                   display: block;
                   position: absolute;
                   content: "";
-                  width: 100%;
+                  width: 22px;
                   height: 2px;
                   background: #332f2f;
                   left: 50%;
@@ -680,7 +789,7 @@ export default {
                 display: block;
                 position: absolute;
                 content: "";
-                width: 100%;
+                width: 22px;
                 height: 2px;
                 background: #332f2f;
                 left: 50%;
