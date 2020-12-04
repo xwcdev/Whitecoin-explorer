@@ -32,7 +32,7 @@ public class RequestWalletService {
 
     private static Set<String> logSet = new HashSet<>();
     static{
-//        logSet.add("info");
+        logSet.add("info");
     }
 
 
@@ -49,14 +49,11 @@ public class RequestWalletService {
 
         try {
             request = requestJson.toJSONString();
+            logger.info("【请求钱包发送数据】:{}", request);
 
-            if(logSet.contains(method)){
-                logger.info("【请求钱包发送数据】:{}", request);
-            }
             String result = HttpUtil.post(walletUrl, request);
-            if(logSet.contains(method)){
-                logger.info("【请求钱包返回数据】:" + result);
-            }
+            logger.info("【请求钱包返回数据】:" + result);
+
             //为空重新查询
             if (StringUtils.isEmpty(result)) {
                 return null;
