@@ -7,6 +7,11 @@ const en = {
     contracts: 'Contracts',
     richlist: 'Richlist',
     tokens: 'Tokens',
+    ziyuan: 'Resource',
+  },
+  maxTitle:{
+    t1:'All Transactions',
+    t2:'Tokens Transactions',
   },
   alert: {
     noSpace:'No space can be available',
@@ -23,11 +28,12 @@ const en = {
       transactions: 'Transactions',
       blockHeight: 'Block Height',
       blockReward: 'Block Reward',
-      crossAsset: 'Cross Assets'
+      crossAsset: 'Cross Assets',
+      accountCount: 'Total Supply'
     },
     valueInfo: {
       title: 'Value Info',
-      price: 'Price($)',
+      price: 'Price',
       priceBTC: 'Price(BTC)',
       change: 'Change(24H)'
     },
@@ -39,7 +45,10 @@ const en = {
       transactions: 'Transactions',
       miner: 'Miner',
       size: 'Size',
-      reward: 'Reward'
+      reward: 'Reward',
+      minerFee:'Gas Fee',
+      over:'finished',
+      success:'ordes',
     },
     transaction: {
       title: 'Transaction',
@@ -49,14 +58,22 @@ const en = {
       types: 'Types',
       age: 'Age',
       value: 'Value',
-      fee: 'Fee'
+      fee: 'Fee',
+      numberss:'Amount'
     },
     transactionLine: {
       today: 'Today',
       week: 'Week',
       month: 'Month',
       summary: 'Transaction Statistics'
-    }
+    },
+    footer: {
+      t1: 'Whitepaper',
+      t2: 'Contact',
+      t3: 'Event',
+      t4: 'Support',
+      t5: 'Links',
+    },
   },
   transferDetails: {
     tips: {

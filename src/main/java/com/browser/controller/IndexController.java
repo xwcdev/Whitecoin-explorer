@@ -259,33 +259,5 @@ public class IndexController extends BaseController {
 		return resultMsg;
 	}
 
-	public static void main(String[] args) {
 
-
-		String urlNameString = "https://api.xt.pub/data/api/v1/getTicker?market=xwc_btc";
-
-
-		String result="";
-		try {
-			HttpGet request = new HttpGet(urlNameString);
-			request.setHeader("Content-Type","application/x-www-form-urlencoded");
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpResponse response = httpClient.execute(request);
-
-			if (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-				result= EntityUtils.toString(response.getEntity(),"utf-8");
-
-			}
-		} catch (Exception e) {
-
-			e.printStackTrace();
-		}
-		Object jsStr = (Object)JSONObject.parseObject(result);
-		/*String price = jsStr.get("price").toString();
-		String rate = jsStr.get("rate").toString();*/
-		PriceInfo priceInfo = (PriceInfo)jsStr;
-		System.out.println(priceInfo);
-		//System.out.println(rate);
-
-	}
 }

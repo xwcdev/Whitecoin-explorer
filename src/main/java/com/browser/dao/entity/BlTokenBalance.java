@@ -11,4 +11,5 @@ public class BlTokenBalance {
     private BigDecimal amount;
     private String tokenContract;
     private String tokenSymbol;
+    private String imgUrl;
 }

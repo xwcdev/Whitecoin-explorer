@@ -5,7 +5,13 @@ const korea = {
     blocks: '블록',
     transactions: '거래 내역',
     contracts: '컨트렉트',
-    richlist: '풍부한 목록'
+    richlist: '풍부한 목록',
+    tokens: '화폐',
+    ziyuan: '자원',
+  },
+  maxTitle:{ 
+    t1:'거래 내역',
+    t2:'화폐 거래 내역',
   },
   alert: {
     noSpace:'사용 가능한 공간이 부족합니다',
@@ -23,11 +29,11 @@ const korea = {
       blockHeight: '블록 높이',
       blockReward: '블록 리워드',
       crossAsset: '기타 자산',
-      accountCount: '계정 수량'
+      accountCount: '총 발행량'
     },
     valueInfo: {
       title: 'Value Info',
-      price: ' 가격($)',
+      price: ' 가격',
       priceBTC: '가격(BTC)',
       change: '변동(24H)'
     },
@@ -40,7 +46,10 @@ const korea = {
       transactions: '거래',
       miner: '마이너',
       size: '사이즈',
-      reward: '리워드'
+      reward: '리워드',
+      minerFee:'채굴비용',
+      over:'완성',
+      success:'건의 주문',
     },
     transaction: {
       title: '거래',
@@ -51,14 +60,22 @@ const korea = {
       types: '유형',
       age: '시간',
       value: '금액',
-      fee: '수수료'
+      fee: '수수료',
+      numberss:'수량'
     },
     transactionLine: {
       today: '오늘',
       week: '이번주',
       month: '이번달',
       summary: '거래 통계'
-    }
+    },
+    footer: {
+      t1: '백서',
+      t2: 'Contact Us',
+      t3: '뉴스',
+      t4: '지원',
+      t5: '파트너',
+    },
   },
   transferDetails: {
     tips: {
@@ -72,6 +89,16 @@ const korea = {
       type: '거래 결과 유형:',
       height: '블록 높이:',
       timeStamp: '시간:'
+    },
+    tokenTransfers: {
+      title: 'Token 이체',
+      transfer: '이체',
+    },
+    contractBalanceChangeDetail: {
+      title: '계약 잔액 변경',
+      contract_withdraw: '계약에서 양도',
+      deposit_contract: '예금 계약',
+      deposit_to_address: '계약 철회 주소',
     },
     details: {
       title: '거래 정보',
@@ -275,6 +302,31 @@ const korea = {
       to: '~로',
       value: '금액',
       fee: '수수료'
+    },
+    myTokenTransactions: {
+      title: '내 토큰 거래',
+      txHash: '거래 해시',
+      block: '블록',
+      types: '유형',
+      age: '시간',
+      from: '에서',
+      to: '~로',   
+      value: '금액',
+      fee: '수수료',
+      symbol: '토큰'
+    }, 
+    mySwapTransactions: {
+      address: '주소',
+      title: '내 스왑 거래',
+      txHash: '거래 해시',
+      block: '블록',
+      types: '유형',
+      age: '시간',
+      from: '에서',
+      to: '~로', 
+      value: '금액',
+      fee: '수수료',
+      symbol: '토큰'
     },
     myContracts: {
       title: '내 컨트렉트',

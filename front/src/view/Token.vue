@@ -1,76 +1,73 @@
 <template>
   <div class="wrap">
-    <div class="background"></div>
-    <div class="top-line"></div>
-    <main>
-      <h2>{{$t('tokens.title')}}</h2>
-      <div class="total">
-        {{$t('tokens.total_span_before')}} {{total}} {{$t('tokens.total_span_after')}}
+    <div class="tr_main">
+      <div class="con_top">
+        <p>{{$t('tokens.title')}}</p>
+        <Search class="search_con"/>
       </div>
-      <div class="table-wrap">
-        <el-table
+      <div class="con_all">
+        <div class="con_table">
+          <el-table
           :data="tokens"
           style="width: 100%"
-        >
-        <el-table-column
-            align="center"
-            show-overflow-tooltip
-            :label="$t('tokens.tokenSymbol')"
           >
-            <template slot-scope="scope">
-              <span class="link">{{scope.row.tokenSymbol}}</span>
-            </template>
-          </el-table-column>
           <el-table-column
-            align="center"
-            :label="$t('tokens.contractAddress')"
-            show-overflow-tooltip
-          >
-            <template slot-scope="scope">
-              <router-link   :to="'/contractOverview/'+scope.row.contractAddress">
-                {{scope.row.contractAddress}}
-              </router-link>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            show-overflow-tooltip
-            :label="$t('tokens.precision')"
-          >
-            <template slot-scope="scope">
-              <span class="link">{{scope.row.precision}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            show-overflow-tooltip
-            :label="$t('tokens.tokenSupply')"
-          >
-            <template slot-scope="scope">
-              <span class="link">{{scope.row.tokenSupply}}</span>
-            </template>
-          </el-table-column>
-        </el-table>
+              align="center"
+              :label="$t('tokens.tokenSymbol')"
+            >
+              <template slot-scope="scope">
+                <span class="link">{{scope.row.tokenSymbol}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="$t('tokens.contractAddress')"
+            >
+              <template slot-scope="scope">
+                <router-link   :to="'/contractOverview/'+scope.row.contractAddress">
+                  {{scope.row.contractAddress}}
+                </router-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="$t('tokens.precision')"
+            >
+              <template slot-scope="scope">
+                <span class="link">{{scope.row.precision}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="$t('tokens.tokenSupply')"
+            >
+              <template slot-scope="scope">
+                <span class="link">{{scope.row.tokenSupply}}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <el-pagination
+          class="pagination"
+          layout="prev, pager, next, jumper"
+          :current-page="page"
+          :page-size="size"
+          :total="total"
+          @current-change="pageChange">
+        </el-pagination> 
       </div>
-      <el-pagination
-        class="pagination"
-        layout="prev, pager, next, jumper"
-        :current-page="page"
-        :page-size="size"
-        :total="total"
-        @current-change="pageChange">
-      </el-pagination>
-    </main>
+    </div>
   </div>
 </template>
 
 <script>
+
+  import Search from "../components/search/Search";
   import bus from "../utils/bus";
   import common from "../utils/common";
-  import mixin from '../utils/mixin';
   export default {
-    mixins: [mixin],
     name: "tokens",
+    components:{Search},
     data() {
       return {
         page: 1,
@@ -87,6 +84,7 @@
         let that = this;
         this.$axios.post('/listTokens', {page: this.page, rows: this.size}).then(function (res) {
           let data = res.data.data;
+          console.log(data,'ooo')
           that.tokens = data.rows;
           that.total = data.total;
         })
@@ -98,6 +96,9 @@
       dataFormate(row) {
         let time = new Date(row.createTime);
         return common.format(time,'yyyy-MM-dd hh:mm:ss');
+      },
+      navChange(index) {
+        bus.navChoice = index;
       }
     },
     computed: {
@@ -110,23 +111,56 @@
 
 <style lang="less" scoped>
   .wrap {
-    .top-line {
-      height: 1px;
-    }
-    .background {
-      width: 100%;
-      height: 338px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: white;
-    }
-    main {
-      width: 77%;
-      min-width: 1160px;
-      margin: 120px auto;
+    .tr_main {
+      width: 1140px;
+      margin: 0 auto;
       position: relative;
-      color: black;;
+      color: black;
+      .con_top{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 30px;
+        p{
+          font-size: 22px;
+          color: #333333;
+          font-weight: 600;
+        }
+      }
+      .con_all{
+        background: #fff;
+        box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
+        margin-top: 30px;
+        padding-bottom: 30px;
+        border-radius: 5px;
+        .all_title{
+          display: flex;
+          align-items: center;
+          border-bottom:1px solid #EEEEEE;
+          line-height: 30px;
+          padding:10px 0 0 30px;
+          margin-bottom: 30px;
+          color: #333333;
+          li{
+            list-style: none;
+            padding: 15px;
+            border-bottom:2px solid #fff;
+          }
+          li:hover{
+            border-bottom:2px solid #735DFF;
+            cursor: pointer;
+          }
+          .active{
+            border-bottom:2px solid #735DFF;
+            color: #333333;
+            font-weight: bold;
+          }
+        }
+        .con_table{
+          margin: 0 30px;
+        }
+      }
+
       .search {
         position: absolute;
         right: 0;

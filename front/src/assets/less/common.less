@@ -77,7 +77,7 @@
   .con {
     ul {
       li {
-        padding: 15px;
+        padding:15px 30px;
         font-size: 14px;
         border-bottom: 1px solid #fcfcfc;
         &:last-of-type {
@@ -99,7 +99,7 @@
           }
         }
         .name {
-          width: 250px;
+          width: 160px;
           text-align: left;
           .el-icon-back {
             transform: rotate(180deg);
@@ -127,4 +127,128 @@
 .link:hover {
   color: #5586ED;
   cursor: pointer;
+}
+
+
+// elementui  公共样式修改
+
+.el-table__body, .el-table__footer, .el-table__header{
+  width: 100%;
+}
+.table-wrap .el-table thead tr th,.el-table th{
+background: #735DFF;
+line-height: 63px;
+font-weight: normal;
+font-size: 18px;
+}
+.table-wrap .el-table tr{
+border-bottom:1px solid #eeeeee !important
+}
+.el-table .cell{
+padding: 10px 0 15px 15px;
+border: 0;
+  .yanse{
+    color: #0279FF;
+    cursor: pointer;
+    &:hover{
+      color: #333;
+    }
+  }
+}
+.table-wrap .el-table td, .table-wrap .el-table th.is-leaf {
+border-bottom:1px solid #EEEEEE;
+}
+.table-wrap .el-table tr:hover td{
+background: none;
+}
+.el-pager li{
+border-radius: 3px;
+border: 1px solid #C6C6C6;
+margin:0 4px;
+color: #C6C6C6;
+}
+.el-pager li.active,.el-pager li:hover{
+color: #fff;
+background: #735DFF;
+border-radius: 3px;
+border: 1px solid #735DFF;
+}
+.el-pagination .btn-next,.el-pagination .btn-prev{
+border: 1px solid #C6C6C6; 
+color: #C6C6C6; 
+}
+.el-pagination .btn-next:hover,.el-pagination .btn-prev:hover{
+  background: #735DFF;
+  color: #fff;
+  }
+.el-pager .number{
+color: #677897;
+}
+
+.el-pagination__jump{
+border-bottom:0
+}
+.el-pagination__editor.el-input .el-input__inner{
+border: 1px solid #C6C6C6;
+color: #677897;
+font-size: 14px;
+}
+.el-pager li.btn-quicknext{
+color: #677897;
+}
+
+.el-pager li.active+li{
+  border: 1px solid #C6C6C6 !important
+}
+.el-pager li.btn-quickprev{
+  color: #677897;
+}
+.el-table{
+  color: #333;
+}
+.el-table th.is-leaf{
+  background:#735DFF ;
+  color: #fff;
+}
+.el-input.el-input--medium {
+  background: #fff;
+  line-height: 52px;
+  border: 1px solid #735DFF;
+  box-sizing: border-box;
+  border-radius: 8px;
+}
+.el-input.el-input--medium.el-input--suffix{
+  border: 0;
+}
+.el-input__inner{
+  color: #333333;
+  font-weight: normal;
+  &::placeholder {
+    color: #677897;
+    font-weight: normal;
+  }
+}
+.el-select .el-input.is-focus .el-input__inner{
+  border-color: #fff;
+}
+.el-popper[x-placement^=bottom] .popper__arrow{
+  left: 45% !important;
+}
+.el-popper[x-placement^=bottom]{
+  margin-top: 0;
+}
+.el-input.el-input--medium.el-pagination__editor.is-in-pagination{
+  line-height: 0;
+  border:0
+}
+.operation-details header{
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  background: #735DFF;
+  height: 63px;
+  line-height: 63px;
+}
+.el-table{
+  border: 1px solid #B8C8DA;
+  border-radius: 10px;
 }

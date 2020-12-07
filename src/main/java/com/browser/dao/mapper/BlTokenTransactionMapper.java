@@ -9,5 +9,6 @@ public interface BlTokenTransactionMapper {
     BlTokenTransaction selectByPrimaryKey(@Param("id") Long id);
     List<BlTokenTransaction> selectAllByCond(BlTokenTransaction cond);
     List<BlTokenTransaction> selectListByUserAddress(BlTokenTransaction cond);
+    List<BlTokenTransaction> selectTrxList(BlTokenTransaction cond);
     int insert(BlTokenTransaction record);
 }

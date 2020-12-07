@@ -1,73 +1,70 @@
 <template>
   <div class="wrap">
-    <div class="background"></div>
-    <div class="top-line"></div>
-    <main>
-      <h2>{{$t('contracts.title')}}</h2>
-      <div class="total">
-        {{$t('contracts.total_span_before')}} {{total}} {{$t('contracts.total_span_after')}}
+    <div class="tr_main">
+      <div class="con_top">
+        <p>{{$t('contracts.title')}}</p>
+        <Search class="search_con"/>
       </div>
-      <div class="table-wrap">
-        <el-table
-          :data="contracts"
-          style="width: 100%"
-        >
-          <el-table-column
-            align="center"
-            :label="$t('contracts.contractAddress')"
-            show-overflow-tooltip
+      <div class="con_all">
+        <div class="table-wrap">
+          <el-table
+            :data="contracts"
+            style="width: 100%"
           >
-            <template slot-scope="scope">
-              <router-link   :to="'/contractOverview/'+scope.row.contractAddress">
-                {{scope.row.contractAddress}}
-              </router-link>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            show-overflow-tooltip
-            :label="$t('contracts.authorAddress')"
-          >
-            <template slot-scope="scope">
-              <span class="link" @click="_mixin_address_jump(scope.row.onwerAddress)">{{scope.row.onwerAddress}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="callTimes"
-            :label="$t('contracts.callTimes')"
-            width="120"
-          >
-          </el-table-column>
-          <el-table-column
-            align="center"
-            prop="createTime"
-            :label="$t('contracts.createTime')"
-            :formatter="dataFormate"
-            width="180"
-          >
-          </el-table-column>
-          <el-table-column
-            align="center"
-            show-overflow-tooltip
-            :label="$t('contracts.lastTime')"
-            width="180"
-          >
-            <template slot-scope="scope">
-              <timeago v-if="scope.row.lastTime !== null" :since="scope.row.lastTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
-            </template>
-          </el-table-column>
-        </el-table>
+            <el-table-column
+              align="center"
+              :label="$t('contracts.contractAddress')"
+            >
+              <template slot-scope="scope">
+                <router-link   :to="'/contractOverview/'+scope.row.contractAddress">
+                  {{scope.row.contractAddress}}
+                </router-link>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="$t('contracts.authorAddress')"
+            >
+              <template slot-scope="scope">
+                <span class="link" @click="_mixin_address_jump(scope.row.onwerAddress)">{{scope.row.onwerAddress}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="callTimes"
+              :label="$t('contracts.callTimes')"
+              width="120"
+            >
+            </el-table-column>
+            <el-table-column
+              align="center"
+              prop="createTime"
+              :label="$t('contracts.createTime')"
+              :formatter="dataFormate"
+              width="180"
+            >
+            </el-table-column>
+            <el-table-column
+              align="center"
+              :label="$t('contracts.lastTime')"
+              width="180"
+            >
+              <template slot-scope="scope">
+                <timeago v-if="scope.row.lastTime !== null" :since="scope.row.lastTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <el-pagination
+          class="pagination"
+          layout="prev, pager, next, jumper"
+          :current-page="page"
+          :page-size="size"
+          :total="total"
+          @current-change="pageChange">
+        </el-pagination>
       </div>
-      <el-pagination
-        class="pagination"
-        layout="prev, pager, next, jumper"
-        :current-page="page"
-        :page-size="size"
-        :total="total"
-        @current-change="pageChange">
-      </el-pagination>
-    </main>
+    </div>
   </div>
 </template>
 
@@ -75,9 +72,11 @@
   import bus from "../utils/bus";
   import common from "../utils/common";
   import mixin from '../utils/mixin';
+  import Search from "../components/search/Search";
   export default {
     mixins: [mixin],
     name: "contracts",
+    components:{Search},
     data() {
       return {
         page: 1,
@@ -117,33 +116,28 @@
 
 <style lang="less" scoped>
   .wrap {
-    .top-line {
-      height: 1px;
-    }
-    .background {
-      width: 100%;
-      height: 338px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: white;
-    }
-    main {
-      width: 77%;
-      min-width: 1160px;
-      margin: 120px auto;
+    .tr_main {
+      width: 1140px;
+      margin: 0 auto;
       position: relative;
-      color: black;;
-      .search {
-        position: absolute;
-        right: 0;
-        top: 0;
+      color: black;
+      .con_top{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 30px;
+        p{
+          font-size: 22px;
+          color: #333333;
+          font-weight: 600;
+        }
       }
-      h2 {
-        font-size: 36px;
-      }
-      .total {
-        margin: 10px 0 65px;
+      .con_all{
+        background: #fff;
+        box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
+        margin: 30px 0;
+        padding: 30px;
+        border-radius: 5px;
       }
       .pagination {
         text-align: center;

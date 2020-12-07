@@ -1,16 +1,21 @@
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
 const cn = {
   nav: {
-    home: '主页',
+    home: '首页',
     blocks: '区块',
-    transactions: '交易记录',
+    transactions: '交易',
     contracts: '合约',
-    richlist: 'Richlist',
-    tokens: '代币'
+    richlist: '地址',
+    tokens: '代币',
+    ziyuan: '资源',
+  },
+  maxTitle:{
+    t1:'全部交易',
+    t2:'代币交易',
   },
   alert: {
     noSpace:'没有足够空间',
-    enterContent:'请输入',
+    enterContent:'请输入内容',
     notSearch:'没找到对应的搜索结果'
   },
   search: {
@@ -20,20 +25,20 @@ const cn = {
     blockchinaInfo: {
       title: '区块信息',
       totalSupply: '供应量',
-      transactions: '交易数',
+      transactions: '交易量',
       blockHeight: '区块高度',
       blockReward: '区块奖励',
       crossAsset: '其他资产',
-      accountCount: '账户数量'
+      accountCount: '总发行量'
     },
     valueInfo: {
       title: 'Value Info',
-      price: '价格($)',
+      price: '价格',
       priceBTC: '价格(BTC)',
       change: '涨幅(24H)'
     },
     blocks: {
-      title: '区块',
+      title: '最新区块',
       more: '更多',
       all: '全部',
       height: '高度',
@@ -41,25 +46,36 @@ const cn = {
       transactions: '交易',
       miner: '播报方',
       size: '大小',
-      reward: '奖励'
+      reward: '奖励',
+      minerFee:'矿工费',
+      over:'完成',
+      success:'笔订单',
     },
     transaction: {
-      title: '交易',
+      title: '最新交易',
       more: '更多',
       all: '全部',
-      txHash: '交易hash',
-      block: '区块',
+      txHash: '交易',
+      block: '高度',
       types: '类型',
       age: '时间',
       value: '金额',
-      fee: '手续费'
+      fee: '手续费',
+      numberss:'数量'
     },
     transactionLine: {
       today: '今天',
       week: '本周',
       month: '本月',
       summary: '交易统计'
-    }
+    },
+    footer: {
+      t1: '白皮书',
+      t2: '联系我们',
+      t3: '历史',
+      t4: '支持',
+      t5: '友情链接',
+    },
   },
   transferDetails: {
     tips: {
@@ -270,7 +286,7 @@ const cn = {
     mortgage: '投票',
     other:'其他',
     txHash:'交易hash',
-    block:'区块',
+    block:'高度',
     types:'类型',
     age:'时间',
     from:'发送方',

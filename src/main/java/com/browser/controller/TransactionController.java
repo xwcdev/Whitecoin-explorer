@@ -191,6 +191,23 @@ public class TransactionController extends BaseController {
 	}
 
 	@ResponseBody
+	@RequestMapping(value = "queryTokenTrx", method = { RequestMethod.POST })
+	public ResultMsg queryTokenTrx(@RequestBody BlTokenTransaction transaction) {
+		ResultMsg resultMsg = new ResultMsg();
+
+		try {
+			EUDataGridResult data = tokenTransactionService.selectTrxList(transaction);
+			resultMsg.setRetCode(ResultMsg.HTTP_OK);
+			resultMsg.setData(data);
+		} catch (Exception e) {
+			logger.error("system error", e);
+			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+			resultMsg.setRetMsg(e.getMessage());
+		}
+		return resultMsg;
+	}
+
+	@ResponseBody
 	@RequestMapping(value = "querySwapTrxByAddr", method = { RequestMethod.POST })
 	public ResultMsg querySwapTrxByAddr(@RequestBody BlSwapTransaction transaction) {
 		ResultMsg resultMsg = new ResultMsg();

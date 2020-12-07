@@ -1,16 +1,18 @@
 <template>
   <div id="app">
-    <v-nav></v-nav>
-    <router-view />
+    <v-nav/>
+    <router-view class="mian_alls" />
+    <iFooter />
   </div>
 </template>
 
 <script>
 import VNav from "./components/nav/VNav";
+import iFooter from "./components/nav/iFooter";
 import bus from "./utils/bus";
 
 export default {
-  components: { VNav },
+  components: { VNav,iFooter },
   name: "App",
   created() {
     let href = window.location.href;
@@ -40,6 +42,9 @@ export default {
 
   input::-webkit-input-placeholder {
     font-size: 12px;
+  }
+  .mian_alls{
+    height: 100%;
   }
 }
 

@@ -106,6 +106,26 @@ public class TokenTransactionServiceImpl implements TokenTransactionService {
     }
 
     @Override
+    public EUDataGridResult selectTrxList(BlTokenTransaction transaction) {
+        // 分页处理
+        PageHelper.startPage(transaction.getPage(), transaction.getRows());
+        List<BlTokenTransaction> list = blTokenTransactionMapper.selectTrxList(transaction);
+        if (list != null && list.size() > 0) {
+            for (BlTokenTransaction trx : list) {
+                handleAmountData(trx);
+            }
+        }
+        // 创建一个返回值对象
+        EUDataGridResult result = new EUDataGridResult();
+        result.setRows(list);
+        // 取记录总条数
+        PageInfo<BlTokenTransaction> pageInfo = new PageInfo<>(list);
+        result.setTotal(pageInfo.getTotal());
+        result.setPages(pageInfo.getPages());
+        return result;
+    }
+
+    @Override
     public List<BlTokenTransaction> selectAllByTrxId(String trxId) {
         BlTokenTransaction cond = new BlTokenTransaction();
         cond.setTrxId(trxId);

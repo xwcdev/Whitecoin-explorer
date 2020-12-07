@@ -1,262 +1,263 @@
 <template>
   <div class="wrap">
-    <div class="background"></div>
-    <div class="top-line"></div>
-    <main>
-      <h2>
-        {{$t('contractOverview.title')}}
-      </h2>
-      <section class="clear">
-        <div class="left">
-          <ul>
-            <li>
+    <div class="tr_main">
+      <div class="con_top">
+        <p>{{$t('contractOverview.title')}}</p>
+        <Search class="search_con"/>
+      </div>
+      <div class="con_all">
+        <div class="all_section">
+          <div class="left">
+            <ul>
+              <li>
+                  <span>
+                    {{$t('contractOverview.contractAddress')}}
+                  </span>
                 <span>
-                  {{$t('contractOverview.contractAddress')}}
-                </span>
-              <span>
-                  {{contractInfo.contractAddress}}
-                </span>
-            </li>
-            <li>
+                    {{contractInfo.contractAddress}}
+                  </span>
+              </li>
+              <li>
+                  <span>
+                    {{$t('contractOverview.authorAddress')}}
+                  </span>
                 <span>
-                  {{$t('contractOverview.authorAddress')}}
-                </span>
-              <span>
-                  {{contractInfo.onwerAddress}}
-                </span>
-            </li>
-            <li>
+                    {{contractInfo.onwerAddress}}
+                  </span>
+              </li>
+              <li>
+                  <span>
+                    {{$t('contractOverview.balance')}}
+                  </span>
                 <span>
-                  {{$t('contractOverview.balance')}}
-                </span>
-              <span>
-                  <template v-if="contractInfo.balance === null">- -</template>
-                  <template v-for="item in contractInfo.balance">
-                    {{item}}&nbsp;
+                    <template v-if="contractInfo.balance === null">- -</template>
+                    <template v-for="item in contractInfo.balance">
+                      {{item}}&nbsp;
+                    </template>
+                  </span>
+              </li>
+              <li v-if="contractInfo && contractInfo.tokenContract">
+                  <span>
+                    Token Symbol
+                  </span>
+                <span>
+                    {{contractInfo.tokenContract.tokenSymbol}}
+                  </span>
+              </li>
+              <li v-if="contractInfo && contractInfo.tokenContract">
+                  <span>
+                    Token Precision
+                  </span>
+                <span>
+                    {{contractInfo.tokenContract.precision}}
+                  </span>
+              </li>
+              <li v-if="contractInfo && contractInfo.tokenContract">
+                  <span>
+                    Token Supply
+                  </span>
+                <span>
+                    {{contractInfo.tokenContract.tokenSupply}}
+                  </span>
+              </li>
+            </ul>
+          </div>
+          <div class="right">
+            <ul>
+              <li>
+                  <span>
+                    {{$t('contractOverview.transaction')}}
+                  </span>
+                <span>
+                    {{contractInfo.transactions}}
+                  </span>
+              </li>
+              <li>
+                  <span>
+                    {{$t('contractOverview.createTxn')}}
+                  </span>
+                <span>
+                    {{contractInfo.createTxId}}
+                  </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="all_aside">
+          <div class="all_header">
+            <div>
+              <span @click="choiceFlagChange(0)"
+                    :class="{'choice':choiceFlag===0}">{{$t('contractOverview.tableTitle')}}</span>
+              <span @click="choiceFlagChange(2)"
+                    :class="{'choice':choiceFlag===2}">Token Transfers</span>
+              <span @click="choiceFlagChange(1)" :class="{'choice':choiceFlag===1}">{{$t('contractOverview.api')}}</span>
+            </div>
+            <div class="total">
+              A Total Of {{total}} transactions found
+            </div>
+          </div>
+          <template v-if="choiceFlag===0">
+            <div class="table-wrap">
+              <el-table
+                :data="tableData"
+                style="width: 100%"
+              >
+                <el-table-column
+                  align="center"
+                  :label="$t('contractOverview.txHash')"
+                  show-overflow-tooltip
+                >
+                  <template slot-scope="scope">
+                    <router-link :to="'/transfer_details/'+scope.row.trxId+'/'+scope.row.opType">{{scope.row.trxId}}
+                    </router-link>
                   </template>
-                </span>
-            </li>
-            <li v-if="contractInfo && contractInfo.tokenContract">
-                <span>
-                  Token Symbol
-                </span>
-              <span>
-                  {{contractInfo.tokenContract.tokenSymbol}}
-                </span>
-            </li>
-            <li v-if="contractInfo && contractInfo.tokenContract">
-                <span>
-                  Token Precision
-                </span>
-              <span>
-                  {{contractInfo.tokenContract.precision}}
-                </span>
-            </li>
-            <li v-if="contractInfo && contractInfo.tokenContract">
-                <span>
-                  Token Supply
-                </span>
-              <span>
-                  {{contractInfo.tokenContract.tokenSupply}}
-                </span>
-            </li>
-          </ul>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$t('contractOverview.block')"
+                  width="150">
+                  <template slot-scope="scope">
+                    <router-link :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$t('contractOverview.time')"
+                  width="150">
+                  <template slot-scope="scope">
+                    <timeago :since="scope.row.trxTime" :locale="getBusLocal"></timeago>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$t('contractOverview.callerAddress')"
+                  show-overflow-tooltip
+                >
+                  <template slot-scope="scope">
+                    <span class="link"
+                          @click="_mixin_address_jump(scope.row.fromAccount)">{{scope.row.fromAccount}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="amountStr"
+                  :label="$t('contractOverview.value')"
+                  width="150">
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="feeStr"
+                  :label="$t('contractOverview.fee')"
+                  width="150">
+                </el-table-column>
+              </el-table>
+            </div>
+            <el-pagination
+              class="pagination"
+              layout="prev, pager, next, jumper"
+              :current-page="page"
+              :page-size="size"
+              :total="total"
+              @current-change="pageChange">
+            </el-pagination>
+          </template>
+          <template v-if="choiceFlag===2">
+            <div class="table-wrap">
+              <el-table
+                :data="tokenTransactions"
+                style="width: 100%"
+              >
+                <el-table-column
+                  align="center"
+                  :label="$t('contractOverview.txHash')"
+                  show-overflow-tooltip
+                >
+                  <template slot-scope="scope">
+                    <router-link :to="'/transfer_details/'+scope.row.trxId+'/'+(scope.row.opType||79)">{{scope.row.trxId}}
+                    </router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$t('contractOverview.block')"
+                  width="150">
+                  <template slot-scope="scope">
+                    <router-link :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$t('contractOverview.time')"
+                  width="150">
+                  <template slot-scope="scope">
+                    <timeago :since="scope.row.trxTime" :locale="getBusLocal"></timeago>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  label="From"
+                  show-overflow-tooltip
+                >
+                  <template slot-scope="scope">
+                    <span class="link"
+                          @click="_mixin_address_jump(scope.row.fromAccount)">{{scope.row.fromAccount}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  label="To"
+                  show-overflow-tooltip
+                >
+                  <template slot-scope="scope">
+                    <span class="link"
+                          @click="_mixin_address_jump(scope.row.toAccount)">{{scope.row.toAccount}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  label="Amount"
+                  show-overflow-tooltip
+                >
+                  <template slot-scope="scope">
+                    <span>{{scope.row.amountStr}} &nbsp; {{scope.row.symbol}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  label="Memo"
+                  show-overflow-tooltip
+                >
+                  <template slot-scope="scope">
+                    <span>{{scope.row.memo}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="feeStr"
+                  :label="$t('contractOverview.fee')"
+                  width="150">
+                </el-table-column>
+              </el-table>
+            </div>
+            <el-pagination
+              class="pagination"
+              layout="prev, pager, next, jumper"
+              :current-page="page"
+              :page-size="size"
+              :total="total"
+              @current-change="pageChange">
+            </el-pagination>
+          </template>
+          <template v-if="choiceFlag===1">
+            <div class="api-wrap">
+              <template v-for="(item,index) in abi" >
+                <span class="abi" :key="index">{{item}}</span>
+              </template>
+            </div>
+          </template>
         </div>
-        <div class="right">
-          <ul>
-            <li>
-                <span>
-                  {{$t('contractOverview.transaction')}}
-                </span>
-              <span>
-                  {{contractInfo.transactions}}
-                </span>
-            </li>
-            <li>
-                <span>
-                  {{$t('contractOverview.createTxn')}}
-                </span>
-              <span>
-                  {{contractInfo.createTxId}}
-                </span>
-            </li>
-          </ul>
-        </div>
-      </section>
-      <aside>
-        <header>
-          <div>
-            <span @click="choiceFlagChange(0)"
-                  :class="{'choice':choiceFlag===0}">{{$t('contractOverview.tableTitle')}}</span>
-            <span @click="choiceFlagChange(2)"
-                  :class="{'choice':choiceFlag===2}">Token Transfers</span>
-            <span @click="choiceFlagChange(1)" :class="{'choice':choiceFlag===1}">{{$t('contractOverview.api')}}</span>
-          </div>
-          <div class="total">
-            A Total Of {{total}} transactions found
-          </div>
-        </header>
-        <template v-if="choiceFlag===0">
-          <div class="table-wrap">
-            <el-table
-              :data="tableData"
-              style="width: 100%"
-            >
-              <el-table-column
-                align="center"
-                :label="$t('contractOverview.txHash')"
-                show-overflow-tooltip
-              >
-                <template slot-scope="scope">
-                  <router-link :to="'/transfer_details/'+scope.row.trxId+'/'+scope.row.opType">{{scope.row.trxId}}
-                  </router-link>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('contractOverview.block')"
-                width="150">
-                <template slot-scope="scope">
-                  <router-link :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('contractOverview.time')"
-                width="150">
-                <template slot-scope="scope">
-                  <timeago :since="scope.row.trxTime" :locale="getBusLocal"></timeago>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('contractOverview.callerAddress')"
-                show-overflow-tooltip
-              >
-                <template slot-scope="scope">
-                  <span class="link"
-                        @click="_mixin_address_jump(scope.row.fromAccount)">{{scope.row.fromAccount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                prop="amountStr"
-                :label="$t('contractOverview.value')"
-                width="150">
-              </el-table-column>
-              <el-table-column
-                align="center"
-                prop="feeStr"
-                :label="$t('contractOverview.fee')"
-                width="150">
-              </el-table-column>
-            </el-table>
-          </div>
-          <el-pagination
-            class="pagination"
-            layout="prev, pager, next, jumper"
-            :current-page="page"
-            :page-size="size"
-            :total="total"
-            @current-change="pageChange">
-          </el-pagination>
-        </template>
-        <template v-if="choiceFlag===2">
-          <div class="table-wrap">
-            <el-table
-              :data="tokenTransactions"
-              style="width: 100%"
-            >
-              <el-table-column
-                align="center"
-                :label="$t('contractOverview.txHash')"
-                show-overflow-tooltip
-              >
-                <template slot-scope="scope">
-                  <router-link :to="'/transfer_details/'+scope.row.trxId+'/'+(scope.row.opType||79)">{{scope.row.trxId}}
-                  </router-link>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('contractOverview.block')"
-                width="150">
-                <template slot-scope="scope">
-                  <router-link :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('contractOverview.time')"
-                width="150">
-                <template slot-scope="scope">
-                  <timeago :since="scope.row.trxTime" :locale="getBusLocal"></timeago>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="From"
-                show-overflow-tooltip
-              >
-                <template slot-scope="scope">
-                  <span class="link"
-                        @click="_mixin_address_jump(scope.row.fromAccount)">{{scope.row.fromAccount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="To"
-                show-overflow-tooltip
-              >
-                <template slot-scope="scope">
-                  <span class="link"
-                        @click="_mixin_address_jump(scope.row.toAccount)">{{scope.row.toAccount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="Amount"
-                show-overflow-tooltip
-              >
-                <template slot-scope="scope">
-                  <span>{{scope.row.amountStr}} &nbsp; {{scope.row.symbol}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="Memo"
-                show-overflow-tooltip
-              >
-                <template slot-scope="scope">
-                  <span>{{scope.row.memo}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                prop="feeStr"
-                :label="$t('contractOverview.fee')"
-                width="150">
-              </el-table-column>
-            </el-table>
-          </div>
-          <el-pagination
-            class="pagination"
-            layout="prev, pager, next, jumper"
-            :current-page="page"
-            :page-size="size"
-            :total="total"
-            @current-change="pageChange">
-          </el-pagination>
-        </template>
-        <template v-if="choiceFlag===1">
-          <div class="api-wrap">
-            <template v-for="item in abi">
-              <span class="abi">{{item}}</span>
-            </template>
-          </div>
-        </template>
-      </aside>
-    </main>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -359,24 +360,29 @@
 
 <style lang="less" scoped>
   .wrap {
-    .top-line {
-      height: 1px;
-    }
-    .background {
-      width: 100%;
-      height: 338px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      background: white;
-      color: black;
-    }
-    main {
-      width: 77%;
-      min-width: 1160px;
-      margin: 120px auto;
+    .tr_main {
+      width: 1140px;
+      margin: 0 auto;
       position: relative;
-      color: black;;
+      color: black;
+      .con_top{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 30px;
+        p{
+          font-size: 22px;
+          color: #333333;
+          font-weight: 600;
+        }
+      }
+      .con_all{
+        background: #fff;
+        box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
+        margin: 30px 0;
+        padding: 30px 30px;
+        border-radius: 5px;
+      }
       .search {
         position: absolute;
         right: 0;
@@ -385,10 +391,8 @@
       h2 {
         font-size: 36px;
       }
-      section {
-        width: 75%;
-        min-width: 1160px;
-        margin: 20px auto 0;
+      .all_section {
+        overflow: hidden;
         div ul li {
           width: 514px;
           box-sizing: border-box;
@@ -409,15 +413,15 @@
           float: right;
         }
       }
-      aside {
-        margin-top: 60px;
-        header {
+      .all_aside {
+        margin-top: 30px;
+        .all_header {
           display: flex;
+          justify-content: space-between;
           font-size: 16px;
           padding: 0 15px;
           margin-bottom: 20px;
           div {
-            flex: 1;
             &:first-of-type {
               span {
                 display: inline-block;
