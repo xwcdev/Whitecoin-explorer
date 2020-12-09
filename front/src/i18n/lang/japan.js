@@ -306,7 +306,7 @@ const japan = {
     },
     address: {
         overview: {
-            title: 'タイトル:',
+            title: 'タイトル',
             name: 'アカウント名:',
             address: 'アドレス:',
             contracts: 'コントラクト:',

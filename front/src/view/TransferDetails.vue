@@ -193,6 +193,7 @@ export default {
     bus.$on("tipChange", function(index) {
       that.tipChange(index);
     });
+    bus.navChoice = 2;
   },
   methods: {
     getTypeName(typeNum) {

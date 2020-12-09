@@ -99,7 +99,7 @@
                 <p><timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
               </div>
               <div class="block_san">
-                <p><span>FROM:</span> <router-link :to="`/address?address=${item.fromAccount}`">{{item.fromAccount!==null?(item.fromAccount.substring(0,24) + '...' ):'--'}} </router-link></p>
+                <p><span>FROM:</span> <router-link :to="`/address?address=${item.fromAccount}`">{{item.fromAccount !== 'Mining' ?(item.fromAccount.substring(0,24) + '...' ):item.fromAccount}} </router-link></p>
               </div>
               <div class="block_san">
                 <p class="toAccount"><span>TO:</span> <router-link :to="`/address?address=${item.toAccount}`"> {{item.toAccount!==null? (item.toAccount.substring(0,26) + '...') : '--'}} </router-link></p>
