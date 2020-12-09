@@ -10,6 +10,7 @@ public class BlTokenBalance {
     private String addr;
     private BigDecimal amount;
     private String tokenContract;
+    private String assetId;
     private String tokenSymbol;
     private String imgUrl;
 }
