@@ -4,7 +4,7 @@
       <div class="con_top">
         <p>
           {{$t('address.overview.title')}} 
-          <span class="address_link">Address:{{minerInfo.address}} <span
+          <span class="address_link">{{minerInfo.address}} <span
                     style="color: red;"
                     v-if="minerInfo.address==='XWCNWKLUcsybWt4bW5EXV1CfdaSNHiSKj4Hzw' || minerInfo.address==='XWCNi146ffqUffGJk3tTjnY1MdVGJn3m8jH29'"
                   >({{$t('address.overview.abnormal_address')}})</span></span>
@@ -329,12 +329,12 @@ export default {
       this.getTokenBalancesData();
       console.log(this.isShow,'ccc')
 
-      bus.navChoice = 4;
-
     } else {
       this.minerName = this.$route.query.minerName;
       this.getDataByMinerName();
     };
+
+    bus.navChoice = 4;
   },
   methods: {
     pageChange(page) {

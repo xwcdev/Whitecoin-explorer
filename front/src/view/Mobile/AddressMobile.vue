@@ -226,12 +226,12 @@ export default {
       this.getTokenBalancesData();
       // console.log(this.isShow,'ccc')
 
-      bus.navChoice = 4
-
     } else {
       this.minerName = this.$route.query.minerName;
       this.getDataByMinerName();
     };
+    
+    bus.navChoice = 4
   },
   methods: {
     pageChange(page) {
