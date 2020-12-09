@@ -295,7 +295,7 @@ public class ContractController {
                     if(null != urlMap) {
                         for (BlTokenBalance blTokenBalance : tokenBalances) {
                             if(StringUtils.isEmpty(blTokenBalance.getAddr())) {
-                                urlMap.get(blTokenBalance.getAssetId());
+                                blTokenBalance.setImgUrl(urlMap.get(blTokenBalance.getAssetId()));
                             } else {
                                 blTokenBalance.setImgUrl(urlMap.get(blTokenBalance.getAddr()));
                             }
