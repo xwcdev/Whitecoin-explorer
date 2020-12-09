@@ -294,7 +294,12 @@ public class ContractController {
 
                     if(null != urlMap) {
                         for (BlTokenBalance blTokenBalance : tokenBalances) {
-                            blTokenBalance.setImgUrl(urlMap.get(blTokenBalance.getAddr()));
+                            if(StringUtils.isEmpty(blTokenBalance.getAddr())) {
+                                urlMap.get(blTokenBalance.getAssetId());
+                            } else {
+                                blTokenBalance.setImgUrl(urlMap.get(blTokenBalance.getAddr()));
+                            }
+
                         }
                     }
 
@@ -376,23 +381,6 @@ public class ContractController {
 
     public static void main(String[] args) {
 
-        /*List<String> params = new ArrayList<>();
-        params.add("XWCCQZasPhLLPgH61juj8h17RLBAcm8Dzkk6a");
-        params.add("XWCCeExCVEZUbnYjSPovHTWKtAmJF77ZTKY8o");
-
-        try {
-            String httpStr = HttpUtil.post("https://api.tokenswap.info/lightwallet/thirdParty/getLogoUrl", JSONObject.toJSONString(params));
-            if (!StringUtils.isEmpty(httpStr)) {
-                Map<String, Object> resMap = (Map) JSONObject.parse(httpStr);
-                Map<String, String> urlMap = (Map) resMap.get("data");
-
-                System.out.println(urlMap.get("XWCCQZasPhLLPgH61juj8h17RLBAcm8Dzkk6a"));
-                System.out.println(urlMap.get("XWCCeExCVEZUbnYjSPovHTWKtAmJF77ZTKY8o"));
-
-            }
-        } catch (Exception e) {
-
-        }*/
 
 
 
