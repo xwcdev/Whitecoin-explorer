@@ -275,7 +275,7 @@ public class ContractController {
             List<String> contractAddrList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(tokenBalances)) {
                 for (BlTokenBalance blTokenBalance : tokenBalances) {
-                    logger.info("blTokenBalance.contractAddr:{}", blTokenBalance.getAddr());
+                    logger.info("blTokenBalance.contractAddr:{}", blTokenBalance.getAddr() + " " + blTokenBalance.getTokenSymbol());
                     if(!StringUtils.isEmpty(blTokenBalance.getAddr())) {
                         contractAddrList.add(blTokenBalance.getAddr());
                     } else {
