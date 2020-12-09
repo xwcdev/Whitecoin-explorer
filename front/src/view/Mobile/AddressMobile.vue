@@ -45,7 +45,7 @@
                 <span>XWC{{$t('address.overview.balances')}}</span>
                 <span v-if="minerInfo.balances">{{minerInfo.balances[0]}}</span>
               </li>
-              <li @click.stop="isShow = !isShow">
+              <li @click.stop="nameSymbol">
                 <span>{{$t('address.overview.tokenBalances')}}</span>
                 <span v-if="tokenBalances.length>0">{{tokenAmount}} <em class="tp_click">{{tokenName}} <strong></strong></em> </span>
                 <div class="ser_input" v-show="isShow">
@@ -53,7 +53,7 @@
                     <b></b>
                     <input type="text" :placeholder="$t('search.placeholder2')" v-model='serValue' @input="tokenBalancesData($event)">
                   </div>
-                  <div class="daibi"  v-if="tokenBalancesResult.length>0">
+                  <div class="daibi"  v-if="tokenBalancesResult.length>0 && serValue !=''">
                     <div class="daibi_li" v-for="(item,index) of tokenBalancesResult" :key="index">
                       <img :src="item.imgUrl!==null ? item.imgUrl:require('../../assets/img/icon_logo/XWC.png')" alt="">
                       <div class="daibi_p" v-if="item.id !==null" @click.stop="changeToken(item.id)">
@@ -71,7 +71,7 @@
                       NO Data
                     </div>
                   </div>
-                  <div class="daibi" v-if="tokenBalancesResult.length==0 || serValue ==''">
+                  <div class="daibi" v-if="tokenBalances.length>0 && serValue ==''">
                     <div class="daibi_li" v-for="(item,index) of tokenBalances" :key="index" @click.stop="changeToken(index)">
                       <img :src="item.imgUrl!==null ? item.imgUrl:require('../../assets/img/icon_logo/XWC.png')" alt="">
                       <div class="daibi_p" v-if="item.id !==null" @click.stop="changeToken(item.id)">
@@ -312,7 +312,7 @@ export default {
       this.$axios
         .get(`/user_tokens/${this.address}`)
         .then(function(res) {
-          if(res.retCode===200){
+          if(res.status===200){
             let data = res.data;
             that.tokenBalances = data.data.tokenBalances;
             // console.log(that.tokenBalances,6666)
@@ -406,6 +406,12 @@ export default {
         duration:2000,
       });
     },
+    nameSymbol(){
+      if(this.tokenBalances.length>0){
+        this.isShow = !this.isShow;
+        this.serValue = ''
+      }
+    }
   },
   computed: {
     getBusLocal() {

@@ -53,7 +53,7 @@
                     <b></b>
                     <input type="text" :placeholder="$t('search.placeholder2')" v-model='serValue' @input="tokenBalancesData($event) ">
                   </div>
-                  <div class="daibi"  v-if="tokenBalancesResult.length>0">
+                  <div class="daibi"  v-if="tokenBalancesResult.length>0 && serValue !=''">
                     <div class="daibi_li" v-for="(item,index) of tokenBalancesResult" :key="index">
                       <img :src="item.imgUrl!==null ? item.imgUrl:require('../assets/img/icon_logo/XWC.png')" alt="">
                       <div class="daibi_p" v-if="item.id !==null" @click.stop="changeToken(item.id)">
@@ -71,7 +71,7 @@
                       NO Data
                     </div>
                   </div>
-                  <div class="daibi" v-if="tokenBalancesResult.length==0 || serValue ==''">
+                  <div class="daibi" v-if="tokenBalances.length>0 && serValue ==''">
                     <div class="daibi_li" v-for="(item,index) of tokenBalances" :key="index" @click.stop="changeToken(index)">
                       <img :src="item.imgUrl!==null ? item.imgUrl:require('../assets/img/icon_logo/XWC.png')" alt="">
                       <div class="daibi_p" v-if="item.id !==null" @click.stop="changeToken(item.id)">
@@ -413,10 +413,10 @@ export default {
       this.$axios
         .get(`/user_tokens/${this.address}`)
         .then(function(res) {
-          if(res.retCode === 200){
+          if(res.status === 200){
             let data = res.data;
             that.tokenBalances = data.data.tokenBalances;
-            // console.log(data.data,6666)
+            // console.log(data.data.tokenBalances,6666)
             // 代币余额默认值 
             if(that.tokenBalances.length>0){
               that.tokenAmount = that.tokenBalances[0].amount;
@@ -473,7 +473,7 @@ export default {
     tokenBalancesData(e){
       let that = this;
       that.serValue = e.target.value.trim();
-      console.log(that.serValue,'000') 
+      // console.log(that.serValue,'000') 
       that.tokenBalancesResult = Object.values(that.tokenBalances).filter(item=>{
         if( (item.tokenSymbol!==null && item.tokenSymbol.includes(that.serValue.toUpperCase()) ) || (item.tokenContract!==null && item.tokenContract.includes(that.serValue)) ){
           return item
@@ -503,8 +503,10 @@ export default {
       this.$message(this.$t('message.failed'));
     },
     nameSymbol(){
-      this.isShow = !this.isShow;
-      this.serValue = ''
+      if(this.tokenBalances.length>0){
+        this.isShow = !this.isShow;
+        this.serValue = ''
+      }
     }
   },
   computed: {
