@@ -548,11 +548,13 @@ public class SyncService {
             logger.error("{}块处理数据出错", blockNum, e);
         } finally {
 
-            // 保存批量数据
-            commonService.insertBatchBlockData(bc, transactionList,trxNum);
+            if(bc != null) {
+                // 保存批量数据
+                commonService.insertBatchBlockData(bc, transactionList, trxNum);
+                // 保存合约信息
+                commonService.insertBatchContractData();
+            }
 
-            // 保存合约信息
-            commonService.insertBatchContractData();
         }
     }
 

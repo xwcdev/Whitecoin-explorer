@@ -1,5 +1,7 @@
 package com.browser.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.browser.dao.entity.*;
 import com.browser.protocol.EUDataGridResult;
@@ -9,9 +11,12 @@ import com.browser.service.TokenBalanceService;
 import com.browser.service.TokenService;
 import com.browser.service.impl.ContractService;
 import com.browser.service.impl.RequestWalletService;
+import com.browser.tools.common.HttpUtil;
 import com.browser.tools.common.StringUtil;
 import com.browser.wallet.PrecisionUtils;
+import com.google.gson.JsonObject;
 import lombok.Data;
+import net.sf.json.util.JSONUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -19,14 +24,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +57,9 @@ public class ContractController {
 
     @Value("${swap_contract.admin.password}")
     private String swapContractAdminPassword;
+
+    @Value("${img.url}")
+    private String imgUrl;
 
     private static Logger logger = LoggerFactory.getLogger(ContractController.class);
 
@@ -219,7 +226,6 @@ public class ContractController {
         NewBalance data = new NewBalance();
 
 
-
         BlMinerStatis blMinerStatis = new BlMinerStatis();
         blMinerStatis.setAddress(addr);
 
@@ -232,26 +238,26 @@ public class ContractController {
             List<BlTokenBalance> tokenBalances = tokenBalanceService.findAllTokenBalancesByAddr(addr);
             BlMinerStatis balanceData = statisService.getAddrStatis(blMinerStatis);
             List<String> balanceList = balanceData.getBalances();
-            if(!CollectionUtils.isEmpty(balanceList)) {
+            if (!CollectionUtils.isEmpty(balanceList)) {
                 List<String> newBalanceList = balanceList.stream().filter(item -> item.contains("XWC")).collect(Collectors.toList());
                 balanceData.setBalances(newBalanceList);
             }
             data.setXwcBanlance(balanceData);
 
-            if(!CollectionUtils.isEmpty(balanceList)) {
+            if (!CollectionUtils.isEmpty(balanceList)) {
 
                 Iterator<String> it = balanceList.iterator();
 
-                while(it.hasNext()){
+                while (it.hasNext()) {
                     String typeBalance = it.next();
 
-                    if(typeBalance.contains("XWC")) {
+                    if (typeBalance.contains("XWC")) {
                         it.remove();
                     }
                 }
 
-                if(!CollectionUtils.isEmpty(balanceList)) {
-                    for (String typeBalance:balanceList) {
+                if (!CollectionUtils.isEmpty(balanceList)) {
+                    for (String typeBalance : balanceList) {
 
                         BlTokenBalance blTokenBalance = new BlTokenBalance();
                         String[] chars = typeBalance.split(" ");
@@ -265,6 +271,27 @@ public class ContractController {
 
             }
 
+            List<String> contractAddrList = new ArrayList<>();
+            if (!CollectionUtils.isEmpty(tokenBalances)) {
+                for (BlTokenBalance blTokenBalance : tokenBalances) {
+                    logger.info("blTokenBalance.contractAddr:{}", blTokenBalance.getAddr());
+                    contractAddrList.add(blTokenBalance.getAddr());
+                }
+
+                String httpStr = HttpUtil.post(imgUrl + "/lightwallet/thirdParty/getLogoUrl", JSONObject.toJSONString(contractAddrList));
+
+                if (!StringUtils.isEmpty(httpStr)) {
+                    Map<String, Object> resMap = (Map) JSONObject.parse(httpStr);
+                    Map<String, String> urlMap = (Map) resMap.get("data");
+
+                    if(null != urlMap) {
+                        for (BlTokenBalance blTokenBalance : tokenBalances) {
+                            blTokenBalance.setImgUrl(urlMap.get(blTokenBalance.getAddr()));
+                        }
+                    }
+
+                }
+            }
 
 
             data.setTokenBalances(tokenBalances);
@@ -280,25 +307,25 @@ public class ContractController {
 
     }
 
-	@ResponseBody
-	@RequestMapping(value = "token_holders/{tokenContract}", method = {RequestMethod.GET})
-	public ResultMsg getTokenHolders(@PathVariable("tokenContract") String tokenContract) {
-		ResultMsg resultMsg = new ResultMsg();
-		resultMsg.setRetCode(ResultMsg.HTTP_OK);
-		try {
-			if (StringUtil.isEmpty(tokenContract)) {
-				resultMsg.setData(new ArrayList<>());
-			} else {
-				List<BlTokenBalance> tokenBalances = tokenBalanceService.findAllTokenBalancesByTokenContract(tokenContract);
-				resultMsg.setData(tokenBalances);
-			}
-		} catch (Exception e) {
-			logger.error("system error", e);
-			resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
-			resultMsg.setRetMsg(e.getMessage());
-		}
-		return resultMsg;
-	}
+    @ResponseBody
+    @RequestMapping(value = "token_holders/{tokenContract}", method = {RequestMethod.GET})
+    public ResultMsg getTokenHolders(@PathVariable("tokenContract") String tokenContract) {
+        ResultMsg resultMsg = new ResultMsg();
+        resultMsg.setRetCode(ResultMsg.HTTP_OK);
+        try {
+            if (StringUtil.isEmpty(tokenContract)) {
+                resultMsg.setData(new ArrayList<>());
+            } else {
+                List<BlTokenBalance> tokenBalances = tokenBalanceService.findAllTokenBalancesByTokenContract(tokenContract);
+                resultMsg.setData(tokenBalances);
+            }
+        } catch (Exception e) {
+            logger.error("system error", e);
+            resultMsg.setRetCode(ResultMsg.HTTP_ERROR);
+            resultMsg.setRetMsg(e.getMessage());
+        }
+        return resultMsg;
+    }
 
     @ResponseBody
     @RequestMapping(value = "top_tokens", method = RequestMethod.GET)
@@ -336,6 +363,32 @@ public class ContractController {
             resultMsg.setData(tokenBalances);
         }
         return resultMsg;
+    }
+
+
+    public static void main(String[] args) {
+
+        List<String> params = new ArrayList<>();
+        params.add("XWCCQZasPhLLPgH61juj8h17RLBAcm8Dzkk6a");
+        params.add("XWCCeExCVEZUbnYjSPovHTWKtAmJF77ZTKY8o");
+
+        try {
+            String httpStr = HttpUtil.post("http://192.168.110.11:8083/lightwallet/thirdParty/getLogoUrl", JSONObject.toJSONString(params));
+            if (!StringUtils.isEmpty(httpStr)) {
+                Map<String, Object> resMap = (Map) JSONObject.parse(httpStr);
+                Map<String, String> urlMap = (Map) resMap.get("data");
+
+                System.out.println(urlMap.get("XWCCQZasPhLLPgH61juj8h17RLBAcm8Dzkk6a"));
+                System.out.println(urlMap.get("XWCCeExCVEZUbnYjSPovHTWKtAmJF77ZTKY8o"));
+
+            }
+        } catch (Exception e) {
+
+        }
+
+
+
+
     }
 
 }
