@@ -1,9 +1,29 @@
 <template>
   <div class="wrap">
     <div class="tr_main">
+      <SearchMobile class="search_con"/>
       <div class="con_top">
         <p>{{$t('transaction.title')}}</p>
-        <Search class="search_con"/>
+      </div>
+      <div v-show="traActive === 1">
+        <el-pagination
+          class="pagination"
+          layout="prev,total,next,jumper"
+          :current-page="page"
+          :page-size="size"
+          :total="total"
+          @current-change="pageChange">
+        </el-pagination> 
+      </div>
+      <div v-show="traActive === 2">
+        <el-pagination
+          class="pagination"
+          layout="prev,total,next,jumper"
+          :current-page="page1"
+          :page-size="size"
+          :total="total1"
+          @current-change="pageChange1">
+        </el-pagination>
       </div>
       <div class="con_all">
         <div class="all_title">
@@ -11,105 +31,51 @@
           <li :class="{'active':traActive === 2}" @click="tokenTableData">{{$t('maxTitle.t2')}}</li>
         </div>
         <div class="con_table" v-show="traActive === 1">
-          <all v-if="tips[0].show" :tableData="tableData"></all>
-          <transfer v-else-if="tips[1].show" :tableData="tableData"></transfer>
-          <withdraw v-else-if="tips[2].show" :tableData="tableData"></withdraw>
-          <recharge v-else-if="tips[3].show" :tableData="tableData"></recharge>
-          <contract v-else-if="tips[4].show" :tableData="tableData"></contract>
-          <wage v-else-if="tips[5].show" :tableData="tableData"></wage>
-          <acceptance v-else-if="tips[6].show" :tableData="tableData"></acceptance>
-          <mortgage v-else-if="tips[7].show" :tableData="tableData"></mortgage>
-          <foreclose v-else-if="tips[8].show" :tableData="tableData"></foreclose>
-          <other v-else-if="tips[9].show" :tableData="tableData"></other>
-          <el-pagination
-            class="pagination"
-            layout="prev, pager, next, jumper"
-            :current-page="page"
-            :page-size="size"
-            :total="total"
-            @current-change="pageChange">
-          </el-pagination> 
+          <div class="trans_ul">
+            <li v-for="(item,index) of tableData" :key="index">
+              <p><span>{{$t('home.transaction.txHash')}}</span><router-link class="yanse" :to="'/transfer_details/'+item.trxId+'/'+item.opType">{{item.trxId}}</router-link></p>
+              <p><span>{{$t('transaction.block')}}</span><router-link class="yanse" :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
+              <p><span>{{$t('transaction.age')}}</span>{{item.trxTime}}</p>
+              <p><span>{{$t('transaction.from')}}</span><router-link class="yanse" :to="'/address?address='+item.fromAccount">{{item.fromAccount !==null ? item.fromAccount :'--'}}</router-link></p>
+              <p><span>{{$t('transaction.to')}}</span><router-link class="yanse" :to="'/address?address='+item.toAccount">{{item.toAccount !==null ? item.toAccount :'--'}}</router-link></p>
+              <p><span>{{$t('transaction.value')}}</span>{{item.amountStr}}</p>
+              <p><span>{{$t('transaction.fee')}}</span>{{item.feeStr}}</p>
+            </li>
+          </div>
+          <div class="trans_page">
+            <el-pagination
+              class="pagination"
+              layout="prev,total,next,jumper"
+              :current-page="page"
+              :page-size="size"
+              :total="total"
+              @current-change="pageChange">
+            </el-pagination> 
+          </div>
         </div>
         <div class="con_table" v-show="traActive === 2">
-          <el-table
-            :data="TokenTrxData"
-            width="100%"
-          >
-            <el-table-column
-              align="center"
-              :label="$t('home.transaction.txHash')"
-              width="180"
-            >
-              <template slot-scope="scope">
-                <router-link  class="yanse"  :to="'/transfer_details/'+scope.row.trxId+'/'+79">{{scope.row.trxId}}</router-link>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :label="$t('transaction.block')"
-              width="80"
-              >
-              <template slot-scope="scope">
-                <router-link  class="yanse"  :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :label="$t('transaction.age')"
-              
-            >
-              <template slot-scope="scope">
-                <div>
-                  <span>{{scope.row.trxTime}}</span>  
-                </div>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :label="$t('transaction.from')"
-              width="190"
-            >
-              <template slot-scope="scope">
-                <router-link :to="'/address?address='+scope.row.fromAccount"><span class="yanse" >{{scope.row.fromAccount !==null ? scope.row.fromAccount :'--'}}</span></router-link>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :label="$t('transaction.to')"
-              width="180"
-            >
-              <template slot-scope="scope">
-                <router-link :to="'/address?address='+scope.row.toAccount"><span class="yanse" >{{scope.row.toAccount !==null ? scope.row.toAccount :'--'}}</span></router-link>
-              </template>
-            </el-table-column>
-              <el-table-column
-                align="center"
-                prop="amountStr"
-                :label="$t('transaction.value')"
-                width="150"
-              >
-              </el-table-column>
-                <el-table-column
-                  align="center"
-                  :label="$t('transaction.fee')"
-                  
-                >
-                  <template slot-scope="scope">
-                    {{scope.row.feeStr}}
-                    <img v-if="scope.row.guaranteeUse" class="feeShow" src="../assets/img/shouxufei.png"/>
-                  </template>
-                </el-table-column>
-          </el-table>
+          <div class="trans_ul">
+            <li v-for="(item,index) of TokenTrxData" :key="index">
+              <p><span>{{$t('home.transaction.txHash')}}</span><router-link class="yanse" :to="'/transfer_details/'+item.trxId+'/'+item.opType">{{item.trxId}}</router-link></p>
+              <p><span>{{$t('transaction.block')}}</span><router-link class="yanse" :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
+              <p><span>{{$t('transaction.age')}}</span>{{item.trxTime}}</p>
+              <p><span>{{$t('transaction.from')}}</span><router-link class="yanse" :to="'/address?address='+item.fromAccount">{{item.fromAccount !==null ? item.fromAccount :'--'}}</router-link></p>
+              <p><span>{{$t('transaction.to')}}</span><router-link class="yanse" :to="'/address?address='+item.toAccount">{{item.toAccount !==null ? item.toAccount :'--'}}</router-link></p>
+              <p><span>{{$t('transaction.value')}}</span>{{item.amountStr}}</p>
+              <p><span>{{$t('transaction.fee')}}</span>{{item.feeStr}}</p>
+            </li> 
+          </div>
+          <div class="trans_page">
             <el-pagination
-            class="pagination"
-            layout="prev, pager, next, jumper"
-            :current-page="page1"
-            :page-size="size"
-            :total="total1"
-            @current-change="pageChange1">
-          </el-pagination> 
+              class="pagination"
+              layout="prev,total,next,jumper"
+              :current-page="page1"
+              :page-size="size"
+              :total="total1"
+              @current-change="pageChange1">
+            </el-pagination> 
+          </div>
         </div>
-        
       </div>
       
       <!-- <nav>
@@ -124,20 +90,20 @@
 </template>
 
 <script>
-  import Search from "../components/search/Search";
-  import All from "../components/transactionTables/All";
-  import Contract from "../components/transactionTables/Contract";
-  import Wage from "../components/transactionTables/Wage";
-  import Withdraw from "../components/transactionTables/Withdraw";
-  import Transfer from "../components/transactionTables/Transfer";
-  import Recharge from "../components/transactionTables/Recharge";
-  import Acceptance from "../components/transactionTables/Acceptance";
-  import Other from "../components/transactionTables/Other";
-  import Mortgage from "../components/transactionTables/Mortgage";
-  import Foreclose from "../components/transactionTables/Foreclose";
+  import SearchMobile from "../../components/search/SearchMobile";
+  import All from "../../components/transactionTables/All";
+  import Contract from "../../components/transactionTables/Contract";
+  import Wage from "../../components/transactionTables/Wage";
+  import Withdraw from "../../components/transactionTables/Withdraw";
+  import Transfer from "../../components/transactionTables/Transfer";
+  import Recharge from "../../components/transactionTables/Recharge";
+  import Acceptance from "../../components/transactionTables/Acceptance";
+  import Other from "../../components/transactionTables/Other";
+  import Mortgage from "../../components/transactionTables/Mortgage";
+  import Foreclose from "../../components/transactionTables/Foreclose";
   import dayjs from 'dayjs';
-  import bus from "../utils/bus";
-  import mixin from "../utils/mixin";
+  import bus from "../../utils/bus";
+  import mixin from "../../utils/mixin";
 
   export default {
     components: {
@@ -151,7 +117,7 @@
       Wage,
       Contract,
       All,
-      Search
+      SearchMobile
     },
     mixins: [mixin],
     name: "transaction",
@@ -323,78 +289,97 @@
 </script>
 
 <style lang="less" scoped>
-  .wrap {
+.wrap {
+  padding-top: 153rem;
     .tr_main {
-      width: 1140px;
-      margin: 0 auto;
       position: relative;
-      color: black;
+      padding: 0 40rem;
       .con_top{
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 30px;
+        margin-top: 30rem;
         p{
-          font-size: 22px;
+          font-size: 36rem;
           color: #333333;
           font-weight: 600;
         }
       }
       .con_all{
         background: #fff;
-        box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
-        margin: 30px 0;
-        padding-bottom: 30px;
+        box-shadow: 0rem 2rem 13rem 0rem rgba(0, 0, 0, 0.09);
+        margin: 30rem 0;
+        padding-bottom: 30rem;
         .all_title{
           display: flex;
           align-items: center;
-          border-bottom:1px solid #EEEEEE;
-          line-height: 30px;
-          padding:10px 0 0 30px;
-          margin-bottom: 30px;
+          border-bottom:1px solid #dedede;
+          padding:10rem 0 0 30rem;
           color: #333333;
+          font-size: 32rem;
           li{
             list-style: none;
-            padding: 12px 0;
-            border-bottom:2px solid #fff;
-            margin-right: 60px;
+            padding: 15rem;
+            border-bottom:4rem solid #fff;
           }
           li:hover{
-            border-bottom:2px solid #735DFF;
+            border-bottom:4rem solid #735DFF;
             cursor: pointer;
           }
           .active{
-            border-bottom:2px solid #735DFF;
+            border-bottom:2rem solid #735DFF;
             color: #333333;
             font-weight: bold;
           }
         }
         .con_table{
-          margin: 0 30px;
           box-sizing: border-box;
-          padding-bottom: 30px;
+          .trans_ul{
+            li{
+              border-bottom: 1px solid #E2E2E2;
+              padding: 20rem 30rem;
+              font-size: 28rem;
+              color: #333;
+              p{
+                display: flex;
+                margin: 20rem 0;
+                span{
+                  width: 25%;
+              color: #677897;
+                }
+                a{
+                  color: #0279FF;
+                  text-align: left;
+                  word-break:break-all;
+                  width: 75%;
+                }
+              }
+            }
+          }
+          .trans_page{
+            padding-left: 30rem;
+          }
         }
       }
       .pagination {
-        text-align: center;
-        margin-top: 20px;
+        margin-top: 20rem;
       }
       nav {
-        margin: 0 auto 26px;
+        margin: 0 auto 26rem;
         text-align: center;
         .nav-item-wrap {
           display: inline-block;
           border-bottom: 1px solid rgba(255, 255, 255, .5);
           .normal {
             font-weight: bold;
-            padding: 12px 0;
-            margin-right: 35px;
+            padding: 12rem 0;
+            margin-right: 35rem;
             &:last-of-type {
               margin-right: 0;
             }
             display: inline-block;
             color: rgba(255, 255, 255, .5);
-            font-size: 16px;
+            font-size: 16rem;
             cursor: pointer;
             &:hover {
               color: rgba(255, 255, 255, 1);
@@ -423,5 +408,46 @@
       }
     }
   }
+/deep/ .el-pagination .btn-prev{
+  font-size: 26rem;
+  min-width: 80rem;
+  height: 50rem; 
+  color: #737D92;
+  background: #E3DEFF;
+  border: 0;
+}
 
+/deep/ .el-pagination .btn-next{
+  font-size: 26rem;
+  min-width: 80rem;
+  height: 50rem; 
+  color: #737D92;
+  background: #E3DEFF;
+  border: 0;
+}
+/deep/.el-pagination .btn-prev .el-icon, .el-pagination .btn-prev .el-icon{
+  font-size: 26rem;
+}
+/deep/.el-pagination .btn-next .el-icon, .el-pagination .btn-next .el-icon{
+  font-size: 26rem;
+}
+/deep/ .el-pagination span:not([class*=suffix]){
+  font-size: 22rem;
+}
+/deep/ .el-pagination__jump{
+  font-size: 26rem !important;
+}
+/deep/ .el-pagination__editor.el-input .el-input__inner {
+  font-size: 26rem;
+  min-width: 80rem;
+  height: 50rem; 
+  line-height: 50rem;
+  color: #737D92;
+  background: #E3DEFF;
+  border: 0;
+}
+/deep/ .el-pagination span:not([class*=suffix]){
+  height: 50rem; 
+  line-height: 50rem;
+}
 </style>

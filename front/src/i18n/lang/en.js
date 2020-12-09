@@ -304,7 +304,7 @@ const en = {
   },
   address: {
     overview: {
-      title: 'Address Overview',
+      title: 'Address',
       name: 'Name:',
       address: 'Address:',
       contracts: 'Contracts:',

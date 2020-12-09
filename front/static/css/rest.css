@@ -18,6 +18,9 @@ th, td { /* table elements 表格元素 */
   padding: 0;
 }
 
+li{
+  list-style-type: none;
+}
 ol, ul {
   margin: 0;
   padding: 0;

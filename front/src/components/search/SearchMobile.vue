@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <div class="wrap_ser">
     <el-input placeholder="Search by Address/TxHash/Contract/Height/Account Name" v-model="keyWord" @keyup.enter="search" />
     <span class="search-btn" @click="search">
       <i v-if="false" class="iconfont icon-sousuo"></i>
@@ -23,14 +23,16 @@ export default {
       let regS = /(^\s+)|(\s+$)|\s+/g;
       let reg = /^[0-9]+[0-9]*$/;
       if (regS.test(this.keyWord)) {
-        this.$message({
+        this.$notify({
           message: this.$t("alert.noSpace"),
-          type: "warning"
+          type: "warning",
+          duration:2000,
         });
       } else if (this.keyWord === "") {
-        this.$message({
+        this.$notify({
           message: this.$t("alert.enterContent"),
-          type: "warning"
+          type: "warning",
+          duration:2000,
         });
       } else if (this.keyWord.length === 40) {
         this.$axios
@@ -47,9 +49,10 @@ export default {
                 query: { txHash: that.keyWord }
               });
             } else {
-              that.$message({
+              that.$notify({
                 message: that.$t("alert.notSearch"),
-                type: "warning"
+                type: "warning",
+                duration:2000,
               });
             }
           });
@@ -60,9 +63,10 @@ export default {
             if (res.data.data) {
               that.$router.push({ path: `/contractOverview/${that.keyWord}` });
             } else {
-              that.$message({
+              that.$notify({
                 message: that.$t("alert.notSearch"),
-                type: "warning"
+                type: "warning",
+                duration:2000,
               });
             }
           });
@@ -73,9 +77,10 @@ export default {
             if (res.data.data) {
               that.$router.push({ path: `/blockDetails/${that.keyWord}` });
             } else {
-              that.$message({
+              that.$notify({
                 message: that.$t("alert.notSearch"),
-                type: "warning"
+                type: "warning",
+                duration:2000,
               });
             }
           });
@@ -89,9 +94,9 @@ export default {
                 query: { address: that.keyWord }
               });
             } else {
-              that.$message({
+              that.$notify({
                 message: that.$t("alert.notSearch"),
-                type: "warning"
+                type: "warning",
               });
             }
           });
@@ -102,33 +107,23 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.wrap {
-  width: 690px;
-  height: 52px;
+.wrap_ser {
+  width: 100%;
+  height: 94rem;
   position: relative;
-  @media screen and (max-width: 900px) {
-    width: 100%;
-  }
+  display: flex;
+  align-items: center;
+  padding-top: 0;
   input {
     width:100%;
-    line-height: 52px;
     box-sizing: border-box;
     background: #fff;
     // border-bottom: 2px solid white;
     color:#333333;
     outline: none;
-    border-radius: 6px;
-    padding-left: 15px;
-    font-size: 20px;
-    border: 1px solid #735DFF;
-    &::placeholder {
-      color: #677897;
-      font-size: 20px;
-      line-height:45px;
-    }
-    &::-webkit-input-placeholder{
-      line-height:45px;
-    }
+    border-radius: 8rem;
+    margin-left: 2rem;
+    font-size: 26rem;
   }
 
   .search-btn {
@@ -141,13 +136,32 @@ export default {
     color: black;
     cursor: pointer;
     .iconfont {
-      font-size: 24px;
+      font-size: 24rem;
     }
-    width: 54px;
-    height: 54px;
+    width: 96rem;
+    height: 96rem;
     background: url(../../assets/img/search_ico.png) no-repeat;
     background-size: 100%;
   }
 }
+/deep/.el-input.el-input--medium{
+  height: 96rem;
+  line-height: 96rem;
+  border-radius:15rem;
+  box-sizing: border-box;
+  input{
+    &::placeholder {
+      color: #677897;
+      font-size: 20rem !important;
+    }
+    &::-webkit-input-placeholder{
+      font-size: 20rem !important;
+    }
+  }
+}
+/deep/.el-input--medium .el-input__inner{
+  font-size: 26rem;
+  line-height: 40rem;
+  height: 40rem
+}
 </style>
-

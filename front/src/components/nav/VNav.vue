@@ -174,19 +174,17 @@ export default {
           border-bottom: 4px solid #fff;
           box-sizing: border-box;
           &:hover {
-            border-bottom: 4px solid #735DFF;
-            border-radius: 2px;
+            border-bottom-color:#735DFF;
             color: #735DFF;
-          }
-          @media screen and (max-width: 1400px) {
-            padding: 6px 20px;
-            margin-left: 18px;
           }
         }
         .choice {
-          border-bottom: 4px solid #735DFF;
-          border-radius: 2px;
+          border-bottom-color: #735DFF;
           color: #735DFF;
+          .el-input__inner{
+            border-bottom: 4px solid #735DFF;
+            border-radius: 0;
+          }
         }
       }
     }
@@ -200,7 +198,9 @@ export default {
     margin-top: 0 !important;
 }
 .-lang-select {
-    width: 120px;
+  margin-left: 15px;
+  width:120px;
+  box-sizing: border-box;
     input::-webkit-input-placeholder{
       color: #333333 !important;
       font-size: 14px !important;
@@ -209,12 +209,12 @@ export default {
       color: #333333 !important;
       text-align: center;
       padding: 0;
-      height: 65px;
-      line-height: 65px !important;
+      height: 68px;
+      line-height: 68px !important;
       font-weight: normal !important;
       font-family: "Avenir", Helvetica, Arial, sans-serif;
-      border-bottom: 4px solid #fff;
       box-sizing: border-box;
+      border-bottom: 4px solid #fff;
     }
   }
 }

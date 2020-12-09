@@ -1,20 +1,20 @@
 <template>
   <div class="wrap" @click="isShow = false">
     <div class="tr_main">
+      <SearchMobile class="search_con"/>
       <div class="con_top">
+        <p>{{$t('address.overview.title')}} </p>
         <p>
-          {{$t('address.overview.title')}} 
-          <span class="address_link">Address:{{minerInfo.address}} <span
+          <span class="address_link">{{minerInfo.address}} <span
                     style="color: red;"
                     v-if="minerInfo.address==='XWCNWKLUcsybWt4bW5EXV1CfdaSNHiSKj4Hzw' || minerInfo.address==='XWCNi146ffqUffGJk3tTjnY1MdVGJn3m8jH29'"
                   >({{$t('address.overview.abnormal_address')}})</span></span>
           <span class="copy" v-clipboard:copy="minerInfo.address" v-clipboard:success="onCopy" v-clipboard:error="onError"></span>
         </p>
-        <Search class="search_con"/>
       </div>
       <div class="con_all">
         <div class="all_section">
-          <div class="left"> 
+          <div class="all_left"> 
             <ul>
               <li>
                 <span>{{$t('address.overview.name')}}</span>
@@ -39,23 +39,23 @@
               </li> -->
             </ul>
           </div>
-          <div class="right">
+          <div class="all_right">
             <ul>
               <li>
                 <span>XWC{{$t('address.overview.balances')}}</span>
                 <span v-if="minerInfo.balances">{{minerInfo.balances[0]}}</span>
               </li>
-              <li @click.stop="nameSymbol">
+              <li @click.stop="isShow = !isShow">
                 <span>{{$t('address.overview.tokenBalances')}}</span>
                 <span v-if="tokenBalances.length>0">{{tokenAmount}} <em class="tp_click">{{tokenName}} <strong></strong></em> </span>
                 <div class="ser_input" v-show="isShow">
                   <div class="ser_icon" @click.stop="isShow=true">
                     <b></b>
-                    <input type="text" :placeholder="$t('search.placeholder2')" v-model='serValue' @input="tokenBalancesData($event) ">
+                    <input type="text" :placeholder="$t('search.placeholder2')" v-model='serValue' @input="tokenBalancesData($event)">
                   </div>
                   <div class="daibi"  v-if="tokenBalancesResult.length>0">
                     <div class="daibi_li" v-for="(item,index) of tokenBalancesResult" :key="index">
-                      <img :src="item.imgUrl!==null ? item.imgUrl:require('../assets/img/icon_logo/XWC.png')" alt="">
+                      <img :src="item.imgUrl!==null ? item.imgUrl:require('../../assets/img/icon_logo/XWC.png')" alt="">
                       <div class="daibi_p" v-if="item.id !==null" @click.stop="changeToken(item.id)">
                         <p>{{item.tokenSymbol}}</p>
                         <p>{{item.tokenContract!==null ? (item.tokenContract.substring(0,29)+'...') : '--'}}</p>
@@ -73,7 +73,7 @@
                   </div>
                   <div class="daibi" v-if="tokenBalancesResult.length==0 || serValue ==''">
                     <div class="daibi_li" v-for="(item,index) of tokenBalances" :key="index" @click.stop="changeToken(index)">
-                      <img :src="item.imgUrl!==null ? item.imgUrl:require('../assets/img/icon_logo/XWC.png')" alt="">
+                      <img :src="item.imgUrl!==null ? item.imgUrl:require('../../assets/img/icon_logo/XWC.png')" alt="">
                       <div class="daibi_p" v-if="item.id !==null" @click.stop="changeToken(item.id)">
                         <p>{{item.tokenSymbol}}</p>
                         <p>{{item.tokenContract!==null ? (item.tokenContract.substring(0,29)+'...') : '--'}}</p>
@@ -103,170 +103,67 @@
             </div>
           </div>
           <div v-if="choiceFlag===0" class="table-wrap">
-            <el-table :data="transaction" style="width: 100%">
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.txHash')"
-              >
-                <template slot-scope="scope">
-                  <router-link
-                    :to="'/transfer_details/'+scope.row.trxId+'/'+scope.row.opType"
-                  >{{scope.row.trxId}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" :label="$t('address.myTransactions.block')" width="80">
-                <template slot-scope="scope">
-                  <router-link :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.types')"
-                :formatter="getTypeName"
-                width="80"
-              ></el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.age')"
-                width="120"
-              >
-                <template slot-scope="scope">
-                  <timeago :since="scope.row.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.from')"
-              >
-                <template slot-scope="scope">
-                  <span
-                    class="link"
-                    @click="_mixin_address_jump(scope.row.fromAccount)"
-                  >{{scope.row.fromAccount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.to')"
-              >
-                <template slot-scope="scope">
-                  <span
-                    class="link"
-                    @click="_mixin_address_jump(scope.row.toAccount)"
-                  >{{scope.row.toAccount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                prop="amountStr"
-                :label="$t('miner.myTransactions.value')"
-                width="100"
-              ></el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.fee')"
-                width="130"
-              >
-                <template slot-scope="scope">
-                  {{scope.row.feeStr}}
-                  <img
-                    v-if="scope.row.guaranteeUse"
+            <div class="trans_ul">
+              <li v-for="(item,index) of transaction" :key="index">
+                <p><span>{{$t('address.myTransactions.txHash')}}</span>
+                  <router-link :to="'/transfer_details/'+item.trxId+'/'+item.opType">{{item.trxId}}</router-link>
+                </p>
+                <p><span>{{$t('address.myTransactions.block')}}</span><router-link :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
+                <p><span>{{$t('address.myTransactions.types')}}</span>{{getTypeName(item)}}</p>
+                <p><span>{{$t('address.myTransactions.age')}}</span><timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
+                <p><span>{{$t('address.myTransactions.from')}}</span><router-link :to="'/address?address='+item.fromAccount">{{item.fromAccount}}</router-link></p>
+                <p><span>{{$t('address.myTransactions.to')}}</span><router-link :to="'/address?address='+item.toAccount">{{item.toAccount}}</router-link></p>
+                <p><span>{{$t('miner.myTransactions.value')}}</span>{{item.amountStr}}</p>
+                <p><span>{{$t('address.myTransactions.fee')}}</span>{{item.feeStr}}<img
+                    v-if="item.guaranteeUse"
                     class="feeShow"
-                    src="../assets/img/shouxufei.png"
-                  />
-                </template>
-              </el-table-column>
-            </el-table>
+                    src="../../assets/img/shouxufei.png"
+                  /></p>
+              </li>
+            </div>
+            <div class="trans_page">
+              <el-pagination
+                class="pagination"
+                layout="prev, total, next, jumper"
+                :current-page="page"
+                :page-size="size"
+                :total="total"
+                @current-change="pageChange">
+              </el-pagination>
+            </div>
           </div>
           <div v-if="choiceFlag===2" class="table-wrap">
-            <el-table :data="tokenTransactions" style="width: 100%">
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.txHash')"
-              >
-                <template slot-scope="scope">
-                  <!-- invoke contract type is 79 -->
+            <div class="trans_ul">
+              <li v-for="(item,index) of tokenTransactions" :key="index">
+                <p><span>{{$t('address.myTransactions.txHash')}}</span>
                   <router-link
-                    :to="'/transfer_details/'+scope.row.trxId+'/'+79" 
-                  >{{scope.row.trxId}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" :label="$t('address.myTransactions.block')" width="80">
-                <template slot-scope="scope">
-                  <router-link :to="'/blockDetails/'+scope.row.blockNum">{{scope.row.blockNum}}</router-link>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTokenTransactions.symbol')"
-                width="150"
-              >
-                <template slot-scope="scope">
-                  <span>{{scope.row.symbol}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.age')"
-                width="120"
-              >
-                <template slot-scope="scope">
-                  <timeago :since="scope.row.trxTime" :locale="getBusLocal"></timeago>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.from')"
-              >
-                <template slot-scope="scope">
-                  <span
-                    class="link"
-                    @click="_mixin_address_jump(scope.row.fromAccount)"
-                  >{{scope.row.fromAccount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.to')"
-              >
-                <template slot-scope="scope">
-                  <span
-                    class="link"
-                    @click="_mixin_address_jump(scope.row.toAccount)"
-                  >{{scope.row.toAccount}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                prop="amountStr"
-                :label="$t('miner.myTransactions.value')"
-                width="100"
-              ></el-table-column>
-              <el-table-column
-                align="center"
-                :label="$t('address.myTransactions.fee')"
-                width="130"
-              >
-                <template slot-scope="scope">
-                  {{scope.row.feeStr}}
-                  <img
-                    v-if="scope.row.guaranteeUse"
+                    :to="'/transfer_details/'+item.trxId+'/'+79" 
+                  >{{item.trxId}}</router-link>
+                </p>
+                <p><span>{{$t('address.myTransactions.block')}}</span><router-link :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
+                <p><span>{{$t('address.myTokenTransactions.symbol')}}</span>{{item.symbol}}</p>
+                <p><span>{{$t('address.myTransactions.age')}}</span><timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
+                <p><span>{{$t('address.myTransactions.from')}}</span><router-link :to="'/address?address='+item.fromAccount">{{item.fromAccount}}</router-link></p>
+                <p><span>{{$t('address.myTransactions.to')}}</span><router-link :to="'/address?address='+item.toAccount">{{item.toAccount}}</router-link></p>
+                <p><span>{{$t('miner.myTransactions.value')}}</span>{{item.amountStr}}</p>
+                <p><span>{{$t('address.myTransactions.fee')}}</span>{{item.feeStr}}<img
+                    v-if="item.guaranteeUse"
                     class="feeShow"
-                    src="../assets/img/shouxufei.png"
-                  />
-                </template>
-              </el-table-column>
-            </el-table>
+                    src="../../assets/img/shouxufei.png"
+                  /></p>
+              </li>
+            </div>
+            <div class="trans_page">
+              <el-pagination
+                class="pagination"
+                layout="prev, total, next, jumper"
+                :current-page="page"
+                :page-size="size"
+                :total="total"
+                @current-change="pageChange">
+              </el-pagination>
+            </div>
           </div>
-
-          <el-pagination
-            class="pagination"
-            layout="prev, pager, next, jumper"
-            :current-page="page"
-            :page-size="size"
-            :total="total"
-            @current-change="pageChange"
-          ></el-pagination>
         </div>
       </div>
 
@@ -275,16 +172,16 @@
 </template>
 
 <script>
-import bus from "../utils/bus";
-import common from "../utils/common";
-import typeObj from "../utils/type";
-import mixin from "../utils/mixin";
-import Search from "../components/search/Search";
+import bus from "../../utils/bus";
+import common from "../../utils/common";
+import typeObj from "../../utils/type";
+import mixin from "../../utils/mixin";
+import SearchMobile from "../../components/search/SearchMobile";
 
 export default {
   mixins: [mixin],
   name: "v-address",
-  components:{Search},
+  components:{SearchMobile},
   data() {
     return {
       page: 1,
@@ -327,9 +224,9 @@ export default {
       this.address = this.$route.query.address;
       this.getDataByAddress();
       this.getTokenBalancesData();
-      console.log(this.isShow,'ccc')
+      // console.log(this.isShow,'ccc')
 
-      bus.navChoice = 4;
+      bus.navChoice = 4
 
     } else {
       this.minerName = this.$route.query.minerName;
@@ -380,7 +277,7 @@ export default {
         .then(function(res) {
           let data = res.data;
           that.minerInfo = data.data;
-          console.log(that.minerInfo,'pp')
+          // console.log(that.minerInfo,'pp')
           that.getTransactionData();
         });
     },
@@ -391,6 +288,7 @@ export default {
         .then(function(res) {
           let data = res.data;
           that.minerInfo = data.data;
+          // console.log(that.minerInfo,'ooo')
           that.getTransactionData();
         });
     },
@@ -404,6 +302,7 @@ export default {
         })
         .then(function(res) {
           let data = res.data;
+          // console.log(res.data,'666')
           that.transaction = data.data.rows;
           that.total = data.data.total;
         });
@@ -415,7 +314,7 @@ export default {
         .then(function(res) {
           let data = res.data;
           that.tokenBalances = data.data.tokenBalances;
-          // console.log(data.data,6666)
+          // console.log(that.tokenBalances,6666)
           // 代币余额默认值 
           if(that.tokenBalances.length>0){
             that.tokenAmount = that.tokenBalances[0].amount;
@@ -469,18 +368,16 @@ export default {
       return common.format(new Date(row.createTime), "yyyy-MM-dd hh:mm:ss");
     },
     tokenBalancesData(e){
-      let that = this;
-      that.serValue = e.target.value.trim();
-      console.log(that.serValue,'000') 
-      that.tokenBalancesResult = Object.values(that.tokenBalances).filter(item=>{
-        if( (item.tokenSymbol!==null && item.tokenSymbol.includes(that.serValue.toUpperCase()) ) || (item.tokenContract!==null && item.tokenContract.includes(that.serValue)) ){
+      this.serValue = e.target.value.trim();
+      this.tokenBalancesResult = this.tokenBalances.filter(item=>{
+        if( (item.tokenSymbol !== null && item.tokenSymbol.includes(this.serValue.toUpperCase()) ) || (item.tokenContract!==null && item.tokenContract.includes(this.serValue)) ){
           return item
         }
       })
     },
     changeToken(index){
       let that = this;
-      that.serValue = ''
+      that.serValue= '';
       that.tokenBalances.forEach(item=>{
         if(item.id === index){
           that.tokenAmount = item.amount;
@@ -488,22 +385,25 @@ export default {
           that.isShow = false;
         }else if(item.tokenSymbol == index){
           that.tokenAmount = item.amount;
-          that.tokenName = item.tokenSymbol;
+          that.tokenName = item.tokenSymbol
           that.isShow = false;
         }
       })
     },
     //点击复制成功
     onCopy() {
-      this.$message(this.$t('message.success'));
+      this.$notify({
+        message: this.$t("message.success"),
+        type: "success",
+        duration:2000,
+      });
     },
     onError() {
-      this.$message(this.$t('message.failed'));
+      this.$notify.error({
+        message: this.$t("message.failed"),
+        duration:2000,
+      });
     },
-    nameSymbol(){
-      this.isShow = !this.isShow;
-      this.serValue = ''
-    }
   },
   computed: {
     getBusLocal() {
@@ -515,91 +415,93 @@ export default {
 
 <style lang="less" scoped>
 .wrap {
+  height: 100%;
+  padding-top: 153rem;
   .tr_main {
-    width: 1140px;
-    margin: 0 auto;
     position: relative;
-    color: black;
+    padding: 0 40rem;
     .con_top{
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 30px;
+      margin-top: 30rem;
       p{
-        font-size: 22px;
+        font-size: 32rem;
         color: #333333;
         font-weight: 600;
         display: flex;
         align-items: center;
+        word-break:break-all;
+        margin-top: 10rem;
         .normal&.choice{
-          font-size: 22px;
+          font-size: 22rem;
         }
         .address_link{
-          font-size: 16px;
+          font-size: 24rem;
           font-weight: normal;
-          margin: 0 20px;
+          margin-right: 20rem;
         }
         span.copy{
-          width: 29px;
-          height: 29px;
+          width: 35rem;
+          height: 35rem;
           display: block;
-          background: url(../assets/img/copy.png) no-repeat;
+          background: url(../../assets/img/copy.png) no-repeat;
           background-size: 100%;
           cursor: pointer;
         }
       }
       .search_con{
-        width: 500px;
+        width: 500rem;
       }
     }
     .con_all{
         background: #fff;
-        box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
-        margin: 30px 0;
-        padding: 30px;
+        box-shadow: 0rem 2rem 13rem 0rem rgba(0, 0, 0, 0.09);
+        margin: 30rem 0;
         overflow: hidden;
         position: relative;
+        padding-bottom: 30rem;
       }
     .search {
       position: absolute;
       right: 0;
-      top: 0px;
+      top: 0rem;
     }
     h2 {
-      font-size: 36px;
+      font-size: 36rem;
     }
     .all_section {
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 30rem;
       ul li {
-        width: 514px;
         box-sizing: border-box;
         border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-        padding: 12px;
-        font-size: 14px;
+        padding: 12rem 0;
+        font-size: 26rem;
+        display: flex;
+        align-items: center;
+        color: #333;
         span {
-          display: inline-block;
-          
-            position: relative;
+          display: inline-block; 
+          position: relative;
           &:first-of-type {
-            width: 140px;
+            width: 30%;
+            color: #677897;
+          }
+          &:last-of-type {
+            width: 70%;
           }
           .tp_click{
-            margin-left: 10px;
-            border-radius: 3px;
+            margin-left: 10rem;
+            border-radius: 3rem;
             border: 1px solid #B8C8DA;
-            padding: 3px 23px 3px 5px;
-            cursor: pointer;
+            padding: 5rem 40rem 3rem 10rem;
+            position: relative;
             strong{
               position: absolute;
-              background: url(../assets/img/xia.png) no-repeat;
+              background: url(../../assets/img/xia.png) no-repeat;
               background-size: 100%;
-              width: 13px;
-              height: 13px;
-              top: 3px;
-              right: 5px;
+              width: 23rem;
+              height: 23rem;
+              top: 10rem;
+              right: 10rem;
             }
           }
         }
@@ -607,59 +509,63 @@ export default {
     }
     .ser_input{
       position: absolute;
-      width: 300px;
-      top: 140px;
-      right: 85px;
-      z-index: 99999;
+      width: 500rem;
+      top: 350rem;
+      right: 85rem;
+      z-index: 99;
       background: #fff;
-      box-shadow: 0px 0px 11px 0px rgba(0, 0, 0, 0.09);
+      box-shadow: 0rem 0rem 11rem 0rem rgba(0, 0, 0, 0.09);
       box-sizing: border-box;
-      padding: 10px;
-      border-radius: 5px;
+      padding: 20rem;
+      border-radius: 5rem;
       .ser_icon{
         display: flex;
         align-items: center;
         border: 1px solid #DBDBDB;
-        border-radius: 5px;
-        padding: 5px 10px;
-        input{
+        border-radius: 5rem;
+        padding: 5rem 10rem;
+        /deep/ input{
           width: 100%;
-          padding-left: 7px;
+          padding-left: 7rem;
           outline: none;
           border: 0;
-          height:35px;
-          line-height: 35px;
+          height:65rem;
+          line-height: 65rem;
           text-decoration: none;
+          font-size: 26rem;
+          &::placeholder{
+            font-size: 20rem !important;
+          }
         }
         b{
-          width: 15px;
-          height: 15px;
-          background: url(../assets/img/ser_icon.png) no-repeat;
+          width: 30rem;
+          height: 30rem;
+          background: url(../../assets/img/ser_icon.png) no-repeat;
           background-size: 100%;
-          margin-top: 5px;
+          margin-top: 5rem;
         }
       }
       .daibi{
-        margin-top: 5px;
+        margin-top: 20rem;
         .daibi_li{
           display: flex;
           align-items: center;
-          margin-bottom: 8px;
-          padding-top: 5px;
+          margin-bottom: 8rem;
+          padding-top: 5rem;
           cursor: pointer;
           .default-image{
-            background: url(../assets/img/icon_logo/XWC.png) no-repeat;
+            background: url(../../assets/img/icon_logo/XWC.png) no-repeat;
           }
           img{
-            width: 35px;
-            margin-right: 8px;
+            width: 50rem;
+            margin-right: 8rem;
           }
           .daibi_p{
             p:first-child{
-              font-size: 14px;
+              font-size: 26rem;
             }
             p:last-child{
-              font-size: 12px;
+              font-size: 20rem;
               color:#999999;
             }
           }
@@ -667,55 +573,39 @@ export default {
       }
     }
     .all_aside {
-      margin-top: 50px;
       .all_header {
         display: flex;
         justify-content: space-between;
-        font-size: 16px;
-        padding: 0 15px;
-        margin-bottom: 20px;
+        font-size: 28rem;
+        margin-bottom: 20rem;
+        padding-left:30rem;
         div {
+          width: 100%;
+          border-bottom:1px solid #dedede;
           &:first-of-type {
             span {
               display: inline-block;
-              margin-right: 50px;
-              color: #999999;
+              margin-right: 40rem;
+              color: #c6cad4;
               position: relative;
               cursor: pointer;
-              &:hover {
-                color: #333333;
-                &::after {
-                  display: block;
-                  position: absolute;
-                  content: "";
-                  width: 100%;
-                  height: 2px;
-                  background: #735DFF;
-                  left: 50%;
-                  bottom: -5px;
-                  z-index: 1;
-                  transform: translateX(-50%);
-                }
-              }
+              padding-bottom: 10rem;
             }
             .choice {
-              color: #333333;
+              color: #333;
               &::after {
                 display: block;
                 position: absolute;
                 content: "";
                 width: 100%;
-                height: 2px;
-                background: #735DFF;
+                height: 2rem;
+                background: #0279FF;
                 left: 50%;
-                bottom: -5px;
                 z-index: 1;
                 transform: translateX(-50%);
+                margin-top: 10rem;
               }
             }
-          }
-          &:last-of-type {
-            text-align: right;
           }
         }
       }
@@ -723,19 +613,81 @@ export default {
         color: #333333;
       }
       .table-wrap {
-        .el-icon-circle-check-outline {
-          color: #eb6100;
-          position: absolute;
-          left: 10px;
-          top: 50%;
-          transform: translateY(-50%);
+        .trans_ul{
+          li{
+            border-bottom: 1px solid #dedede;
+            padding: 20rem 30rem;
+            font-size: 28rem;
+            color: #333;
+            span{
+              color: #677897;
+            }
+            p{
+              display: flex;
+              margin: 20rem 0;
+              span{
+                width: 32%;
+                color: #677897;
+              }
+              a{
+                color: #0279FF;
+                text-align: left;
+                word-break:break-all;
+                width: 68%;
+              }
+            }
+          }
+        }
+        .trans_page{
+          padding-left:30rem;
         }
       }
       .pagination {
-        text-align: center;
-        margin-top: 20px;
+        margin-top: 20rem;
       }
     }
   }
+}
+/deep/ .el-pagination .btn-prev{
+  font-size: 26rem;
+  min-width: 80rem;
+  height: 50rem; 
+  color: #737D92;
+  background: #E3DEFF;
+  border: 0;
+}
+
+/deep/ .el-pagination .btn-next{
+  font-size: 26rem;
+  min-width: 80rem;
+  height: 50rem; 
+  color: #737D92;
+  background: #E3DEFF;
+  border: 0;
+}
+/deep/.el-pagination .btn-prev .el-icon, .el-pagination .btn-prev .el-icon{
+  font-size: 26rem;
+}
+/deep/.el-pagination .btn-next .el-icon, .el-pagination .btn-next .el-icon{
+  font-size: 26rem;
+}
+/deep/ .el-pagination span:not([class*=suffix]){
+  font-size: 22rem;
+}
+/deep/ .el-pagination__jump{
+  font-size: 26rem !important;
+}
+/deep/ .el-pagination__editor.el-input .el-input__inner {
+  font-size: 26rem;
+  min-width: 80rem;
+  height: 50rem; 
+  line-height: 50rem;
+  color: #737D92;
+  background: #E3DEFF;
+  border: 0;
+}
+/deep/ .el-pagination span:not([class*=suffix]){
+  height: 50rem; 
+  line-height: 50rem;
 }
 </style>
