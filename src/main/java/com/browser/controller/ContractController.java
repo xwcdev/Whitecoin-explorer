@@ -264,6 +264,7 @@ public class ContractController {
 
                         blTokenBalance.setTokenSymbol(chars[1]);
                         blTokenBalance.setAmount(new BigDecimal(chars[0]));
+                        blTokenBalance.setAssetId(chars[2]);
                         tokenBalances.add(blTokenBalance);
 
                     }
@@ -275,7 +276,12 @@ public class ContractController {
             if (!CollectionUtils.isEmpty(tokenBalances)) {
                 for (BlTokenBalance blTokenBalance : tokenBalances) {
                     logger.info("blTokenBalance.contractAddr:{}", blTokenBalance.getAddr());
-                    contractAddrList.add(blTokenBalance.getAddr());
+                    if(!StringUtils.isEmpty(blTokenBalance.getAddr())) {
+                        contractAddrList.add(blTokenBalance.getAddr());
+                    } else {
+                        contractAddrList.add(blTokenBalance.getAssetId());
+                    }
+
                 }
 
                 String httpStr = HttpUtil.post(imgUrl + "/lightwallet/thirdParty/getLogoUrl", JSONObject.toJSONString(contractAddrList));
@@ -369,7 +375,7 @@ public class ContractController {
 
     public static void main(String[] args) {
 
-        List<String> params = new ArrayList<>();
+        /*List<String> params = new ArrayList<>();
         params.add("XWCCQZasPhLLPgH61juj8h17RLBAcm8Dzkk6a");
         params.add("XWCCeExCVEZUbnYjSPovHTWKtAmJF77ZTKY8o");
 
@@ -385,8 +391,7 @@ public class ContractController {
             }
         } catch (Exception e) {
 
-        }
-
+        }*/
 
 
 
