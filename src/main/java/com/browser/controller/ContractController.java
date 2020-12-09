@@ -275,9 +275,9 @@ public class ContractController {
             List<String> contractAddrList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(tokenBalances)) {
                 for (BlTokenBalance blTokenBalance : tokenBalances) {
-                    logger.info("blTokenBalance.contractAddr:{}", blTokenBalance.getAddr() + " " + blTokenBalance.getTokenSymbol());
-                    if(!StringUtils.isEmpty(blTokenBalance.getAddr())) {
-                        contractAddrList.add(blTokenBalance.getAddr());
+                    logger.info("blTokenBalance.contractAddr:{}", blTokenBalance.getTokenContract() + " " + blTokenBalance.getTokenSymbol());
+                    if(!StringUtils.isEmpty(blTokenBalance.getTokenContract())) {
+                        contractAddrList.add(blTokenBalance.getTokenContract());
                     } else {
                         contractAddrList.add(blTokenBalance.getAssetId());
                     }
@@ -297,7 +297,7 @@ public class ContractController {
                             if(StringUtils.isEmpty(blTokenBalance.getAddr())) {
                                 blTokenBalance.setImgUrl(urlMap.get(blTokenBalance.getAssetId()));
                             } else {
-                                blTokenBalance.setImgUrl(urlMap.get(blTokenBalance.getAddr()));
+                                blTokenBalance.setImgUrl(urlMap.get(blTokenBalance.getTokenContract()));
                             }
 
                         }
