@@ -312,13 +312,15 @@ export default {
       this.$axios
         .get(`/user_tokens/${this.address}`)
         .then(function(res) {
-          let data = res.data;
-          that.tokenBalances = data.data.tokenBalances;
-          // console.log(that.tokenBalances,6666)
-          // 代币余额默认值 
-          if(that.tokenBalances.length>0){
-            that.tokenAmount = that.tokenBalances[0].amount;
-            that.tokenName = that.tokenBalances[0].tokenSymbol
+          if(res.retCode===200){
+            let data = res.data;
+            that.tokenBalances = data.data.tokenBalances;
+            // console.log(that.tokenBalances,6666)
+            // 代币余额默认值 
+            if(that.tokenBalances.length>0){
+              that.tokenAmount = that.tokenBalances[0].amount;
+              that.tokenName = that.tokenBalances[0].tokenSymbol
+            }
           }
         });
     },
