@@ -287,6 +287,7 @@ public class ContractController {
                 String httpStr = HttpUtil.post(imgUrl + "/lightwallet/thirdParty/getLogoUrl", JSONObject.toJSONString(contractAddrList));
                 logger.info("图片地址请求接口地址:{}", imgUrl + "/lightwallet/thirdParty/getLogoUrl");
 
+                logger.info("图片接口响应:{}",httpStr);
                 if (!StringUtils.isEmpty(httpStr)) {
                     Map<String, Object> resMap = (Map) JSONObject.parse(httpStr);
                     Map<String, String> urlMap = (Map) resMap.get("data");
