@@ -264,6 +264,7 @@ public class ContractController {
 
                         blTokenBalance.setTokenSymbol(chars[1]);
                         blTokenBalance.setAmount(new BigDecimal(chars[0]));
+                        blTokenBalance.setAssetId(chars[2]);
                         tokenBalances.add(blTokenBalance);
 
                     }
@@ -274,12 +275,19 @@ public class ContractController {
             List<String> contractAddrList = new ArrayList<>();
             if (!CollectionUtils.isEmpty(tokenBalances)) {
                 for (BlTokenBalance blTokenBalance : tokenBalances) {
-                    logger.info("blTokenBalance.contractAddr:{}", blTokenBalance.getAddr());
-                    contractAddrList.add(blTokenBalance.getAddr());
+                    logger.info("blTokenBalance.contractAddr:{}", blTokenBalance.getAddr() + " " + blTokenBalance.getTokenSymbol());
+                    if(!StringUtils.isEmpty(blTokenBalance.getAddr())) {
+                        contractAddrList.add(blTokenBalance.getAddr());
+                    } else {
+                        contractAddrList.add(blTokenBalance.getAssetId());
+                    }
+
                 }
 
                 String httpStr = HttpUtil.post(imgUrl + "/lightwallet/thirdParty/getLogoUrl", JSONObject.toJSONString(contractAddrList));
+                logger.info("图片地址请求接口地址:{}", imgUrl + "/lightwallet/thirdParty/getLogoUrl");
 
+                logger.info("图片接口响应:{}",httpStr);
                 if (!StringUtils.isEmpty(httpStr)) {
                     Map<String, Object> resMap = (Map) JSONObject.parse(httpStr);
                     Map<String, String> urlMap = (Map) resMap.get("data");
@@ -368,12 +376,12 @@ public class ContractController {
 
     public static void main(String[] args) {
 
-        List<String> params = new ArrayList<>();
+        /*List<String> params = new ArrayList<>();
         params.add("XWCCQZasPhLLPgH61juj8h17RLBAcm8Dzkk6a");
         params.add("XWCCeExCVEZUbnYjSPovHTWKtAmJF77ZTKY8o");
 
         try {
-            String httpStr = HttpUtil.post("http://192.168.110.11:8083/lightwallet/thirdParty/getLogoUrl", JSONObject.toJSONString(params));
+            String httpStr = HttpUtil.post("https://api.tokenswap.info/lightwallet/thirdParty/getLogoUrl", JSONObject.toJSONString(params));
             if (!StringUtils.isEmpty(httpStr)) {
                 Map<String, Object> resMap = (Map) JSONObject.parse(httpStr);
                 Map<String, String> urlMap = (Map) resMap.get("data");
@@ -384,8 +392,7 @@ public class ContractController {
             }
         } catch (Exception e) {
 
-        }
-
+        }*/
 
 
 

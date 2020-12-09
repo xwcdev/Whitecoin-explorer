@@ -34,6 +34,7 @@ import com.browser.service.StatisService;
 import com.browser.tools.Constant;
 import com.browser.tools.common.DateUtil;
 import com.browser.tools.common.StringUtil;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class StatisServiceImpl implements StatisService {
@@ -486,8 +487,11 @@ public class StatisServiceImpl implements StatisService {
                         divide(new BigDecimal(blAsset.getPrecision()), 8, BigDecimal.ROUND_HALF_UP).
                         stripTrailingZeros().toPlainString();
 
-                balanceList.add(balance + " " + blAsset.getSymbol());
-
+                if("XWC".equals(blAsset.getSymbol())) {
+                    balanceList.add(balance + " " + blAsset.getSymbol());
+                } else {
+                    balanceList.add(balance + " " + blAsset.getSymbol() + " " + blAsset.getAssetId());
+                }
 
             }
         }
