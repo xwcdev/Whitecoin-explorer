@@ -99,6 +99,10 @@ public class TransactionServiceImpl implements TransactionService {
                 if (null != trx.getGuaranteeId()) {
                     trx.setGuaranteeUse(true);
                 }
+
+                if(trx.getOpType() != null && trx.getOpType() == 73) {
+                    trx.setFromAccount("Mining");
+                }
             }
         }
         // 创建一个返回值对象
