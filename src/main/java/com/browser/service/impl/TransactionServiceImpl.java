@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -100,9 +101,14 @@ public class TransactionServiceImpl implements TransactionService {
                     trx.setGuaranteeUse(true);
                 }
 
-                if(trx.getOpType() != null && trx.getOpType() == 73) {
+                if(StringUtils.isEmpty(trx.getFromAccount())) {
                     trx.setFromAccount("Mining");
                 }
+
+                if(StringUtils.isEmpty(trx.getToAccount())) {
+                    trx.setToAccount("Mining");
+                }
+
             }
         }
         // 创建一个返回值对象
