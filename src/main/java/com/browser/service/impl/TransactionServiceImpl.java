@@ -105,9 +105,6 @@ public class TransactionServiceImpl implements TransactionService {
                     trx.setFromAccount("Mining");
                 }
 
-                if(StringUtils.isEmpty(trx.getToAccount())) {
-                    trx.setToAccount("Mining");
-                }
 
             }
         }
@@ -132,7 +129,11 @@ public class TransactionServiceImpl implements TransactionService {
         if (list != null && list.size() > 0) {
             for (BlTransaction trx : list) {
                 handleAmountData(trx);
+                if(StringUtils.isEmpty(trx.getFromAccount())) {
+                    trx.setFromAccount("Mining");
+                }
             }
+
         }
         // 创建一个返回值对象
         EUDataGridResult result = new EUDataGridResult();

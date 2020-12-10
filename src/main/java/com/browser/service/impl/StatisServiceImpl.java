@@ -102,9 +102,6 @@ public class StatisServiceImpl implements StatisService {
                     trx.setFromAccount("Mining");
                 }
 
-                if(StringUtils.isEmpty(trx.getToAccount())) {
-                    trx.setToAccount("Mining");
-                }
             }
         }
         return txList;
