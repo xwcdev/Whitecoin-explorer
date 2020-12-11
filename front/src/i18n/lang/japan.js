@@ -62,7 +62,8 @@ const japan = {
             age: '時間',
             value: '金額',
             fee: '手数料',
-            numberss:'数量'
+            numberss:'数量',
+            fromDeafult:'契約を作成する'
         },
         transactionLine: {
             today: '今日',

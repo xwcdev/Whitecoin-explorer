@@ -320,7 +320,7 @@ export default {
               .downLa{
                 display: flex;
                 align-items: center;
-                padding: 20rem 0 30rem 80rem;
+                padding: 0 0 0 80rem;
                 .downIcon{
                   width: 35rem;
                   height: 35rem;
@@ -371,23 +371,23 @@ export default {
 /deep/.el-input__inner {
   line-height: 50rem !important;
   height:50rem !important ;
-  padding: 0 0 0 48rem;
+  padding: 0 0 0 48rem !important;
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   color: #fff;
 }
 /deep/.el-input--medium{
-  width: 205rem;
+  width: 220rem;
   font-size: 28rem !important;
 }
 /deep/.language_default{
   input::-webkit-input-placeholder{
-    font-size: 28px !important;
+    font-size: 24rem !important;
     color: #fff;
   }
 }
 /deep/.language_default.active{
   input::-webkit-input-placeholder{
-    font-size: 28px !important;
+    font-size: 24rem !important;
     color: #fff;
   }
 }

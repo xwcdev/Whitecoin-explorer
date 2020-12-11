@@ -143,7 +143,7 @@
                   layout="prev, total, next, jumper"
                   :current-page="page"
                   :page-size="size"
-                  :total="total"
+                  :total="total1"
                   @current-change="pageChange">
                 </el-pagination>
               </div>
@@ -183,6 +183,7 @@
         page: 1,
         size: 25,
         total: 0,
+        total1: 0,
         contractAddress: '',
         contractInfo: {
           contractAddress: '',
@@ -211,7 +212,9 @@
       getContractInfo() {
         let that = this;
         this.$axios.post('/getContractStatis', {contractId: this.contractAddress}).then(function (res) {
-          that.contractInfo = res.data.data;
+          if(res.data.retCode===200 && res.data.data !==null){
+            that.contractInfo = res.data.data;
+          }
         })
       },
       getTransactionData() {
@@ -221,9 +224,11 @@
           page: this.page,
           rows: this.size
         }).then(function (res) {
-          let data = res.data.data;
-          that.tableData = data.rows;
-          that.total = data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data.data;
+            that.tableData = data.rows;
+            that.total = data.total;
+          }
         })
       },
       getTokenTransactionData() {
@@ -233,9 +238,11 @@
           page: this.page,
           rows: this.size
         }).then(function (res) {
-          let data = res.data.data;
-          that.tokenTransactions = data.rows;
-          that.total = data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data.data;
+            that.tokenTransactions = data.rows;
+            that.total1 = data.total;
+          }
         })
       },
       pageChange(page) {
@@ -249,7 +256,9 @@
       getAbiData() {
         let that = this;
         this.$axios.post('/getAbi', {contractId: this.contractAddress}).then(function (res) {
-          that.abi = res.data.data.abi;
+          if(res.data.retCode===200 && res.data.data !==null){
+            that.abi = res.data.data.abi;
+          }
         });
       }
     },

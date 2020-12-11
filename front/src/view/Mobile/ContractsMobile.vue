@@ -68,9 +68,11 @@
       getContractsData() {
         let that = this;
         this.$axios.post('/queryContractList', {page: this.page, rows: this.size}).then(function (res) {
-          let data = res.data.data;
-          that.contracts = data.rows;
-          that.total = data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data.data;
+            that.contracts = data.rows;
+            that.total = data.total;
+          }
         })
       },
       pageChange(page) {
@@ -101,19 +103,19 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 30px;
+        margin-top: 30rem;
         p{
-          font-size: 32px;
+          font-size: 32rem;
           color: #333333;
           font-weight: 600;
         }
       }
       .con_all{
         background: #fff;
-        box-shadow: 0px 2px 13px 0px rgba(0, 0, 0, 0.09);
-        margin: 30px 0;
-        padding-bottom: 30px;
-        border-radius: 5px;
+        box-shadow: 0rem 2rem 13rem 0rem rgba(0, 0, 0, 0.09);
+        margin: 30rem 0;
+        padding-bottom: 30rem;
+        border-radius: 5rem;
         .con_table{
           .trans_ul{
             li{
@@ -143,7 +145,7 @@
         }
       }
       .pagination {
-        margin-top: 20px;
+        margin-top: 20rem;
       }
     }
   }

@@ -62,7 +62,8 @@ const cn = {
       age: '时间',
       value: '金额',
       fee: '手续费',
-      numberss:'数量'
+      numberss:'数量',
+      fromDeafult:'创建合约'
     },
     transactionLine: {
       today: '今天',

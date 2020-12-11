@@ -86,10 +86,13 @@
                 <p>{{$t('home.blocks.minerFee')}}</p>
               </div>
             </div>
+            <div class="block_more">
+              <router-link to="/blocks">{{$t('home.blocks.more')}}</router-link>
+            </div>
           </div>
         </div>
         <div class="main_block">
-          <h2><router-link to="/blocks">{{$t('home.transaction.title')}}</router-link></h2>
+          <h2><router-link to="/transaction">{{$t('home.transaction.title')}}</router-link></h2>
           <div class="block_ul">
             <div class="block_li" v-for="(item,index) of transaction" :key="index">
               <div class="block_er">
@@ -99,7 +102,7 @@
                 <p><timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
               </div>
               <div class="block_san">
-                <p><span>FROM:</span> <router-link :to="`/address?address=${item.fromAccount}`">{{item.fromAccount !== 'Mining' ?(item.fromAccount.substring(0,24) + '...' ):item.fromAccount}} </router-link></p>
+                <p><span>FROM:</span> <router-link :to="`/address?address=${item.fromAccount}`">{{item.fromAccount !== null ? ( item.fromAccount!=='Mining'? (item.fromAccount.substring(0,24) + ('...')) : item.fromAccount ) : ($t('home.transaction.fromDeafult')) }} </router-link></p>
               </div>
               <div class="block_san">
                 <p class="toAccount"><span>TO:</span> <router-link :to="`/address?address=${item.toAccount}`"> {{item.toAccount!==null? (item.toAccount.substring(0,26) + '...') : '--'}} </router-link></p>
@@ -108,6 +111,9 @@
                 <p><span>{{item.amountStr !== null ? item.amountStr : '--'}}</span></p>
                 <p>{{$t('home.transaction.numberss')}}</p>
               </div>
+            </div>
+            <div class="block_more">
+              <router-link to="/transaction">{{$t('home.blocks.more')}}</router-link>
             </div>
           </div>
         </div>
@@ -467,6 +473,18 @@ export default {
         }
         &:last-child{
           border-bottom:none
+        }
+      }
+      .block_more{
+        margin: 20rem 50rem 0 50rem;
+        a{
+          line-height: 70rem;
+          display: block;
+          background: #735DFF;
+          border-radius: 4rem;
+          color: #fff;
+          text-align: center;
+          font-size: 26rem;
         }
       }
     }

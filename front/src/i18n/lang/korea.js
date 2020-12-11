@@ -62,7 +62,8 @@ const korea = {
       age: '시간',
       value: '금액',
       fee: '수수료',
-      numberss:'수량'
+      numberss:'수량',
+      fromDeafult:'(선물)계약 생성하기'
     },
     transactionLine: {
       today: '오늘',

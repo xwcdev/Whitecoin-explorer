@@ -60,7 +60,8 @@ const en = {
       age: 'Age',
       value: 'Value',
       fee: 'Fee',
-      numberss:'Amount'
+      numberss:'Amount',
+      fromDeafult:'Create Contract'
     },
     transactionLine: {
       today: 'Today',

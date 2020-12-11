@@ -89,6 +89,9 @@
                 <p>{{$t('home.blocks.minerFee')}}</p>
               </div>
             </div>
+            <div class="block_more">
+              <router-link to="/blocks">{{$t('home.blocks.more')}}</router-link>
+            </div>
           </div>
         </div>
         <div class="main_block1">
@@ -101,15 +104,18 @@
                     :to="'/transfer_details/'+item.trxId+'/'+item.opType"
                   >{{item.trxId.substring(0,15)}}...</router-link></p>
                 <p><timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
-              </div>
+              </div> 
               <div class="block_san">
-                <p><span>FROM:</span> <router-link :to="`/address?address=${item.fromAccount}`">{{item.fromAccount !== 'Mining' ? (item.fromAccount.substring(0,11) + '...' ) : item.fromAccount }} </router-link></p>
+                <p><span>FROM:</span> <router-link :to="`/address?address=${item.fromAccount}`">{{item.fromAccount !== null ? ( item.fromAccount!=='Mining'? (item.fromAccount.substring(0,11) + ('...')) : item.fromAccount ) : ($t('home.transaction.fromDeafult')) }} </router-link></p>
                 <p class="toAccount"><span>TO:</span> <router-link :to="`/address?address=${item.toAccount}`"> {{item.toAccount!==null? (item.toAccount.substring(0,16) + '...') : '--'}} </router-link></p>
               </div>
               <div class="block_si">
                 <p><span>{{item.amountStr !== null ? item.amountStr : '--'}}</span></p>
                 <p>{{$t('home.transaction.numberss')}}</p>
               </div>
+            </div>
+            <div class="block_more">
+              <router-link to="/transaction">{{$t('home.blocks.more')}}</router-link>
             </div>
           </div>
         </div>
@@ -517,8 +523,20 @@ main {
         .block_si{
           width: 23%;
         }
-        &:last-child{
-          border-bottom:none
+      }
+      .block_more{
+        margin-top: 20px;
+        a{
+          line-height: 46px;
+          display: block;
+          background: #735DFF;
+          border-radius: 4px;
+          color: #fff;
+          text-align: center;
+          font-size: 16px;
+          &:hover{
+            background: #403682;
+          }
         }
       }
     }

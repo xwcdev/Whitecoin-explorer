@@ -60,15 +60,17 @@ export default {
         }
       }
       this.$axios.get("/richlist", {}).then(function(res) {
-        let data = res.data.data;
-        const limit = 100;
-        if (data.length > limit) {
-          data.length = limit;
-        }
-        that.richlist = data;
-        that.total = data.length;
-        if (window.localStorage) {
-          localStorage.setItem("xwc.richlist", JSON.stringify(data));
+        if(res.data.retCode===200 && res.data.data !==null){
+          let data = res.data.data;
+          const limit = 100;
+          if (data.length > limit) {
+            data.length = limit;
+          }
+          that.richlist = data;
+          that.total = data.length;
+          if (window.localStorage) {
+            localStorage.setItem("xwc.richlist", JSON.stringify(data));
+          }
         }
       });
     },

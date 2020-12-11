@@ -190,16 +190,20 @@
       getBlockData() {
         let that = this;
         this.$axios.post('/queryBlockByNum',{blockNum:this.height}).then(function (res) {
-          let data = res.data;
-          that.blockData = data.data;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data;
+            that.blockData = data.data;
+          }
         });
       },
       getTransactionData() {
         let that = this;
         this.$axios.post('/queryBlockTxNum',{blockNum:this.height,page:this.page,rows:this.size}).then(function (res) {
-          let data = res.data.data;
-          that.transaction = data.rows;
-          that.total = data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data.data;
+            that.transaction = data.rows;
+            that.total = data.total;
+          }
         });
       }
     },

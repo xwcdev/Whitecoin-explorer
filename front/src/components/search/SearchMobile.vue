@@ -122,7 +122,6 @@ export default {
     color:#333333;
     outline: none;
     border-radius: 8rem;
-    margin-left: 2rem;
     font-size: 26rem;
   }
 
@@ -162,6 +161,7 @@ export default {
 /deep/.el-input--medium .el-input__inner{
   font-size: 26rem;
   line-height: 40rem;
-  height: 40rem
+  height: 40rem;
+  padding-left: 8rem;
 }
 </style>

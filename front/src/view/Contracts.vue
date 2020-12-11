@@ -97,9 +97,11 @@
       getContractsData() {
         let that = this;
         this.$axios.post('/queryContractList', {page: this.page, rows: this.size}).then(function (res) {
-          let data = res.data.data;
-          that.contracts = data.rows;
-          that.total = data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data.data;
+            that.contracts = data.rows;
+            that.total = data.total;
+          }
         })
       },
       pageChange(page) {

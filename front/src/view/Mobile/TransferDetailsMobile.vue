@@ -214,48 +214,50 @@ export default {
           opType: this.type
         })
         .then(function(res) {
-          res.data.data.timeStamp = dayjs(res.data.data.timeStamp).format('YYYY-MM-DD HH:mm:ss');
-          that.detailsData = res.data.data;
-          console.log(that.detailsData)
-          if (that.type === 77 || that.type === 79 || that.type === 81) {
-            that.$axios
-              .post("/getEvents", {
-                contractId: that.detailsData.operationData[0].contractAddress
-              })
-              .then(function(res) {
-                that.events = that.detailsData.events;
-              });
-          }
-          let statu = res.data.data.txStatus;
-          if (that.type === 61) {
-            switch (statu) {
-              case 0:
-                that.statusName = "Transaction Request";
-                that.statusFlag = false;
-                break;
-              case 1:
-                that.statusName = "Transaction Create";
-                that.statusFlag = false;
-                break;
-              case 2:
-                that.statusName = "Transaction Signature";
-                that.statusFlag = false;
-                break;
-              case 3:
-                that.statusName = "Trading broadcast";
-                that.statusFlag = false;
-                break;
-              case 4:
-                that.statusName = "Success";
-                that.statusFlag = true;
-                break;
+          if(res.data.retCode===200 && res.data.data !==null){
+            res.data.data.timeStamp = dayjs(res.data.data.timeStamp).format('YYYY-MM-DD HH:mm:ss');
+            that.detailsData = res.data.data;
+            console.log(that.detailsData)
+            if (that.type === 77 || that.type === 79 || that.type === 81) {
+              that.$axios
+                .post("/getEvents", {
+                  contractId: that.detailsData.operationData[0].contractAddress
+                })
+                .then(function(res) {
+                  that.events = that.detailsData.events;
+                });
             }
-          } else if (that.type === 82) {
-            that.statusFlag = statu === 1 ? true : false;
-            that.statusName = statu === 1 ? "Valid" : "Invalid";
-          } else {
-            that.statusFlag = statu === 1 ? true : false;
-            that.statusName = statu === 1 ? "Success" : "Pending";
+            let statu = res.data.data.txStatus;
+            if (that.type === 61) {
+              switch (statu) {
+                case 0:
+                  that.statusName = "Transaction Request";
+                  that.statusFlag = false;
+                  break;
+                case 1:
+                  that.statusName = "Transaction Create";
+                  that.statusFlag = false;
+                  break;
+                case 2:
+                  that.statusName = "Transaction Signature";
+                  that.statusFlag = false;
+                  break;
+                case 3:
+                  that.statusName = "Trading broadcast";
+                  that.statusFlag = false;
+                  break;
+                case 4:
+                  that.statusName = "Success";
+                  that.statusFlag = true;
+                  break;
+              }
+            } else if (that.type === 82) {
+              that.statusFlag = statu === 1 ? true : false;
+              that.statusName = statu === 1 ? "Valid" : "Invalid";
+            } else {
+              that.statusFlag = statu === 1 ? true : false;
+              that.statusName = statu === 1 ? "Success" : "Pending";
+            }
           }
         });
     }
@@ -370,11 +372,22 @@ export default {
       .mid{
         margin: 0;
       }
-      .value{
+      .value,.border{
         width: 70% !important;
         text-align: left;
+        word-break:break-all;
       }
     }
   }
 }
+/deep/ .operation-details .con ul li{
+  padding:10rem 30rem;
+}
+/deep/ .operation-details header{
+  line-height: 80rem;
+  height: 80rem;
+  border-top-left-radius: 8rem;
+  border-top-right-radius: 8rem;
+}
+
 </style>

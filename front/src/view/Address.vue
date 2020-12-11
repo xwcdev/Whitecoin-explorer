@@ -378,10 +378,11 @@ export default {
       this.$axios
         .post("/minerInfo", { name: this.minerName })
         .then(function(res) {
-          let data = res.data;
-          that.minerInfo = data.data;
-          console.log(that.minerInfo,'pp')
-          that.getTransactionData();
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data;
+            that.minerInfo = data.data;
+            that.getTransactionData();
+          }
         });
     },
     getDataByAddress() {
@@ -389,9 +390,11 @@ export default {
       this.$axios
         .post("/addrStatis", { address: this.address })
         .then(function(res) {
-          let data = res.data;
-          that.minerInfo = data.data;
-          that.getTransactionData();
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data;
+            that.minerInfo = data.data;
+            that.getTransactionData();
+          }
         });
     },
     getTransactionData() {
@@ -403,9 +406,11 @@ export default {
           rows: this.size
         })
         .then(function(res) {
-          let data = res.data;
-          that.transaction = data.data.rows;
-          that.total = data.data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data;
+            that.transaction = data.data.rows;
+            that.total = data.data.total;
+          }
         });
     },
     getTokenBalancesData() {
@@ -413,7 +418,7 @@ export default {
       this.$axios
         .get(`/user_tokens/${this.address}`)
         .then(function(res) {
-          if(res.status === 200){
+          if(res.data.retCode===200 && res.data.data !==null){
             let data = res.data;
             that.tokenBalances = data.data.tokenBalances;
             // console.log(data.data.tokenBalances,6666)
@@ -434,9 +439,11 @@ export default {
           rows: this.size
         })
         .then(function(res) {
-          let data = res.data;
-          that.tokenTransactions = data.data.rows;
-          that.total = data.data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data;
+            that.tokenTransactions = data.data.rows;
+            that.total = data.data.total;
+          }
         });
     },
     getSwapTransactionData() {
@@ -448,9 +455,11 @@ export default {
           rows: this.size
         })
         .then(function(res) {
-          let data = res.data;
-          that.swapTransactions = data.data.rows;
-          that.total = data.data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data;
+            that.swapTransactions = data.data.rows;
+            that.total = data.data.total;
+          }
         });
     },
     getContractData() {
@@ -462,9 +471,11 @@ export default {
           rows: this.size
         })
         .then(function(res) {
-          let data = res.data;
-          that.contaracts = data.data.rows;
-          that.total = data.data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data;
+            that.contaracts = data.data.rows;
+            that.total = data.data.total;
+          }
         });
     },
     dateFormate(row) {

@@ -36,7 +36,7 @@
               <p><span>{{$t('home.transaction.txHash')}}</span><router-link class="yanse" :to="'/transfer_details/'+item.trxId+'/'+item.opType">{{item.trxId}}</router-link></p>
               <p><span>{{$t('transaction.block')}}</span><router-link class="yanse" :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
               <p><span>{{$t('transaction.age')}}</span>{{item.trxTime}}</p>
-              <p><span>{{$t('transaction.from')}}</span><router-link class="yanse" :to="'/address?address='+item.fromAccount">{{item.fromAccount !==null ? item.fromAccount :'--'}}</router-link></p>
+              <p><span>{{$t('transaction.from')}}</span><router-link class="yanse" :to="'/address?address='+item.fromAccount">{{item.fromAccount !== null ? item.fromAccount  : ($t('home.transaction.fromDeafult')) }}</router-link></p>
               <p><span>{{$t('transaction.to')}}</span><router-link class="yanse" :to="'/address?address='+item.toAccount">{{item.toAccount !==null ? item.toAccount :'--'}}</router-link></p>
               <p><span>{{$t('transaction.value')}}</span>{{item.amountStr}}</p>
               <p><span>{{$t('transaction.fee')}}</span>{{item.feeStr}}</p>
@@ -268,13 +268,15 @@
           page: this.page1,
           rows: this.size
         }).then(function (res) {
-          res.data.data.rows.forEach(item=>{
-            item.trxTime = dayjs(item.trxTime).format('YYYY-MM-DD HH:mm:ss');
-            item.amountStr = item.amountStr !==null ? item.amountStr : 0
-          })
-          console.log(res.data.data.rows,'9999')
-          that.TokenTrxData = res.data.data.rows;
-          that.total1 = res.data.data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            res.data.data.rows.forEach(item=>{
+              item.trxTime = dayjs(item.trxTime).format('YYYY-MM-DD HH:mm:ss');
+              item.amountStr = item.amountStr !==null ? item.amountStr : 0
+            })
+            console.log(res.data.data.rows,'9999')
+            that.TokenTrxData = res.data.data.rows;
+            that.total1 = res.data.data.total;
+          }
         });
       },
       traChange(index) {
@@ -300,7 +302,7 @@
         justify-content: space-between;
         margin-top: 30rem;
         p{
-          font-size: 36rem;
+          font-size: 32rem;
           color: #333333;
           font-weight: 600;
         }
@@ -395,7 +397,7 @@
               position: absolute;
               display: block;
               width: 100%;
-              height: 5px;
+              height: 5rem;
               border-radius: 1px;
               background: white;
               left: 0;

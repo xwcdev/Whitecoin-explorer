@@ -282,15 +282,17 @@
           page: this.page,
           rows: this.size
         }).then(function (res) {
-          res.data.data.rows.forEach(item=>{
-            item.trxTime = dayjs(item.trxTime).format('YYYY-MM-DD HH:mm:ss');
-            item.amountStr = item.amountStr !==null ? item.amountStr : 0
-          })
-          that.tableData = res.data.data.rows;
-          console.log(res.data.data.rows,'0000')
-          that.total = res.data.data.total;
-          if (!parentOpType) {
-            that.allTransactionTotal = res.data.data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            res.data.data.rows.forEach(item=>{
+              item.trxTime = dayjs(item.trxTime).format('YYYY-MM-DD HH:mm:ss');
+              item.amountStr = item.amountStr !==null ? item.amountStr : 0
+            })
+            that.tableData = res.data.data.rows;
+            console.log(res.data.data.rows,'0000')
+            that.total = res.data.data.total;
+            if (!parentOpType) {
+              that.allTransactionTotal = res.data.data.total;
+            }
           }
         });
       },
@@ -302,13 +304,15 @@
           page: this.page1,
           rows: this.size
         }).then(function (res) {
-          res.data.data.rows.forEach(item=>{
-            item.trxTime = dayjs(item.trxTime).format('YYYY-MM-DD HH:mm:ss');
-            item.amountStr = item.amountStr !==null ? item.amountStr : 0
-          })
-          console.log(res.data.data.rows,'9999')
-          that.TokenTrxData = res.data.data.rows;
-          that.total1 = res.data.data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            res.data.data.rows.forEach(item=>{
+              item.trxTime = dayjs(item.trxTime).format('YYYY-MM-DD HH:mm:ss');
+              item.amountStr = item.amountStr !==null ? item.amountStr : 0
+            })
+            console.log(res.data.data.rows,'9999')
+            that.TokenTrxData = res.data.data.rows;
+            that.total1 = res.data.data.total;
+          }
         });
       },
       traChange(index) {

@@ -65,9 +65,11 @@
       getBlocksList() {
         let that = this;
         this.$axios.post('/queryBlockList',{page:this.page,rows:this.size}).then(function (res) {
-          let data = res.data.data;
-          that.blocks = data.rows;
-          that.total = data.total;
+          if(res.data.retCode===200 && res.data.data !==null){
+            let data = res.data.data;
+            that.blocks = data.rows;
+            that.total = data.total;
+          }
         })
       },
       pageChange(page) {

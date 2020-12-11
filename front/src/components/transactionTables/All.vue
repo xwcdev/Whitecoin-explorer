@@ -49,7 +49,9 @@
         width="190"
       >
         <template slot-scope="scope">
-          <span class="yanse"  @click="_mixin_address_jump(scope.row.fromAccount)">{{scope.row.fromAccount !==null ? scope.row.fromAccount :'--'}}</span>
+          <span class="yanse"  @click="_mixin_address_jump(scope.row.fromAccount)">
+            {{scope.row.fromAccount !== null ? scope.row.fromAccount  : ($t('home.transaction.fromDeafult')) }}
+            </span>
         </template>
       </el-table-column>
       <el-table-column
