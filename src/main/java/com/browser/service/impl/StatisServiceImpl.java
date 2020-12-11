@@ -99,6 +99,9 @@ public class StatisServiceImpl implements StatisService {
             for (BlTransaction trx : txList) {
                 handleAmountData(trx);
 
+                if(null != trx.getOpType() && trx.getOpType() == 73) {
+                    trx.setFromAccount("Mining");
+                }
             }
         }
         return txList;

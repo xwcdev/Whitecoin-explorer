@@ -101,7 +101,7 @@ public class TransactionServiceImpl implements TransactionService {
                     trx.setGuaranteeUse(true);
                 }
 
-                if(StringUtils.isEmpty(trx.getFromAccount())) {
+                if(null != trx.getOpType() && trx.getOpType() == 73) {
                     trx.setFromAccount("Mining");
                 }
 
