@@ -98,9 +98,6 @@ public class StatisServiceImpl implements StatisService {
         if (null != txList && txList.size() > 0) {
             for (BlTransaction trx : txList) {
                 handleAmountData(trx);
-                if(StringUtils.isEmpty(trx.getFromAccount())) {
-                    trx.setFromAccount("Mining");
-                }
 
             }
         }
