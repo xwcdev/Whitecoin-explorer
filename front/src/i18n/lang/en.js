@@ -25,7 +25,7 @@ const en = {
   home: {
     blockchinaInfo: {
       title: 'Blockchain Info',
-      totalSupply: 'Total Supply',
+      totalSupply: 'Circulating Supply',
       transactions: 'Transactions',
       blockHeight: 'Block Height',
       blockReward: 'Block Reward',
