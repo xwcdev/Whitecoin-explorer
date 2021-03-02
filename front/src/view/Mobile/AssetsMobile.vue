@@ -19,7 +19,7 @@
         <div class="con_table">
           <div class="trans_ul">
             <li v-for="(item,index) of richlist" :key="index">
-              <p><span>ID:</span>{{index+1}}</p>
+              <p><span>ID:</span>{{(index+1)+(page-1)*size}}</p>
               <p><span>{{$t('richlist.address')}}</span>
                 <router-link :to="'/address?address='+item.addr">{{item.addr !==null ? item.addr : '--'}}</router-link>
                 <span style="color: red;" v-if="item.addr==='XWCNWKLUcsybWt4bW5EXV1CfdaSNHiSKj4Hzw' || item.addr==='XWCNi146ffqUffGJk3tTjnY1MdVGJn3m8jH29'">({{$t('address.overview.abnormal_address')}})</span>
