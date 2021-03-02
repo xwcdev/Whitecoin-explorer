@@ -8,6 +8,7 @@ const cn = {
     richlist: '地址',
     tokens: '代币',
     ziyuan: '资源',
+    assets: '资产'
   },
   maxTitle:{
     t1:'全部交易',

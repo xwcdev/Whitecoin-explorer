@@ -8,6 +8,7 @@ const en = {
     richlist: 'Richlist',
     tokens: 'Tokens',
     ziyuan: 'Resource',
+    assets: 'Assets'
   },
   maxTitle:{
     t1:'All Transactions',

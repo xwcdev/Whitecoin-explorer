@@ -8,6 +8,7 @@ const korea = {
     richlist: '풍부한 목록',
     tokens: '화폐',
     ziyuan: '자원',
+    assets: '자산'
   },
   maxTitle:{ 
     t1:'거래 내역',

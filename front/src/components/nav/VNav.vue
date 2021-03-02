@@ -37,6 +37,9 @@
               <router-link to="/richlist">
                 <el-option :value="$t('nav.richlist')">RICHLIST</el-option>
               </router-link>
+              <router-link to="/assets">
+                <el-option :value="$t('nav.assets')">{{$t('nav.assets')}}</el-option>
+              </router-link>
             </el-select>
           </ul>
           <el-select

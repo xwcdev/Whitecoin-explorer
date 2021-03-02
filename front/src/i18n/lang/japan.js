@@ -8,6 +8,7 @@ const japan = {
         richlist: '豊富なリスト',
         tokens: 'トークン',
         ziyuan: 'リソース',
+        assets: '資産'
     },
     maxTitle:{
         t1:'取引履歴',

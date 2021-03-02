@@ -9,6 +9,7 @@ import BlockDetails from '@/view/BlockDetails';
 import Transaction from '@/view/Transaction';
 import Address from '@/view/Address';
 import Richlist from '@/view/Richlist';
+import Assets from '@/view/Assets';
 import Token from '@/view/Token';
 
 
@@ -21,6 +22,7 @@ import BlockDetailsMobile from '@/view/Mobile/BlockDetailsMobile';
 import TokenMobile from '@/view/Mobile/TokenMobile';
 import ContractsMobile from '@/view/Mobile/ContractsMobile';
 import RichlistMobile from '@/view/Mobile/RichlistMobile';
+import AssetsMobile from '@/view/Mobile/AssetsMobile';
 import ContractOverviewMobile from '@/view/Mobile/ContractOverviewMobile';
 
 
@@ -68,6 +70,10 @@ const routes = [
     component: Richlist
   },
   {
+    path: '/assets',
+    component: Assets
+  },
+  {
     path: '/tokens',
     component: Token
   }
@@ -110,6 +116,10 @@ const routesMobile = [
   {
     path: '/richlist',
     component: RichlistMobile
+  },
+  {
+    path: '/assets',
+    component: AssetsMobile
   },
   {
     path: '/tokens',
