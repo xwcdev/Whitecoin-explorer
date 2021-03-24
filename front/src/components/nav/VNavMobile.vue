@@ -3,10 +3,10 @@
     <div class="wrap1_two1">
       <div class="con_aside1">
         <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.svg" @click="logoClick"></a>
-        <div class="navBar1" @click="toggleMenu">
+        <div class="navBar1" @touchmove.prevent @click="toggleMenu">
         </div>
         <div class="menu-opened1" :class="{ open: showMenu, hide: hideMenu }">
-          <div class="mask" @click="toggleMenu">
+          <div class="mask" @touchmove.prevent @click="toggleMenu">
             <div class="side-menu1">
               <div class="menu-bottom1">
                 <ul class="links1">
