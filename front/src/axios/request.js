@@ -5,11 +5,11 @@ const store = window.sessionStorage;
 if(process.env.NODE_ENV==='development') {
   //开发环境
   // axios.defaults.baseURL = 'https://third.whitecoin.info/whitecoin-explorer';
-  axios.defaults.baseURL = 'https://explorer.whitecoin.info/api'; //'http://explorer.hx.cash/hx-browser';
-  // axios.defaults.baseURL = 'http://localhost:9007/api'; // TODO
+  // axios.defaults.baseURL = 'https://explorer.whitecoin.info/api'; //'http://explorer.hx.cash/hx-browser';
+  axios.defaults.baseURL = 'http://192.168.110.11:9007/api';
 } else {
   //真实环境
-  // axios.defaults.baseURL = 'http://explorer.whitecoin.cash/whitecoin-browser';
+  // axios.defaults.baseURL = 'http://192.168.110.11:9007/api';
   axios.defaults.baseURL = '/api';
 }   
 

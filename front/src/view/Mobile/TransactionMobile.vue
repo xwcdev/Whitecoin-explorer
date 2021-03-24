@@ -344,10 +344,11 @@
               color: #333;
               p{
                 display: flex;
+                align-items: center;
                 margin: 20rem 0;
                 span{
                   width: 25%;
-              color: #677897;
+                  color: #677897;
                 }
                 a{
                   color: #0279FF;

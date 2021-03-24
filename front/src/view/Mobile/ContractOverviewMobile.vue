@@ -86,11 +86,10 @@
         <div class="all_aside">
           <div class="all_header">
             <div class="all_tab">
-              <span @click="choiceFlagChange(0)"
-                    :class="{'choice':choiceFlag===0}">{{$t('contractOverview.tableTitle')}}</span>
-              <span @click="choiceFlagChange(2)"
-                    :class="{'choice':choiceFlag===2}">Token Transfers</span>
+              <span @click="choiceFlagChange(0)" :class="{'choice':choiceFlag===0}">{{$t('contractOverview.tableTitle')}}</span>
+              <span @click="choiceFlagChange(2)" :class="{'choice':choiceFlag===2}">Token Transfers</span>
               <span @click="choiceFlagChange(1)" :class="{'choice':choiceFlag===1}">{{$t('contractOverview.api')}}</span>
+              <span @click="choiceFlagChange(3)" :class="{'choice':choiceFlag===3}">RICHLIST</span>
             </div>
           </div>
           <template v-if="choiceFlag===0">
@@ -143,7 +142,7 @@
                   layout="prev, total, next, jumper"
                   :current-page="page"
                   :page-size="size"
-                  :total="total1"
+                  :total="total"
                   @current-change="pageChange">
                 </el-pagination>
               </div>
@@ -154,6 +153,29 @@
               <template v-for="(item,index) in abi" >
                 <span class="abi" :key="index">{{item}}</span>
               </template>
+            </div>
+          </template>
+          <template v-if="choiceFlag===3">
+            <div class="con_table">
+              <div class="trans_ul">
+                <li v-for="(item,index) of balancesData" :key="index">
+                  <p><span>ID</span>{{item.id}}
+                  </p>
+                  <p><span>{{$t('richlist.address')}}</span><router-link :to="'/address?address='+item.addr">{{item.addr}}</router-link></p>
+                  <p><span>{{$t('richlist.accountName')}}</span>{{item.tokenSymbol}}</p>
+                  <p><span>{{$t('richlist.amount')}}</span>{{item.tokenAmount}}</p>
+                </li>
+              </div>
+              <div class="trans_page">
+                <el-pagination
+                  class="pagination"
+                  layout="prev, total, next, jumper"
+                  :current-page="page"
+                  :page-size="size"
+                  :total="total"
+                  @current-change="pageChange">
+                </el-pagination>
+              </div>
             </div>
           </template>
         </div>
@@ -171,19 +193,18 @@
     mixins: [mixin],
     name: "contract-overview",
     components:{SearchMobile},
-    beforeRouteUpdate(to, from, next) {
-      this.contractAddress = to.params.contractAddress;
-      this.getContractInfo();
-      this.getTransactionData();
-      this.getTokenTransactionData();
-      next();
-    },
+    // beforeRouteUpdate(to, from, next) {
+    //   this.contractAddress = to.params.contractAddress;
+    //   this.getContractInfo();
+    //   this.getTransactionData();
+    //   this.getTokenTransactionData();
+    //   next();
+    // },
     data() {
       return {
         page: 1,
         size: 25,
         total: 0,
-        total1: 0,
         contractAddress: '',
         contractInfo: {
           contractAddress: '',
@@ -195,19 +216,30 @@
         choiceFlag: 0,
         tableData: [],
         abi: [],
-        tokenTransactions: []
+        tokenTransactions: [],
+        balancesData: []
       }
     },
     created() {
       this.contractAddress = this.$route.params.contractAddress;
       this.getContractInfo();
       this.getTransactionData();
-      this.getTokenTransactionData();
-      this.getAbiData();
     },
     methods: {
       choiceFlagChange(flag) {
         this.choiceFlag = flag;
+        if (this.choiceFlag === 0) {
+          this.page = 1
+          this.getTransactionData();
+        } else if (this.choiceFlag === 1) {
+          this.getAbiData();
+        }else if (this.choiceFlag === 2) {
+          this.page = 1
+          this.getTokenTransactionData();
+        } else if (this.choiceFlag === 3) {
+          this.page = 1
+          this.tokenContractbalances();
+        }
       },
       getContractInfo() {
         let that = this;
@@ -241,23 +273,45 @@
           if(res.data.retCode===200 && res.data.data !==null){
             let data = res.data.data;
             that.tokenTransactions = data.rows;
-            that.total1 = data.total;
+            that.total = data.total;
           }
         })
       },
       pageChange(page) {
         this.page = page;
-        if(this.choiceFlag == 2) {
-          this.getTokenTransactionData();
-          return;
+        if (this.choiceFlag === 0) {
+          this.getTransactionData()
+        } else if(this.choiceFlag === 2) {
+          this.getTokenTransactionData()
+        } else if(this.choiceFlag === 3) {
+          this.tokenContractbalances()
         }
-        this.getTransactionData();
+        if(document.body.scrollTop){
+          document.body.scrollTop = 0
+        }else {
+          document.documentElement.scrollTop = 0
+        }
       },
       getAbiData() {
         let that = this;
         this.$axios.post('/getAbi', {contractId: this.contractAddress}).then(function (res) {
           if(res.data.retCode===200 && res.data.data !==null){
             that.abi = res.data.data.abi;
+          }
+        });
+      },
+      tokenContractbalances() {
+        let that = this;
+        this.$axios.get('/token_contract_balances', {
+          params: {
+            contractAddress: this.contractAddress,
+            pageNum: this.page,
+            pageSize: this.size
+          }
+        }).then(function (res) {
+          if(res.data.retCode===200 && res.data.data.rows !== null){
+            that.balancesData = res.data.data.rows
+            that.total = res.data.data.total || 0;
           }
         });
       }
@@ -334,6 +388,7 @@
             border-bottom: 1px solid #dedede;
             padding-left: 30rem;
             width: 100%;
+            box-sizing: border-box;
             &:first-of-type {
               span {
                 display: inline-block;
@@ -342,6 +397,7 @@
                 position: relative;
                 padding-bottom: 10rem;
                 cursor: pointer;
+                margin-top: 10rem;
               }
               .choice {
                 color: #333;
@@ -371,6 +427,7 @@
               color: #333;
               p{
                 display: flex;
+                align-items: center;
                 margin: 20rem 0;
                 span{
                   width: 32%;

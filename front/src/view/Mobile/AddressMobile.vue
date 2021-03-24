@@ -45,7 +45,7 @@
                 <span>XWC{{$t('address.overview.balances')}}</span>
                 <span v-if="minerInfo.balances">{{minerInfo.balances[0]}}</span>
               </li>
-              <li @click.stop="nameSymbol">
+              <li @click.stop="nameSymbol" class="rightName">
                 <span>{{$t('address.overview.tokenBalances')}}</span>
                 <span v-if="tokenBalances.length>0">{{tokenAmount}} <em class="tp_click">{{tokenName}} <strong></strong></em> </span>
                 <div class="ser_input" v-show="isShow">
@@ -507,6 +507,9 @@ export default {
           }
           &:last-of-type {
             width: 70%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
           }
           .tp_click{
             margin-left: 10rem;

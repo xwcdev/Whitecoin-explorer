@@ -86,14 +86,13 @@
         <div class="all_aside">
           <div class="all_header">
             <div>
-              <span @click="choiceFlagChange(0)"
-                    :class="{'choice':choiceFlag===0}">{{$t('contractOverview.tableTitle')}}</span>
-              <span @click="choiceFlagChange(2)"
-                    :class="{'choice':choiceFlag===2}">Token Transfers</span>
+              <span @click="choiceFlagChange(0)" :class="{'choice':choiceFlag===0}">{{$t('contractOverview.tableTitle')}}</span>
+              <span @click="choiceFlagChange(2)" :class="{'choice':choiceFlag===2}">Token Transfers</span>
               <span @click="choiceFlagChange(1)" :class="{'choice':choiceFlag===1}">{{$t('contractOverview.api')}}</span>
+              <span @click="choiceFlagChange(3)" :class="{'choice':choiceFlag===3}">RICHLIST</span>
             </div>
             <div class="total" v-if="choiceFlag!==1">
-              A Total Of {{choiceFlag===0 ? total : total1}} transactions found
+              A Total Of {{total}} transactions found
             </div>
           </div>
           <template v-if="choiceFlag===0">
@@ -237,7 +236,7 @@
               layout="prev, pager, next, jumper"
               :current-page="page"
               :page-size="size"
-              :total="total1"
+              :total="total"
               @current-change="pageChange">
             </el-pagination>
           </template>
@@ -247,6 +246,49 @@
                 <span class="abi" :key="index">{{item}}</span>
               </template>
             </div>
+          </template>
+           <template v-if="choiceFlag===3">
+            <div class="table-wrap">
+              <el-table
+                :data="balancesData"
+                style="width: 100%"
+              >
+                <el-table-column
+                  align="center"
+                  prop="id"
+                  label="#">
+                  <template slot-scope="scope">{{scope.row.id}}</template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="addr"
+                  :label="$t('richlist.address')">
+                  <template slot-scope="scope">
+                    <span class="link" @click="_mixin_address_jump(scope.row.addr)">{{scope.row.addr}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="tokenSymbol"
+                  :label="$t('richlist.accountName')">
+                    <template slot-scope="scope">{{scope.row.tokenSymbol}}</template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  prop="tokenAmount"
+                  :label="$t('richlist.amount')">
+                    <template slot-scope="scope">{{scope.row.tokenAmount}}</template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <el-pagination
+              class="pagination"
+              layout="prev, pager, next, jumper"
+              :current-page="page"
+              :page-size="size"
+              :total="total"
+              @current-change="pageChange">
+            </el-pagination>
           </template>
         </div>
       </div>
@@ -263,19 +305,11 @@
     mixins: [mixin],
     name: "contract-overview",
     components:{Search},
-    beforeRouteUpdate(to, from, next) {
-      this.contractAddress = to.params.contractAddress;
-      this.getContractInfo();
-      this.getTransactionData();
-      this.getTokenTransactionData();
-      next();
-    },
     data() {
       return {
         page: 1,
         size: 25,
         total: 0,
-        total1: 0,
         contractAddress: '',
         contractInfo: {
           contractAddress: '',
@@ -287,25 +321,35 @@
         choiceFlag: 0,
         tableData: [],
         abi: [],
-        tokenTransactions: []
+        tokenTransactions: [],
+        balancesData: []
       }
     },
     created() {
       this.contractAddress = this.$route.params.contractAddress;
       this.getContractInfo();
       this.getTransactionData();
-      this.getTokenTransactionData();
-      this.getAbiData();
     },
     methods: {
       choiceFlagChange(flag) {
         this.choiceFlag = flag;
+        if (this.choiceFlag === 0) {
+          this.page = 1
+          this.getTransactionData();
+        } else if (this.choiceFlag === 1) {
+          this.getAbiData();
+        }else if (this.choiceFlag === 2) {
+          this.page = 1
+          this.getTokenTransactionData();
+        } else if (this.choiceFlag === 3) {
+          this.page = 1
+          this.tokenContractbalances();
+        }
       },
       getContractInfo() {
         let that = this;
         this.$axios.post('/getContractStatis', {contractId: this.contractAddress}).then(function (res) {
           if(res.data.retCode===200 && res.data.data !==null){
-            console.log(res.data.data,'99999')
             that.contractInfo = res.data.data;
           }
         })
@@ -334,23 +378,42 @@
           if(res.data.retCode===200 && res.data.data !==null){
             let data = res.data.data;
             that.tokenTransactions = data.rows;
-            that.total1 = data.total;
+            that.total = data.total;
           }
         })
       },
       pageChange(page) {
         this.page = page;
-        if(this.choiceFlag == 2) {
+        if (this.choiceFlag === 0) {
+          this.getTransactionData();
+        } else if(this.choiceFlag === 2) {
           this.getTokenTransactionData();
           return;
+        } else if(this.choiceFlag === 3) {
+          this.tokenContractbalances();
+          return;
         }
-        this.getTransactionData();
       },
       getAbiData() {
         let that = this;
         this.$axios.post('/getAbi', {contractId: this.contractAddress}).then(function (res) {
           if(res.data.retCode===200 && res.data.data !==null){
             that.abi = res.data.data.abi;
+          }
+        });
+      },
+      tokenContractbalances() {
+        let that = this;
+        this.$axios.get('/token_contract_balances', {
+          params: {
+            contractAddress: this.contractAddress,
+            pageNum: this.page,
+            pageSize: this.size
+          }
+        }).then(function (res) {
+          if(res.data.retCode===200 && res.data.data.rows !== null){
+            that.balancesData = res.data.data.rows
+            that.total = res.data.data.total || 0;
           }
         });
       }

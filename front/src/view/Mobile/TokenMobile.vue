@@ -133,6 +133,7 @@
               color: #333;
               p{
                 display: flex;
+                align-items: center;
                 margin: 20rem 0;
                 span{
                   width: 25%;
