@@ -253,11 +253,10 @@
                 :data="balancesData"
                 style="width: 100%"
               >
-                <el-table-column
-                  align="center"
-                  prop="id"
-                  label="#">
-                  <template slot-scope="scope">{{scope.row.id}}</template>
+                <el-table-column align="center" type="index" width="120" label="#">
+                  <template slot-scope="scope">
+                    <span>{{(page - 1) * size + scope.$index + 1}}</span>
+                  </template>
                 </el-table-column>
                 <el-table-column
                   align="center"
@@ -388,10 +387,13 @@
           this.getTransactionData();
         } else if(this.choiceFlag === 2) {
           this.getTokenTransactionData();
-          return;
         } else if(this.choiceFlag === 3) {
           this.tokenContractbalances();
-          return;
+        }
+        if(document.body.scrollTop){
+          document.body.scrollTop = 0
+        }else {
+          document.documentElement.scrollTop = 0
         }
       },
       getAbiData() {

@@ -159,7 +159,7 @@
             <div class="con_table">
               <div class="trans_ul">
                 <li v-for="(item,index) of balancesData" :key="index">
-                  <p><span>ID</span>{{item.id}}
+                  <p><span>ID</span>{{(page - 1) * size + index + 1}}
                   </p>
                   <p><span>{{$t('richlist.address')}}</span><router-link :to="'/address?address='+item.addr">{{item.addr}}</router-link></p>
                   <p><span>{{$t('richlist.accountName')}}</span>{{item.tokenSymbol}}</p>
