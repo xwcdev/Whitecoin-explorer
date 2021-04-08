@@ -2,7 +2,9 @@
   <div class="wrap1">
     <div class="wrap1_two1">
       <div class="con_aside1">
-        <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.svg" @click="logoClick"></a>
+        <div class="con_logo">
+          <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.svg" @click="logoClick"></a>
+        </div>
         <div class="navBar1" @touchmove.prevent @click="toggleMenu">
         </div>
         <div class="menu-opened1" :class="{ open: showMenu, hide: hideMenu }">
@@ -192,9 +194,13 @@ export default {
       justify-content: space-between;
       padding: 0 30rem;
       box-sizing: border-box;
-      .logo {
-        cursor: pointer;
-        width: 215rem;
+      .con_logo {
+        height: 56rem;
+        .logo {
+          cursor: pointer;
+          width: 200rem;
+          height: 56rem;
+        }
       }
       .navBar1 {
         width: 42rem;

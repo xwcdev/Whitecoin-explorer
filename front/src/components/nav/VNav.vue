@@ -2,7 +2,9 @@
   <div class="wrap">
     <div class="wrap_two">
       <div class="con_aside">
-        <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.svg" @click="logoClick"></a>
+        <div class="con_logo">
+          <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.svg" @click="logoClick"></a>
+        </div>
         <div class="navbar">
           <ul>
             <router-link to="/">
@@ -146,10 +148,14 @@ export default {
       height: 78px;
       display: flex;
       align-items: center;
-      .logo {
-        cursor: pointer;
-        width: 130px;
-        margin-right: 30px;
+      .con_logo {
+        height: 33px;
+        .logo {
+          cursor: pointer;
+          width: 115px;
+          height: 33px;
+          margin-right: 30px;
+        }
       }
       .navbar{
         width: 100%;
