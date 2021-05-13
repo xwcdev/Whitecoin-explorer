@@ -227,7 +227,9 @@ const cn = {
     title: '富豪榜',
     address: '地址',
     accountName: '账户名',
-    amount: '金额'
+    amount: '金额',
+    teamHold: '团队持有',
+    oldExchange: '新老兑换',
   },
   contractOverview: {
     title: '合约概览',

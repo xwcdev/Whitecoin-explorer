@@ -218,7 +218,9 @@ const korea = {
     title: '풍부한 목록',
     address: '주소',
     accountName: '계정 이름',
-    amount: '금액'
+    amount: '금액',
+    teamHold: '팀 보유',
+    oldExchange: '신규/기존 코인 스왑',
   },
   contractOverview: {
     title: '컨트렉트 개요',

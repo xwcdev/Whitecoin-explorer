@@ -225,7 +225,9 @@ const en = {
     title: 'Rich List',
     address: 'Address',
     accountName: 'Account Name',
-    amount: 'Amount'
+    amount: 'Amount',
+    teamHold: 'Hold by the Team',
+    oldExchange: 'Old and new token swap',
   },
   contractOverview: {
     title: 'Contract Overview',

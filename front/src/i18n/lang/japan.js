@@ -227,7 +227,9 @@ const japan = {
         title: '豊富なリスト',
         address: '住所',
         accountName: 'アカウント名',
-        amount: '金額'
+        amount: '金額',
+        teamHold: 'チームホールド',
+        oldExchange: '新旧交代',
     },
     contractOverview: {
         title: 'コントラクト概要',

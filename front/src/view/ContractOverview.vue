@@ -263,7 +263,12 @@
                   prop="addr"
                   :label="$t('richlist.address')">
                   <template slot-scope="scope">
-                    <span class="link" @click="_mixin_address_jump(scope.row.addr)">{{scope.row.addr}}</span>
+                    <span v-if="scope.row.addr ==='XWCNVjD93CFH7SFjLquke2BL9nrPN4Vvkd5Hi'" class="link" @click="_mixin_address_jump(scope.row.addr)">
+                      {{  scope.row.addr }} <font>({{ $t('richlist.teamHold') }})</font></span>
+                    <span v-else-if="scope.row.addr ==='XWCNYzg8sUkoy2kFbzvj6xSky7Hm7RuiTPFqr'" class="link" @click="_mixin_address_jump(scope.row.addr)">
+                      {{  scope.row.addr }}<font>({{ $t('richlist.oldExchange') }})</font></span>
+                    <span v-else class="link" @click="_mixin_address_jump(scope.row.addr)">
+                      {{  scope.row.addr }}</span>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -554,5 +559,8 @@
       }
 
     }
+  }
+  .el-table_1_column_2 font {
+    color: #f00;
   }
 </style>
