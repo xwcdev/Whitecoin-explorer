@@ -227,7 +227,7 @@ const en = {
     accountName: 'Account Name',
     amount: 'Amount',
     teamHold: 'Hold by the Team',
-    oldExchange: 'Old and new token swap',
+    oldExchange: 'For Swapping',
   },
   contractOverview: {
     title: 'Contract Overview',
