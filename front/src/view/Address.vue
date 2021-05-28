@@ -341,11 +341,11 @@ export default {
       this.page = page;
       if (this.choiceFlag === 0) {
         this.getTransactionData();
-      } else if (flag === 2) {
+      } else if (this.choiceFlag === 2) {
         this.getTokenTransactionData();
-      } else if(flag===3) {
+      } else if(this.choiceFlag===3) {
         this.getSwapTransactionData();
-      } else if(flag===4) {
+      } else if(this.choiceFlag===4) {
         this.getTokenBalancesData();
       } else {
         this.getContractData();
