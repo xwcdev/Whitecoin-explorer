@@ -6,10 +6,10 @@ if(process.env.NODE_ENV==='development') {
   //开发环境
   // axios.defaults.baseURL = 'https://third.whitecoin.info/whitecoin-explorer';
   // axios.defaults.baseURL = 'https://explorer.whitecoin.info/api'; //'http://explorer.hx.cash/hx-browser';
-  axios.defaults.baseURL = 'https://explorer.whitecoin.info/api';
+  axios.defaults.baseURL = 'http://154.222.22.76:9007/api';
 } else {
   //真实环境
-  // axios.defaults.baseURL = 'http://192.168.110.11:9007/api';
+  // axios.defaults.baseURL = 'http://154.222.22.76:9007/api';
   axios.defaults.baseURL = '/api';
 }   
 

@@ -9,42 +9,52 @@
         <div class="con_table">
           <el-table
           :data="tokens"
-          style="width: 100%"
-          > 
+          style="width: 100%"> 
           <el-table-column
-              align="center"
-              :label="$t('tokens.tokenSymbol')"
-            >
-              <template slot-scope="scope">
-                <span>{{scope.row.tokenSymbol}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :label="$t('tokens.contractAddress')"
-            >
-              <template slot-scope="scope">
-                <router-link   :to="'/contractOverview/'+scope.row.contractAddress">
-                  {{scope.row.contractAddress}}
-                </router-link>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :label="$t('tokens.precision')"
-            >
-              <template slot-scope="scope">
-                <span>{{scope.row.precision}}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              :label="$t('tokens.tokenSupply')"
-            >
-              <template slot-scope="scope">
-                <span>{{scope.row.tokenSupply}}</span>
-              </template>
-            </el-table-column>
+            align="center"
+            :label="$t('tokens.tokenSymbol')">
+            <template slot-scope="scope">
+              <span>{{scope.row.tokenSymbol}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="$t('tokens.createTime')">
+            <template slot-scope="scope">
+              {{scope.row.createAt}}
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="$t('tokens.contractAddress')">
+            <template slot-scope="scope">
+              <router-link   :to="'/contractOverview/'+scope.row.contractAddress">
+                {{scope.row.contractAddress}}
+              </router-link>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="$t('tokens.precision')">
+            <template slot-scope="scope">
+              <span>{{scope.row.precision}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="$t('tokens.tokenAddressNum')"
+            width="190">
+            <template slot-scope="scope">
+              <span>{{scope.row.tokenAddressNum}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            :label="$t('tokens.tokenSupply')">
+            <template slot-scope="scope">
+              <span>{{scope.row.tokenSupply}}</span>
+            </template>
+          </el-table-column>
           </el-table>
         </div>
         <el-pagination

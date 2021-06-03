@@ -221,7 +221,8 @@ const cn = {
     total_span_after: '个合约',
     tokenSymbol: '代币符号',
     precision: '精度',
-    tokenSupply: '供应量'
+    tokenSupply: '供应量',
+    tokenAddressNum: '地址数量'
   },
   richlist: {
     title: '富豪榜',

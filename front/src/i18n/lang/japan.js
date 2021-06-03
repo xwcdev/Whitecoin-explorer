@@ -221,7 +221,8 @@ const japan = {
         total_span_after: '件の契約が見つかりました',
         tokenSymbol: 'トークンシンボル',
         precision: '精度',
-        tokenSupply: '供給' 
+        tokenSupply: '供給',
+        tokenAddressNum: 'アドレス数'
     },
     richlist: {
         title: '豊富なリスト',

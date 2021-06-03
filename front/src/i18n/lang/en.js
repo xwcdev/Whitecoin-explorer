@@ -219,7 +219,8 @@ const en = {
     total_span_after: 'verified tokens found',
     tokenSymbol: 'Symbol',
     precision: 'Precision',
-    tokenSupply: 'Supply'
+    tokenSupply: 'Supply',
+    tokenAddressNum: 'Number of addresses'
   },
   richlist: {
     title: 'Rich List',

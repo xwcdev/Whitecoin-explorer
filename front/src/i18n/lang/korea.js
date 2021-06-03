@@ -212,7 +212,8 @@ const korea = {
     total_span_after: '_개의 컨트렉트',
     tokenSymbol: '토큰 기호',
     precision: '정도',
-    tokenSupply: '공급'
+    tokenSupply: '공급',
+    tokenAddressNum: '주소 수'
   },
   richlist: {
     title: '풍부한 목록',
