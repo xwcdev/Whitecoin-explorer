@@ -20,8 +20,10 @@
           <div class="trans_ul">
             <li v-for="(item,index) of tokens" :key="index">
               <p><span>{{$t('tokens.tokenSymbol')}}</span>{{item.tokenSymbol}}</p>
+              <p><span>{{$t('tokens.createTime')}}</span>{{item.createAt}}</p>
               <p><span>{{$t('tokens.contractAddress')}}</span><router-link   :to="'/contractOverview/'+item.contractAddress">{{item.contractAddress}}</router-link></p>
               <p><span>{{$t('tokens.precision')}}</span>{{item.precision}}</p>
+              <p><span>{{$t('tokens.tokenAddressNum')}}</span>{{item.tokenAddressNum}}</p>
               <p><span>{{$t('tokens.tokenSupply')}}</span>{{item.tokenSupply}}</p>
             </li>
           </div>
