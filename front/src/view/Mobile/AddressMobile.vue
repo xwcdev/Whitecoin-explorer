@@ -110,7 +110,10 @@
                 </p>
                 <p><span>{{$t('address.myTransactions.block')}}</span><router-link :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
                 <p><span>{{$t('address.myTransactions.types')}}</span>{{getTypeName(item)}}</p>
-                <p><span>{{$t('address.myTransactions.age')}}</span><timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
+                <p><span>{{$t('address.myTransactions.age')}}</span>
+                {{item.intervalTime}}
+                <!-- <timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago> -->
+                </p>
                 <p><span>{{$t('address.myTransactions.from')}}</span><router-link :to="'/address?address='+item.fromAccount">{{item.fromAccount}}</router-link></p>
                 <p><span>{{$t('address.myTransactions.to')}}</span><router-link :to="'/address?address='+item.toAccount">{{item.toAccount}}</router-link></p>
                 <p><span>{{$t('miner.myTransactions.value')}}</span>{{item.amountStr}}</p>
@@ -142,7 +145,10 @@
                 </p>
                 <p><span>{{$t('address.myTransactions.block')}}</span><router-link :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
                 <p><span>{{$t('address.myTokenTransactions.symbol')}}</span>{{item.symbol}}</p>
-                <p><span>{{$t('address.myTransactions.age')}}</span><timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
+                <p><span>{{$t('address.myTransactions.age')}}</span>
+                   {{item.intervalTime}}
+                <!-- <timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago> -->
+                </p>
                 <p><span>{{$t('address.myTransactions.from')}}</span><router-link :to="'/address?address='+item.fromAccount">{{item.fromAccount}}</router-link></p>
                 <p><span>{{$t('address.myTransactions.to')}}</span><router-link :to="'/address?address='+item.toAccount">{{item.toAccount}}</router-link></p>
                 <p><span>{{$t('miner.myTransactions.value')}}</span>{{item.amountStr}}</p>

@@ -78,7 +78,10 @@
               <div class="block_img"><img src="../assets/img/block_img1.png" alt=""></div>
               <div class="block_er">
                 <p><router-link :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
-                <p><timeago :since="item.blockTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
+                <p>
+                  {{item.intervalTime}}
+                  <!-- <timeago :since="item.blockTime" :lsocale="getBusLocal" :auto-update="0.5"></timeago> -->
+                  </p>
               </div>
               <div class="block_san">
                 <p><router-link :to="'/address?minerName='+item.minerName"><span>Miner</span> {{item.minerName}}</router-link></p>
@@ -103,7 +106,10 @@
                 <p><router-link
                     :to="'/transfer_details/'+item.trxId+'/'+item.opType"
                   >{{item.trxId.substring(0,15)}}...</router-link></p>
-                <p><timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
+                <p>
+                  {{item.intervalTime}}
+                  <!-- <timeago :since="item.trxTime" :locale="getBusLocal" :auto-update="0.5"></timeago> -->
+                </p>
               </div> 
               <div class="block_san">
                 <p><span>FROM:</span> <router-link :to="`/address?address=${item.fromAccount}`">{{item.fromAccount !== null ? ( item.fromAccount!=='Mining'? (item.fromAccount.substring(0,11) + ('...')) : item.fromAccount ) : ($t('home.transaction.fromDeafult')) }} </router-link></p>
@@ -301,6 +307,7 @@ export default {
     this.$axios.get('/mainCoinPrice').then((res) => {
       let data = res.data;
       if(data.retCode === 200) {
+        console.log('调用成功',res);
         that.mainCoinPrice = data.data;
       }
     });

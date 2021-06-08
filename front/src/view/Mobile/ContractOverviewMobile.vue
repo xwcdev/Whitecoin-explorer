@@ -101,7 +101,10 @@
                     </router-link>
                   </p>
                   <p><span>{{$t('contractOverview.block')}}</span><router-link :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
-                  <p><span>{{$t('contractOverview.time')}}</span><timeago :since="item.trxTime" :locale="getBusLocal"></timeago></p>
+                  <p><span>{{$t('contractOverview.time')}}</span>
+                  {{item.intervalTime}}
+                  <!-- <timeago :since="item.trxTime" :locale="getBusLocal"></timeago> -->
+                  </p>
                   <p><span>{{$t('contractOverview.callerAddress')}}</span><router-link :to="'/address?address='+item.fromAccount">{{item.fromAccount}}</router-link></p>
                   <p><span>{{$t('contractOverview.value')}}</span>{{item.amountStr}}</p>
                   <p><span>{{$t('contractOverview.fee')}}</span>{{item.feeStr}}</p>
@@ -128,7 +131,10 @@
                     </router-link>
                   </p>
                   <p><span>{{$t('contractOverview.block')}}</span><router-link :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
-                  <p><span>{{$t('contractOverview.time')}}</span><timeago :since="item.trxTime" :locale="getBusLocal"></timeago></p>
+                  <p><span>{{$t('contractOverview.time')}}</span>
+                  {{item.intervalTime}}
+                  <!-- <timeago :since="item.trxTime" :locale="getBusLocal"></timeago> -->
+                  </p>
                   <p><span>From:</span><router-link :to="'/address?address='+item.fromAccount">{{item.fromAccount}}</router-link></p>
                   <p><span>To:</span><router-link :to="'/address?address='+item.toAccount">{{item.toAccount}}</router-link></p>
                   <p><span>Amount</span>{{item.amountStr}} &nbsp; {{item.symbol}}</p>

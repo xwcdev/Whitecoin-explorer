@@ -29,7 +29,8 @@
               <li>
                 <span class="name">{{$t('blocks.overview.timeStamp')}}</span>
                 <span>
-                    <timeago :since="blockData.blockTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
+                  {{blockData.intervalTime}}
+                    <!-- <timeago :since="blockData.blockTime" :locale="getBusLocal" :auto-update="0.5"></timeago> -->
                   </span>
               </li>
               <li>

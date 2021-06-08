@@ -20,7 +20,10 @@
           <div class="trans_ul">
             <li v-for="(item,index) of blocks" :key="index">
               <p><span>{{$t('blocks.height')}}</span><router-link :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
-              <p><span>{{$t('blocks.age')}}</span><timeago :since="item.blockTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
+              <p><span>{{$t('blocks.age')}}</span>
+              {{item.intervalTime}}
+              <!-- <timeago :since="item.blockTime" :locale="getBusLocal" :auto-update="0.5"></timeago> -->
+              </p>
               <p><span>{{$t('blocks.txn')}}</span>{{item.trxCount}}</p>
               <p><span>{{$t('blocks.miner')}}</span><router-link :to="'/address?minerName='+item.minerName">{{item.minerName}}</router-link></p>
               <p><span>{{$t('blocks.reward')}}</span>{{item.rewards}}</p>

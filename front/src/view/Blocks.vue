@@ -24,7 +24,8 @@
               :label="$t('blocks.age')"
               width="180">
               <template slot-scope="scope">
-                <timeago :since="scope.row.blockTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
+                <p>{{scope.row.intervalTime}}</p>
+                <!-- <timeago :since="scope.row.blockTime" :locale="getBusLocal" :auto-update="0.5"></timeago> -->
               </template>
             </el-table-column>
             <el-table-column

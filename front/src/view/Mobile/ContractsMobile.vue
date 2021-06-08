@@ -23,7 +23,10 @@
               <p><span>{{$t('contracts.authorAddress')}}</span><router-link  :to="'/address?address='+item.onwerAddress">{{item.onwerAddress}}</router-link></p>
               <p><span>{{$t('contracts.callTimes')}}</span>{{item.callTimes}}</p>
               <p><span>{{$t('contracts.createTime')}}</span>{{item.createTime}}</p>
-              <p><span>{{$t('contracts.lastTime')}}</span><timeago v-if="item.lastTime !== null ? item.lastTime : '--'" :since="item.lastTime" :locale="getBusLocal" :auto-update="0.5"></timeago></p>
+              <p><span>{{$t('contracts.lastTime')}}</span>
+               {{item.intervalTime}}
+              <!-- <timeago v-if="item.lastTime !== null ? item.lastTime : '--'" :since="item.lastTime" :locale="getBusLocal" :auto-update="0.5"></timeago> -->
+              </p>
             </li>
           </div>
           <div class="trans_page">
