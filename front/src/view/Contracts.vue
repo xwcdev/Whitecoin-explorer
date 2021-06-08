@@ -52,8 +52,7 @@
               width="180"
             >
               <template slot-scope="scope">
-                <p v-if="scope.row.intervalTime">{{scope.row.intervalTime}}</p>
-                <!-- <timeago v-if="scope.row.lastTime !== null" :since="scope.row.lastTime" :locale="getBusLocal" :auto-update="0.5"></timeago> -->
+                <timeago v-if="scope.row.lastTime !== null" :since="scope.row.lastTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
                 <span v-else> -- </span>
               </template>
             </el-table-column>
