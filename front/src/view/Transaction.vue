@@ -60,7 +60,7 @@
             >
               <template slot-scope="scope">
                 <div>
-                  <span>{{scope.row.trxTime}}</span>  
+                  <span>{{scope.row.trxTime}}</span> &nbsp;(UTC)
                 </div>
               </template>
             </el-table-column>

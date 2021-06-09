@@ -43,7 +43,7 @@
               prop="createTime"
               :label="$t('contracts.createTime')"
               :formatter="dataFormate"
-              width="180"
+              width="190"
             >
             </el-table-column>
             <el-table-column
@@ -110,7 +110,8 @@
       },
       dataFormate(row) {
         let time = new Date(row.createTime);
-        return common.format(time,'yyyy-MM-dd hh:mm:ss');
+        let str = `${common.format(time,'yyyy-MM-dd hh:mm:ss')}`
+        return str+'\n'+'(UTC)'
       }
     },
     computed: {

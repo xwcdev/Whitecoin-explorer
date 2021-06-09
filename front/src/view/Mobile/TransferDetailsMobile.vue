@@ -36,10 +36,10 @@
                 <li>
                   <span class="name">{{$t('transferDetails.information.timeStamp')}}</span>
                   <span>
-                     {{item.intervalTime}}
+                     {{detailsData.intervalTime}}
                     <!-- <timeago :since="detailsData.timeStamp" :locale="getBusLocal" :auto-update="0.2"></timeago> -->
                     &nbsp;
-                    <span>{{detailsData.timeStamp}}</span>
+                    <span>{{detailsData.timeStamp}}&nbsp;(UTC)</span>
                   </span>
                 </li>
               </ul>

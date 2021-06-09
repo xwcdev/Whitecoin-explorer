@@ -35,7 +35,7 @@
             <li v-for="(item,index) of tableData" :key="index">
               <p><span>{{$t('home.transaction.txHash')}}</span><router-link class="yanse" :to="'/transfer_details/'+item.trxId+'/'+item.opType">{{item.trxId}}</router-link></p>
               <p><span>{{$t('transaction.block')}}</span><router-link class="yanse" :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
-              <p><span>{{$t('transaction.age')}}</span>{{item.trxTime}}</p>
+              <p><span>{{$t('transaction.age')}}</span>{{item.trxTime}}&nbsp;(UTC)</p>
               <p><span>{{$t('transaction.from')}}</span><router-link class="yanse" :to="'/address?address='+item.fromAccount">{{item.fromAccount !== null ? item.fromAccount  : ($t('home.transaction.fromDeafult')) }}</router-link></p>
               <p><span>{{$t('transaction.to')}}</span><router-link class="yanse" :to="'/address?address='+item.toAccount">{{item.toAccount !==null ? item.toAccount :'--'}}</router-link></p>
               <p><span>{{$t('transaction.value')}}</span>{{item.amountStr}}</p>
@@ -58,7 +58,7 @@
             <li v-for="(item,index) of TokenTrxData" :key="index">
               <p><span>{{$t('home.transaction.txHash')}}</span><router-link class="yanse" :to="'/transfer_details/'+item.trxId+'/'+item.opType">{{item.trxId}}</router-link></p>
               <p><span>{{$t('transaction.block')}}</span><router-link class="yanse" :to="'/blockDetails/'+item.blockNum">{{item.blockNum}}</router-link></p>
-              <p><span>{{$t('transaction.age')}}</span>{{item.trxTime}}</p>
+              <p><span>{{$t('transaction.age')}}</span>{{item.trxTime}}&nbsp;(UTC)</p>
               <p><span>{{$t('transaction.from')}}</span><router-link class="yanse" :to="'/address?address='+item.fromAccount">{{item.fromAccount !==null ? item.fromAccount :'--'}}</router-link></p>
               <p><span>{{$t('transaction.to')}}</span><router-link class="yanse" :to="'/address?address='+item.toAccount">{{item.toAccount !==null ? item.toAccount :'--'}}</router-link></p>
               <p><span>{{$t('transaction.value')}}</span>{{item.amountStr}}</p>

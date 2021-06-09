@@ -39,7 +39,7 @@
           <div>
             <!-- <timeago :since="scope.row.trxTime" :locale="getBusLocal" :auto-update="0.2"></timeago>
             &nbsp; -->
-            <span>{{scope.row.trxTime}}</span>  
+            <span>{{scope.row.trxTime}}</span>(UTC)
           </div>
         </template>
       </el-table-column>

@@ -21,7 +21,7 @@
             align="center"
             :label="$t('tokens.createTime')">
             <template slot-scope="scope">
-              {{scope.row.createAt}}
+              {{scope.row.createAt}}<br/>(UTC)
             </template>
           </el-table-column>
           <el-table-column

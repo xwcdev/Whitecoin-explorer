@@ -22,7 +22,7 @@
               <p><span>{{$t('contracts.contractAddress')}}</span><router-link  :to="'/contractOverview/'+item.contractAddress">{{item.contractAddress}}</router-link></p>
               <p><span>{{$t('contracts.authorAddress')}}</span><router-link  :to="'/address?address='+item.onwerAddress">{{item.onwerAddress}}</router-link></p>
               <p><span>{{$t('contracts.callTimes')}}</span>{{item.callTimes}}</p>
-              <p><span>{{$t('contracts.createTime')}}</span>{{item.createTime}}</p>
+              <p><span>{{$t('contracts.createTime')}}</span>{{item.createTime}}&nbsp;(UTC)</p>
               <p><span>{{$t('contracts.lastTime')}}</span>
               <timeago v-if="item.lastTime !== null ? item.lastTime : '--'" :since="item.lastTime" :locale="getBusLocal" :auto-update="0.5"></timeago>
               </p>
