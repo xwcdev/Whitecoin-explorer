@@ -216,7 +216,7 @@ const en = {
     createTime: 'Create Time',
     lastTime: 'The Last Time',
     total_span_before: 'A Total Of',
-    total_span_after: 'verified tokens found',
+    total_span_after: 'tokens found',
     tokenSymbol: 'Symbol',
     precision: 'Precision',
     tokenSupply: 'Supply',
