@@ -9,7 +9,7 @@
         <div class="table-wrap">
           <el-table :data="richlist" style="width: 100%">
             <el-table-column align="center" type="index" width="120"></el-table-column>
-            <el-table-column align="center" :label="$t('richlist.address')">
+            <el-table-column align="center" :label="$t('richlist.address')" width="420">
               <template slot-scope="scope">
                 <router-link :to="'/address?address='+scope.row.addr">{{scope.row.addr !==null ? scope.row.addr : '--'}}</router-link>
                 <span style="color: red;" v-if="scope.row.addr==='XWCNWKLUcsybWt4bW5EXV1CfdaSNHiSKj4Hzw' || scope.row.addr==='XWCNi146ffqUffGJk3tTjnY1MdVGJn3m8jH29'">({{$t('address.overview.abnormal_address')}})</span>
