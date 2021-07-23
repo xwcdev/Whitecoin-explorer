@@ -366,6 +366,16 @@ const en = {
       last: 'The Last Time'
     }
   },
+  miner: {
+    title: 'Miner(s)',
+    name: 'MINER',
+    weights: 'Priority level',
+    numberBlocks: 'Total blocks produced',
+    missed: 'Missed blocks',
+    lastTime: 'Blocks produced last time',
+    fee: 'Mining pool fees',
+    officialMiner: 'Official miners',
+  },
   message:{
     success:'Copy successfully!',
     failed:'Copy failed!'

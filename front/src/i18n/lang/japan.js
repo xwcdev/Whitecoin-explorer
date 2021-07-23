@@ -367,6 +367,16 @@ const japan = {
             last: '最終使用時間'
         }
     },
+    miner: {
+        title: '鉱夫',
+        name: 'MINER',
+        weights: '重み',
+        numberBlocks: 'ブロックの総数',
+        missed: 'Missedブロック数',
+        lastTime: '最後のブロック',
+        fee: 'マイニングプール料金',
+        officialMiner: '公式鉱山労働者',
+    },
     message:{
         success:'コピー！',
         failed:'コピーに失敗しました！'

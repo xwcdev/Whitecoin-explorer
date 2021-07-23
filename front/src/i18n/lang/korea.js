@@ -358,6 +358,16 @@ const korea = {
       last: '마지막 시용 시간'
     }
   },
+  miner: {
+    title: '마이너',
+    name: 'MINER',
+    weights: '가중치',
+    numberBlocks: '총 블록 산출량',
+    missed: 'Missed 블록수량',
+    lastTime: '지난번 블록 산출',
+    fee: '채굴 풀 수수료',
+    officialMiner: '공식 마이너',
+  },
   message:{
     success:'복사성공!',
     failed:'복사실패!'

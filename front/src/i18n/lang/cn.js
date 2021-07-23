@@ -8,7 +8,7 @@ const cn = {
     richlist: '地址',
     tokens: '代币',
     ziyuan: '资源',
-    assets: '资产'
+    assets: '资产',
   },
   maxTitle:{
     t1:'全部交易',
@@ -367,6 +367,16 @@ const cn = {
       create: '创建时间',
       last: '最后使用时间'
     }
+  },
+  miner: {
+    title: '矿工',
+    name: 'MINER',
+    weights: '权重',
+    numberBlocks: '总出块数',
+    missed: 'Missed块数',
+    lastTime: '上次出块',
+    fee: '矿池手续费',
+    officialMiner: '官方矿工',
   },
   message:{
     success:'复制成功!',

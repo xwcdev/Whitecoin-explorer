@@ -42,6 +42,9 @@
               <router-link to="/assets">
                 <el-option :value="$t('nav.assets')">{{$t('nav.assets')}}</el-option>
               </router-link>
+              <router-link to="/miner">
+                <el-option :value="$t('miner.title')">{{$t('miner.title')}}</el-option>
+              </router-link>
             </el-select>
           </ul>
           <el-select

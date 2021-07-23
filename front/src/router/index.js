@@ -11,6 +11,7 @@ import Address from '@/view/Address';
 import Richlist from '@/view/Richlist';
 import Assets from '@/view/Assets';
 import Token from '@/view/Token';
+import Miner from '@/view/Miner';
 
 
 import HomeMobile from '@/view/Mobile/HomeMobile';
@@ -24,6 +25,7 @@ import ContractsMobile from '@/view/Mobile/ContractsMobile';
 import RichlistMobile from '@/view/Mobile/RichlistMobile';
 import AssetsMobile from '@/view/Mobile/AssetsMobile';
 import ContractOverviewMobile from '@/view/Mobile/ContractOverviewMobile';
+import MinerMobile from '@/view/Mobile/MinerMobile';
 
 
 
@@ -76,6 +78,10 @@ const routes = [
   {
     path: '/tokens',
     component: Token
+  },
+  {
+    path: '/miner',
+    component: Miner
   }
 ]
 
@@ -124,6 +130,10 @@ const routesMobile = [
   {
     path: '/tokens',
     component: TokenMobile
+  },
+  {
+    path: '/miner',
+    component: MinerMobile
   }
 ]
 
