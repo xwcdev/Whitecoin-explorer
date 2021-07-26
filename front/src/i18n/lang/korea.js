@@ -365,7 +365,7 @@ const korea = {
     numberBlocks: '총 블록 산출량',
     missed: 'Missed 블록수량',
     lastTime: '지난번 블록 산출',
-    fee: '채굴 풀 수수료',
+    fee: '비율',
     officialMiner: '공식 마이너',
   },
   message:{

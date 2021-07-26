@@ -375,7 +375,7 @@ const cn = {
     numberBlocks: '总出块数',
     missed: 'Missed块数',
     lastTime: '上次出块',
-    fee: '矿池手续费',
+    fee: '费率',
     officialMiner: '官方矿工',
   },
   message:{

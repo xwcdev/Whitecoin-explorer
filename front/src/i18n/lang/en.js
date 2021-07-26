@@ -367,14 +367,14 @@ const en = {
     }
   },
   miner: {
-    title: 'Miner(s)',
+    title: 'Miners',
     name: 'MINER',
     weights: 'Priority level',
-    numberBlocks: 'Total blocks produced',
+    numberBlocks: 'Total blocks',
     missed: 'Missed blocks',
     lastTime: 'Blocks produced last time',
-    fee: 'Mining pool fees',
-    officialMiner: 'Official miners',
+    fee: 'Rate',
+    officialMiner: 'Official',
   },
   message:{
     success:'Copy successfully!',

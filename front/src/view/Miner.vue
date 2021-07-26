@@ -10,12 +10,17 @@
           <el-table :data="dataList" style="width: 100%">
             <el-table-column align="center" :label="$t('miner.name')">
               <template slot-scope="scope">
-                {{ scope.row.minerName }}
-                {{
-                  scope.row.lvl === 1
-                    ? "(" + $t("miner.officialMiner") + ")"
-                    : ""
-                }}
+                <el-tooltip
+                  class="item"
+                  effect="dark"
+                  :content="
+                    scope.row.lvl === 1
+                      ? $t('miner.officialMiner') : ''
+                  "
+                  placement="top"
+                >
+                  <span :class="['placement',scope.row.lvl === 1 ? 'bold': '']">{{ scope.row.minerName }}</span>
+                </el-tooltip>
               </template>
             </el-table-column>
             <el-table-column
@@ -137,6 +142,12 @@ export default {
     .pagination {
       text-align: center;
       margin-top: 20px;
+    }
+    .placement {
+      cursor: pointer;
+      &.bold {
+        font-weight: bold;
+      }
     }
   }
 }

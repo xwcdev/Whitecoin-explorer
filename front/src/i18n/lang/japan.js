@@ -374,7 +374,7 @@ const japan = {
         numberBlocks: 'ブロックの総数',
         missed: 'Missedブロック数',
         lastTime: '最後のブロック',
-        fee: 'マイニングプール料金',
+        fee: '割合',
         officialMiner: '公式鉱山労働者',
     },
     message:{
