@@ -3,7 +3,7 @@
     <div class="wrap_two">
       <div class="con_aside">
         <div class="con_logo">
-          <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.svg" @click="logoClick"></a>
+          <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.png" @click="logoClick"></a>
         </div>
         <div class="navbar">
           <ul>
@@ -155,7 +155,6 @@ export default {
         height: 33px;
         .logo {
           cursor: pointer;
-          width: 115px;
           height: 33px;
           margin-right: 30px;
         }

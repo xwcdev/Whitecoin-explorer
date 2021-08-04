@@ -3,7 +3,7 @@
     <div class="wrap1_two1">
       <div class="con_aside1">
         <div class="con_logo">
-          <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.svg" @click="logoClick"></a>
+          <a href="https://www.whitecoin.info/"><img class="logo" src="../../assets/img/logo.png" @click="logoClick"></a>
         </div>
         <div class="navBar1" @touchmove.prevent @click="toggleMenu">
         </div>
@@ -201,7 +201,7 @@ export default {
         height: 56rem;
         .logo {
           cursor: pointer;
-          width: 200rem;
+          // width: 200rem;
           height: 56rem;
         }
       }

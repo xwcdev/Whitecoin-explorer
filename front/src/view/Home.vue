@@ -3,7 +3,7 @@
     <div class="search">
       <div class="search_con">
         <div class="ser_left">
-          <h2>The Whitecoin Blockchain Explper</h2>
+          <h2>Whitecoin Blockchain Explorer</h2>
           <Search/>
           <p>Your friendly gate into the Whitecoin world</p>
         </div>
