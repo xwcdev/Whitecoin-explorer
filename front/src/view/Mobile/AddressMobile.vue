@@ -21,7 +21,7 @@
                 <span>{{minerInfo.name}}</span>
               </li>
               <li>
-                <span>{{$t('miner.overview.transaction')}}</span>
+                <span>{{$t('address.overview.transaction')}}</span>
                 <span>{{minerInfo.transaction}}</span>
               </li>  
               <li>
