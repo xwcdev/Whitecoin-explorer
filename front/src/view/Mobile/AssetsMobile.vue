@@ -3,7 +3,7 @@
     <div class="tr_main">
       <SearchMobile class="search_con"/>
       <div class="con_top">
-        <p>{{$t('nav.assets')}}</p>
+        <p>{{$t('nav.richlist')}}</p>
       </div>
       <div>
         <el-pagination

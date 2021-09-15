@@ -31,7 +31,7 @@ export default {
       bus.navChoice = 2;
     } else if (href.indexOf("/contracts") > 0) {
       bus.navChoice = 3;
-    } else if(href.indexOf('/richlist') > 0) {
+    } else if(href.indexOf('/assets') > 0) {
       bus.navChoice = 4;
     }
   }

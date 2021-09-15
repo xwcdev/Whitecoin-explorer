@@ -36,14 +36,14 @@
               <router-link to="/contracts">
                 <el-option :value="$t('nav.contracts')">{{$t('nav.contracts')}}</el-option>
               </router-link>
-              <router-link to="/richlist">
+              <!-- <router-link to="/richlist">
                 <el-option :value="$t('nav.richlist')">RICHLIST</el-option>
-              </router-link>
+              </router-link> -->
               <router-link to="/assets">
-                <el-option :value="$t('nav.assets')">{{$t('nav.assets')}}</el-option>
+                <el-option :value="$t('nav.assets')">RICHLIST</el-option>
               </router-link>
               <router-link to="/miner">
-                <el-option :value="$t('miner.title')">{{$t('miner.title')}}</el-option>
+                <el-option :value="$t('miner.title')">Miners</el-option>
               </router-link>
             </el-select>
           </ul>
