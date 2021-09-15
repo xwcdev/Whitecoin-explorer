@@ -2,7 +2,7 @@
   <div class="wrap">
     <div class="tr_main">
       <div class="con_top">
-        <p>{{$t('nav.assets')}}</p>
+        <p>{{$t('nav.richlist')}}</p>
         <Search class="search_con"/>
       </div>
       <div class="con_all">
