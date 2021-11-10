@@ -21,6 +21,11 @@
             v-clipboard:success="onCopy"
             v-clipboard:error="onError"
           ></span>
+          <span class="code-icon">
+            <span class="code-img">
+              <span class="qrcode" ref="qrCodeUrl"></span>
+            </span>
+          </span>
         </p>
         <Search class="search_con" />
       </div>
@@ -402,7 +407,7 @@ import common from "../utils/common";
 import typeObj from "../utils/type";
 import mixin from "../utils/mixin";
 import Search from "../components/search/Search";
-
+import QRCode from "qrcodejs2";
 export default {
   mixins: [mixin],
   name: "v-address",
@@ -457,7 +462,20 @@ export default {
 
     bus.navChoice = 4;
   },
+  mounted() {
+    this.creatQrCode()
+  },
   methods: {
+    creatQrCode() {
+      var qrcode = new QRCode(this.$refs.qrCodeUrl, {
+        text: this.minerInfo.address,
+        width: 95,
+        height: 95,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H,
+      });
+    },
     pageChange(page) {
       this.page = page;
       if (this.choiceFlag === 0) {
@@ -687,6 +705,33 @@ export default {
           background: url(../assets/img/copy.png) no-repeat;
           background-size: 100%;
           cursor: pointer;
+        }
+        .code-icon {
+          width: 29px;
+          height: 29px;
+          background: url("../assets/img/code-icon.png");
+          background-size: 100% 100%;
+          cursor: pointer;
+          margin-left: 30px;
+          position: relative;
+          .code-img {
+            width: 101px;
+            height: 104px;
+            background: url("../assets/img/code-img.png");
+            background-size: 100% 100%;
+            position: absolute;
+            z-index: 999;
+            top: 33px;
+            left: -40px;
+            display: none;
+            padding-top: 11px;
+            padding-left: 7px;
+          }
+          &:hover {
+            .code-img {
+              display: block;
+            }
+          }
         }
       }
       .search_con {
