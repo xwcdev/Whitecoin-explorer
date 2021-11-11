@@ -10,13 +10,14 @@ if(process.env.NODE_ENV==='development') {
 } else {
   //真实环境
   // axios.defaults.baseURL = 'http://23.133.1.132:9007/api';
+  // axios.defaults.baseURL = 'https://explorer.whitecoin.info/api';
   axios.defaults.baseURL = '/api';
-}   
+}
 
-// http request 请求拦截器，有token值则配置上token值   
+// http request 请求拦截器，有token值则配置上token值
 // axios.interceptors.request.use(
 //   config => {
-//     config.data = qs.stringify(config.data); 
+//     config.data = qs.stringify(config.data);
 //     // config.headers = {
 //     //   "Content-Type":"application/x-www-form-urlencoded",
 //     // }

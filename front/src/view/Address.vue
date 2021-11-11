@@ -462,9 +462,7 @@ export default {
 
     bus.navChoice = 4;
   },
-  mounted() {
-    this.creatQrCode()
-  },
+  mounted() {},
   methods: {
     creatQrCode() {
       var qrcode = new QRCode(this.$refs.qrCodeUrl, {
@@ -532,6 +530,7 @@ export default {
           if (res.data.retCode === 200 && res.data.data !== null) {
             let data = res.data;
             that.minerInfo = data.data;
+            that.creatQrCode();
             that.getTransactionData();
           }
         });
