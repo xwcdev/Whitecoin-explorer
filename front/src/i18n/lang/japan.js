@@ -170,6 +170,14 @@ const japan = {
         }
     },
     miner: {
+        title: '鉱夫',
+        name: 'MINER',
+        weights: '重み',
+        numberBlocks: 'ブロックの総数',
+        missed: 'Missedブロック数',
+        lastTime: '最後のブロック',
+        fee: '割合',
+        officialMiner: '公式鉱山労働者',
         overview: {
             title: 'タイトル',
             name: '名前',
@@ -366,16 +374,6 @@ const japan = {
             create: '作成時間',
             last: '最終使用時間'
         }
-    },
-    miner: {
-        title: '鉱夫',
-        name: 'MINER',
-        weights: '重み',
-        numberBlocks: 'ブロックの総数',
-        missed: 'Missedブロック数',
-        lastTime: '最後のブロック',
-        fee: '割合',
-        officialMiner: '公式鉱山労働者',
     },
     message:{
         success:'コピー！',

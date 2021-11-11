@@ -170,6 +170,14 @@ const cn = {
     }
   },
   miner: {
+    title: '矿工',
+    name: 'MINER',
+    weights: '权重',
+    numberBlocks: '总出块数',
+    missed: 'Missed块数',
+    lastTime: '上次出块',
+    fee: '费率',
+    officialMiner: '官方矿工',
     overview: {
       title: '矿工概览',
       name: '名称:',
@@ -367,16 +375,6 @@ const cn = {
       create: '创建时间',
       last: '最后使用时间'
     }
-  },
-  miner: {
-    title: '矿工',
-    name: 'MINER',
-    weights: '权重',
-    numberBlocks: '总出块数',
-    missed: 'Missed块数',
-    lastTime: '上次出块',
-    fee: '费率',
-    officialMiner: '官方矿工',
   },
   message:{
     success:'复制成功!',

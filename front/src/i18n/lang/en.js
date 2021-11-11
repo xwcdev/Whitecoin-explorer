@@ -168,6 +168,14 @@ const en = {
     }
   },
   miner: {
+    title: 'Miners',
+    name: 'MINER',
+    weights: 'Priority level',
+    numberBlocks: 'Total blocks',
+    missed: 'Missed blocks',
+    lastTime: 'Blocks produced last time',
+    fee: 'Rate',
+    officialMiner: 'Official',
     overview: {
       title: 'Miner Overview',
       name: 'Name:',
@@ -365,16 +373,6 @@ const en = {
       create: 'Create Times',
       last: 'The Last Time'
     }
-  },
-  miner: {
-    title: 'Miners',
-    name: 'MINER',
-    weights: 'Priority level',
-    numberBlocks: 'Total blocks',
-    missed: 'Missed blocks',
-    lastTime: 'Blocks produced last time',
-    fee: 'Rate',
-    officialMiner: 'Official',
   },
   message:{
     success:'Copy successfully!',

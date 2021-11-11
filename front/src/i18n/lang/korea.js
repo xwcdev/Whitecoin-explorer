@@ -161,6 +161,14 @@ const korea = {
     }
   },
   miner: {
+    title: '마이너',
+    name: 'MINER',
+    weights: '가중치',
+    numberBlocks: '총 블록 산출량',
+    missed: 'Missed 블록수량',
+    lastTime: '지난번 블록 산출',
+    fee: '비율',
+    officialMiner: '공식 마이너',
     overview: {
       title: '마이너 개요',
       name: '이름:',
@@ -357,16 +365,6 @@ const korea = {
       create: '생성 시간',
       last: '마지막 시용 시간'
     }
-  },
-  miner: {
-    title: '마이너',
-    name: 'MINER',
-    weights: '가중치',
-    numberBlocks: '총 블록 산출량',
-    missed: 'Missed 블록수량',
-    lastTime: '지난번 블록 산출',
-    fee: '비율',
-    officialMiner: '공식 마이너',
   },
   message:{
     success:'복사성공!',
