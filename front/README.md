@@ -1,3 +1,6 @@
+test: http://192.168.1.11:801
+online: https://explorer.whitecoin.info
+
 # vuex-test
 
 > A Vue.js project
